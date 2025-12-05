@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { PublicLayout, AuthenticatedLayout } from './layouts';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { ForgotPassword } from './pages/ForgotPassword';
@@ -11,10 +12,6 @@ import { Dashboard } from './pages/Dashboard';
  * Componente raíz de la aplicación con ruteo.
  */
 export function App() {
-	// TODO: Replace with actual authentication check
-	// Por ahora, asumimos que el usuario no está autenticado
-	const isAuthenticated = false;
-
 	return (
 		<BrowserRouter>
 			<Routes>
@@ -50,13 +47,11 @@ export function App() {
 				<Route
 					path='/dashboard'
 					element={
-						isAuthenticated ? (
+						<ProtectedRoute>
 							<AuthenticatedLayout>
 								<Dashboard />
 							</AuthenticatedLayout>
-						) : (
-							<Navigate to='/login' replace />
-						)
+						</ProtectedRoute>
 					}
 				/>
 
