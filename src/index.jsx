@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { QueryProvider } from './providers/QueryProvider';
 
 /**
  * Bootstraps the React application.
@@ -17,5 +18,9 @@ const container =
 
 if (container) {
 	const root = createRoot(container);
-	root.render(<App />);
+	root.render(
+		<QueryProvider>
+			<App />
+		</QueryProvider>
+	);
 }
