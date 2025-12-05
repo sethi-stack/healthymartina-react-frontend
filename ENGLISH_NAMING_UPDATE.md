@@ -179,3 +179,4 @@ const result = convertPortionQuantity({
 ## Documentation
 
 See `VARIABLE_NAMING_GUIDE.md` for complete variable name mappings and usage examples.
+
