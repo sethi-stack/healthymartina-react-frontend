@@ -13,6 +13,9 @@ export function AuthPage({
 	onRegisterSubmit,
 	onForgotPasswordClick,
 	initialTab = 'login', // 'login' | 'register'
+	loginError = null,
+	registerError = null,
+	isLoading = false,
 }) {
 	const [activeTab, setActiveTab] = useState(initialTab);
 
@@ -80,6 +83,24 @@ export function AuthPage({
 				<div className='auth-forms'>
 					{activeTab === 'login' && (
 						<form className='auth-form' onSubmit={handleLoginSubmit}>
+							{loginError && (
+								<div
+									className='auth-error'
+									style={{
+										width: '100%',
+										padding: '10px',
+										marginBottom: '1em',
+										backgroundColor: '#fee',
+										border: '1px solid #fcc',
+										borderRadius: '8px',
+										color: '#c33',
+										fontSize: '0.9em',
+									}}
+								>
+									{loginError}
+								</div>
+							)}
+
 							<label htmlFor='email'>Email</label>
 							<input
 								id='email'
@@ -88,6 +109,7 @@ export function AuthPage({
 								value={loginData.email}
 								onChange={(e) => updateLoginData('email', e.target.value)}
 								required
+								disabled={isLoading}
 							/>
 
 							<label htmlFor='password'>Contraseña</label>
@@ -98,6 +120,7 @@ export function AuthPage({
 								value={loginData.password}
 								onChange={(e) => updateLoginData('password', e.target.value)}
 								required
+								disabled={isLoading}
 							/>
 
 							<div className='auth-row'>
@@ -109,6 +132,7 @@ export function AuthPage({
 										onChange={(e) =>
 											updateLoginData('rememberMe', e.target.checked)
 										}
+										disabled={isLoading}
 									/>
 									Recordar cuenta
 									<span className='checkmark'></span>
@@ -117,6 +141,7 @@ export function AuthPage({
 									type='button'
 									className='forgot-password-link'
 									onClick={onForgotPasswordClick}
+									disabled={isLoading}
 								>
 									¿Olvidaste tu contraseña?
 								</button>
@@ -124,14 +149,33 @@ export function AuthPage({
 
 							<input
 								type='submit'
-								value='Iniciar Sesión'
+								value={isLoading ? 'Iniciando...' : 'Iniciar Sesión'}
 								className='auth-submit'
+								disabled={isLoading}
 							/>
 						</form>
 					)}
 
 					{activeTab === 'register' && (
 						<form className='auth-form' onSubmit={handleRegisterSubmit}>
+							{registerError && (
+								<div
+									className='auth-error'
+									style={{
+										width: '100%',
+										padding: '10px',
+										marginBottom: '1em',
+										backgroundColor: '#fee',
+										border: '1px solid #fcc',
+										borderRadius: '8px',
+										color: '#c33',
+										fontSize: '0.9em',
+									}}
+								>
+									{registerError}
+								</div>
+							)}
+
 							<div className='auth-row'>
 								<div className='auth-col'>
 									<label htmlFor='nombre'>Nombre</label>
@@ -144,6 +188,7 @@ export function AuthPage({
 											updateRegisterData('nombre', e.target.value)
 										}
 										required
+										disabled={isLoading}
 									/>
 								</div>
 								<div className='auth-col'>
@@ -157,6 +202,7 @@ export function AuthPage({
 											updateRegisterData('apellidos', e.target.value)
 										}
 										required
+										disabled={isLoading}
 									/>
 								</div>
 							</div>
@@ -169,6 +215,7 @@ export function AuthPage({
 								value={registerData.email}
 								onChange={(e) => updateRegisterData('email', e.target.value)}
 								required
+								disabled={isLoading}
 							/>
 
 							<label htmlFor='new-password'>Contraseña</label>
@@ -179,6 +226,7 @@ export function AuthPage({
 								value={registerData.password}
 								onChange={(e) => updateRegisterData('password', e.target.value)}
 								required
+								disabled={isLoading}
 							/>
 
 							<label htmlFor='confirm-password'>Confirmar Contraseña</label>
@@ -191,9 +239,15 @@ export function AuthPage({
 									updateRegisterData('passwordConfirmation', e.target.value)
 								}
 								required
+								disabled={isLoading}
 							/>
 
-							<input type='submit' value='¡Listo!' className='auth-submit' />
+							<input
+								type='submit'
+								value={isLoading ? 'Registrando...' : '¡Listo!'}
+								className='auth-submit'
+								disabled={isLoading}
+							/>
 						</form>
 					)}
 				</div>
