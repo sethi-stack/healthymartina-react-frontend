@@ -1,0 +1,93 @@
+import React from 'react';
+
+export function CalendarioIcon({ className = 'cls-1', ...props }) {
+	return (
+		<svg
+			xmlns='http://www.w3.org/2000/svg'
+			viewBox='0 0 26.25 25.29'
+			{...props}
+		>
+			<title>icono03</title>
+			<g id='Layer_2' data-name='Layer 2'>
+				<g id='Contenido-Home'>
+					<path
+						className={className}
+						d='M24.15,3.08H21V.93a.93.93,0,1,0-1.86,0V3.08h-12V.93a.93.93,0,1,0-1.86,0V3.08H2.1A2.1,2.1,0,0,0,0,5.18v18a2.11,2.11,0,0,0,2.1,2.1h22a2.11,2.11,0,0,0,2.1-2.1v-18A2.1,2.1,0,0,0,24.15,3.08Zm-18,3.74a.93.93,0,0,0,.93-.93V4.79a1.46,1.46,0,0,1,.51,1.1,1.44,1.44,0,1,1-2.37-1.1v1.1A.93.93,0,0,0,6.16,6.82ZM20,6.82A.93.93,0,0,0,21,5.89V4.79a1.46,1.46,0,0,1,.51,1.1,1.44,1.44,0,0,1-2.88,0,1.46,1.46,0,0,1,.51-1.1v1.1A.93.93,0,0,0,20,6.82Zm4.54,16.37a.42.42,0,0,1-.41.41H2.1a.41.41,0,0,1-.41-.41V9H24.56Z'
+					></path>
+					<rect
+						className={className}
+						x='8.63'
+						y='11.28'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='13.76'
+						y='11.28'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='18.89'
+						y='11.28'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='3.5'
+						y='15.12'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='8.63'
+						y='15.12'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='13.76'
+						y='15.12'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='18.89'
+						y='15.12'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='3.5'
+						y='18.95'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='8.63'
+						y='18.95'
+						width='3.86'
+						height='2.87'
+					></rect>
+					<rect
+						className={className}
+						x='13.76'
+						y='18.95'
+						width='3.86'
+						height='2.87'
+					></rect>
+				</g>
+			</g>
+		</svg>
+	);
+}
+
+export default CalendarioIcon;

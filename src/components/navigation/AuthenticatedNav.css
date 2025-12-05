@@ -1,0 +1,179 @@
+/* Authenticated Navigation Styles */
+
+.auth-nav {
+	background: #fff;
+	border-bottom: 1px solid #e7e7e7;
+	padding: 0;
+}
+
+.auth-nav ul {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	align-items: center;
+	justify-content: center;
+}
+
+.auth-nav li {
+	margin: 0;
+	position: relative;
+}
+
+.auth-nav__link {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem 1.5rem;
+	text-decoration: none;
+	color: #7a7a7a;
+	font-family: 'Gilroy-Medium', 'Gilroy', sans-serif;
+	font-size: 0.9rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	transition: color 0.3s ease;
+	min-width: 100px;
+}
+
+.auth-nav__link:hover {
+	color: #dcb244;
+}
+
+.auth-nav__link svg {
+	width: 24px;
+	height: 24px;
+	margin-bottom: 0.5rem;
+	fill: currentColor;
+}
+
+.auth-nav__link .cls-1,
+.auth-nav__link .cls-2 {
+	fill: currentColor;
+}
+
+.auth-nav li.selected-actv-menu .auth-nav__link {
+	color: #dcb244;
+	background: rgba(220, 178, 68, 0.1);
+}
+
+.auth-nav li.search {
+	margin-left: auto;
+}
+
+/* Search Popup */
+.search-popup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.search-popup__container {
+	background: #fff;
+	border-radius: 8px;
+	padding: 2rem;
+	width: 90%;
+	max-width: 500px;
+	position: relative;
+}
+
+.search-popup__close {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	color: #7a7a7a;
+}
+
+.search-popup__close:hover {
+	color: #dcb244;
+}
+
+.search-popup__title {
+	margin: 0 0 1.5rem 0;
+	font-family: 'Gilroy-SemiBold', 'Gilroy', sans-serif;
+	font-size: 1.5rem;
+	color: #606060;
+	text-transform: none;
+	border-bottom: 2px solid #dcb244;
+	padding-bottom: 0.5rem;
+}
+
+.search-popup__form {
+	width: 100%;
+}
+
+.search-popup__select-container {
+	width: 100%;
+}
+
+.search-popup__select {
+	width: 100%;
+	min-height: 200px;
+	border: 2px solid #e7e7e7;
+	border-radius: 8px;
+	padding: 0.5rem;
+	font-family: 'Gilroy', sans-serif;
+	font-size: 0.9rem;
+	outline: none;
+}
+
+.search-popup__select:focus {
+	border-color: #dcb244;
+}
+
+.search-popup__select option {
+	padding: 0.5rem;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.search-popup__select option:hover {
+	background: #f8f8f8;
+}
+
+.recipe-search {
+	color: #2c5aa0;
+}
+
+.ingredient-search {
+	color: #5a8a2c;
+}
+
+.calendar-search {
+	color: #8a2c5a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.auth-nav ul {
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
+
+	.auth-nav__link {
+		padding: 0.75rem 1rem;
+		min-width: 80px;
+		font-size: 0.8rem;
+	}
+
+	.auth-nav__link svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.search-popup__container {
+		width: 95%;
+		padding: 1.5rem;
+	}
+}
