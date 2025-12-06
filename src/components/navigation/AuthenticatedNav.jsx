@@ -22,6 +22,8 @@ export function AuthenticatedNav({
 	const [searchOpen, setSearchOpen] = useState(false);
 
 	const hasPermission = (permission) => {
+		// For development/demo purposes, return true if permissions prop is empty or undefined
+		if (!permissions || Object.keys(permissions).length === 0) return true;
 		return permissions[permission] === true;
 	};
 
@@ -35,8 +37,44 @@ export function AuthenticatedNav({
 		}
 	};
 
-	const toggleSearch = () => {
+	const toggleSearch = (e) => {
+		e.preventDefault();
 		setSearchOpen(!searchOpen);
+		if (!searchOpen) {
+			document.body.style.overflowY = 'hidden';
+		} else {
+			document.body.style.overflowY = 'auto';
+		}
+	};
+
+	const handleCloseSearch = () => {
+		setSearchOpen(false);
+		document.body.style.overflowY = 'auto';
+	};
+
+	const handleSearchSelect = (e) => {
+		const selectedOption = e.target.options[e.target.selectedIndex];
+		const value = e.target.value;
+		const type = selectedOption.getAttribute('data-type');
+		const name = selectedOption.text;
+
+		// Logic migrated from search.js
+		if (name) {
+			if (type === 'calendar') {
+				if (onNavigate) onNavigate(`/calendario?id=${value}`);
+			} else if (type === 'ingredient') {
+				// Using URLSearchParams for cleaner query construction
+				// var url = '/recetario?' + 'filter=true&ingrediente_incluir%5B%5D=' + value;
+				const params = new URLSearchParams();
+				params.append('filter', 'true');
+				params.append('ingrediente_incluir[]', value);
+				if (onNavigate) onNavigate(`/recetario?${params.toString()}`);
+			} else {
+				// Recipe
+				if (onNavigate) onNavigate(`/receta/${value}`);
+			}
+			handleCloseSearch();
+		}
 	};
 
 	return (
@@ -105,37 +143,45 @@ export function AuthenticatedNav({
 								onClick={toggleSearch}
 							>
 								<SearchIcon />
-								Buscador
 							</button>
 						</li>
 					</ul>
+					{/* Added search icon link outside ul for mobile/responsive layout match if needed, 
+                        based on blade template structure where it's duplicated */}
+					<a
+						className='search mobile-search-trigger'
+						href='#'
+						onClick={toggleSearch}
+					>
+						<SearchIcon />
+					</a>
 				</div>
 			</nav>
 
 			{/* Search Popup */}
 			{searchOpen && (
-				<div className='search-popup'>
-					<div className='search-popup__container'>
-						<button
-							className='search-popup__close'
-							onClick={() => setSearchOpen(false)}
-						>
+				<div
+					className='popup buscador search-popup-buscadr'
+					style={{ display: 'flex' }}
+				>
+					<div className='container-popup'>
+						<button className='close' onClick={handleCloseSearch}>
 							<i className='fas fa-times'></i>
 						</button>
-						<h3 className='search-popup__title'>Buscador</h3>
-						<form className='search-popup__form'>
-							<div className='search-popup__select-container'>
+						<h3 className='no-uppercase underline'>Buscador</h3>
+						<form
+							className='search-popup__form'
+							onSubmit={(e) => e.preventDefault()}
+						>
+							<div
+								className='slide-indicadores slide-active s-a bigdrop'
+								id='bigdrop'
+							>
 								<select
-									className='search-popup__select'
-									multiple
-									onChange={(e) => {
-										const selectedOptions = Array.from(
-											e.target.selectedOptions
-										);
-										if (onSearch) {
-											onSearch(selectedOptions);
-										}
-									}}
+									className='search-select search-popup__select'
+									multiple={false} // Changed to false for single selection behavior like standard select
+									onChange={handleSearchSelect}
+									size={10} // Show multiple options
 								>
 									{searchData.recipes?.map((recipe) => (
 										<option

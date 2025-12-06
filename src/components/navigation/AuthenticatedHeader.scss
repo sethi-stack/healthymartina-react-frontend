@@ -14,6 +14,10 @@
 	color: #fff;
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 	z-index: 101;
+
+	@media (min-width: 1280px) {
+		padding: 0 calc((100vw - 1280px) / 2);
+	}
 }
 
 .header-app__brand {
