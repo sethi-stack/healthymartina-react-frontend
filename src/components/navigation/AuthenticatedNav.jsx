@@ -6,7 +6,7 @@ import {
 	PlanesIcon,
 	SearchIcon,
 } from '../icons';
-import './AuthenticatedNav.css';
+import './AuthenticatedNav.scss';
 
 /**
  * Authenticated navigation component for logged-in users.
@@ -42,70 +42,74 @@ export function AuthenticatedNav({
 	return (
 		<>
 			<nav className='auth-nav'>
-				<ul>
-					{hasPermission('recetario_view') && (
-						<li className={isActive('recetario') ? 'selected-actv-menu' : ''}>
+				<div className='auth-nav__inner'>
+					<ul>
+						{hasPermission('recetario_view') && (
+							<li className={isActive('recetario') ? 'selected-actv-menu' : ''}>
+								<button
+									type='button'
+									className='auth-nav__link'
+									onClick={() => handleNavClick('/recetario')}
+								>
+									<RecetarioIcon />
+									Recetario
+								</button>
+							</li>
+						)}
+
+						{hasPermission('calendario_view') && (
+							<li
+								className={isActive('calendario') ? 'selected-actv-menu' : ''}
+							>
+								<button
+									type='button'
+									className='auth-nav__link'
+									onClick={() => handleNavClick('/calendario')}
+								>
+									<CalendarioIcon />
+									Calendario
+								</button>
+							</li>
+						)}
+
+						{hasPermission('lista_view') && (
+							<li className={isActive('listas') ? 'selected-actv-menu' : ''}>
+								<button
+									type='button'
+									className='auth-nav__link'
+									onClick={() => handleNavClick('/listas')}
+								>
+									<ListaIcon />
+									Lista
+								</button>
+							</li>
+						)}
+
+						{hasPermission('planes_view') && (
+							<li className={isActive('planes') ? 'selected-actv-menu' : ''}>
+								<button
+									type='button'
+									className='auth-nav__link'
+									onClick={() => handleNavClick('/planes')}
+								>
+									<PlanesIcon />
+									Planes
+								</button>
+							</li>
+						)}
+
+						<li className='search'>
 							<button
 								type='button'
-								className='auth-nav__link'
-								onClick={() => handleNavClick('/recetario')}
+								className='auth-nav__link search'
+								onClick={toggleSearch}
 							>
-								<RecetarioIcon />
-								Recetario
+								<SearchIcon />
+								Buscador
 							</button>
 						</li>
-					)}
-
-					{hasPermission('calendario_view') && (
-						<li className={isActive('calendario') ? 'selected-actv-menu' : ''}>
-							<button
-								type='button'
-								className='auth-nav__link'
-								onClick={() => handleNavClick('/calendario')}
-							>
-								<CalendarioIcon />
-								Calendario
-							</button>
-						</li>
-					)}
-
-					{hasPermission('lista_view') && (
-						<li className={isActive('listas') ? 'selected-actv-menu' : ''}>
-							<button
-								type='button'
-								className='auth-nav__link'
-								onClick={() => handleNavClick('/listas')}
-							>
-								<ListaIcon />
-								Lista
-							</button>
-						</li>
-					)}
-
-					{hasPermission('planes_view') && (
-						<li className={isActive('planes') ? 'selected-actv-menu' : ''}>
-							<button
-								type='button'
-								className='auth-nav__link'
-								onClick={() => handleNavClick('/planes')}
-							>
-								<PlanesIcon />
-								Planes
-							</button>
-						</li>
-					)}
-
-					<li className='search'>
-						<button
-							type='button'
-							className='auth-nav__link search'
-							onClick={toggleSearch}
-						>
-							<SearchIcon />
-							Buscador
-						</button>
-					</li>
-				</ul>
+					</ul>
+				</div>
 			</nav>
 
 			{/* Search Popup */}

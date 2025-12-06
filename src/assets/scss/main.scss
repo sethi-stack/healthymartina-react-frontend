@@ -1,0 +1,37 @@
+// External libs (commented out until installed/needed)
+// @import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+// @import "~animate.css/animate.min.css";
+// @import "~select2/dist/css/select2.min.css";
+
+// Variables
+@import 'init';
+
+// Partials
+@import 'partial/header';
+@import 'partial/footer';
+@import 'partial/error';
+@import 'partial/field_validation';
+
+// Pages/Modules
+@import 'login';
+
+// Components
+@import 'componentes/titulo';
+@import 'componentes/planes';
+@import 'componentes/popup';
+@import 'componentes/buttons';
+@import 'componentes/basics';
+@import 'componentes/calendar';
+@import 'componentes/recipe';
+@import 'componentes/lists';
+@import 'componentes/membresia';
+@import 'componentes/tabs';
+@import 'componentes/icon-svg';
+@import 'componentes/searchfield';
+
+// Main Application Styles
+@import 'aplication';
+@import 'perfil';
+
+// Responsive
+@import 'responsive';

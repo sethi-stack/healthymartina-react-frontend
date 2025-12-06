@@ -1,5 +1,5 @@
 import React from 'react';
-import './Footer.css';
+import './Footer.scss';
 
 /**
  * Footer component based on resources/views/partials/footer.blade.php

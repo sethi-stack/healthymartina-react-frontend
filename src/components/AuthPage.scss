@@ -1,3 +1,5 @@
+@import '@/assets/scss/init';
+
 /* AuthPage Styles - Based on _login.scss */
 
 .auth-page {
@@ -13,7 +15,7 @@
 	align-content: center;
 	font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, 'Segoe UI',
 		sans-serif;
-	color: #606060;
+	color: #606060; // Not in variables
 }
 
 .auth-container {
@@ -49,14 +51,14 @@
 }
 
 .auth-tab.active {
-	border-top: 0.5em solid #dcb244;
+	border-top: 0.5em solid $individual;
 }
 
 .auth-separator {
 	width: 100%;
 	margin: 0 auto;
 	padding: 0 1em;
-	background-color: #7a7a7a;
+	background-color: $gris-oscuro;
 	height: 1px;
 }
 
@@ -93,7 +95,7 @@
 .auth-form input[type='email'],
 .auth-form input[type='password'] {
 	width: 100%;
-	border: 2px solid #7a7a7a;
+	border: 2px solid $gris-oscuro;
 	padding: 10px;
 	margin-bottom: 1em;
 	border-radius: 12px;
@@ -105,18 +107,18 @@
 .auth-form input[type='text']:focus,
 .auth-form input[type='email']:focus,
 .auth-form input[type='password']:focus {
-	border-color: #dcb244;
+	border-color: $individual;
 }
 
 .auth-form input::placeholder {
 	font-family: 'Gilroy-SemiBold', 'Gilroy', sans-serif;
-	color: rgba(0, 0, 0, 0.25);
+	color: $border;
 }
 
 .auth-submit {
 	font-family: 'Gilroy-SemiBold', 'Gilroy', sans-serif !important;
-	background: #dcb244 !important;
-	border: 1px solid #dcb244 !important;
+	background: $individual !important;
+	border: 1px solid $individual !important;
 	color: #fff !important;
 	transition: ease 0.5s;
 	width: 100% !important;
@@ -129,7 +131,7 @@
 
 .auth-submit:hover {
 	background-color: #fff !important;
-	color: #dcb244 !important;
+	color: $individual !important;
 }
 
 .auth-row {
@@ -187,7 +189,7 @@
 	height: 1.5em;
 	width: 1.5em;
 	border-radius: 5px;
-	border: 1px solid #dcb244;
+	border: 1px solid $individual;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -207,7 +209,7 @@
 }
 
 .checkbox-label input:checked ~ .checkmark {
-	background-color: #dcb244;
+	background-color: $individual;
 }
 
 .checkbox-label input:checked ~ .checkmark:after {
@@ -226,7 +228,7 @@
 }
 
 .forgot-password-link:hover {
-	color: #dcb244;
+	color: $individual;
 }
 
 /* Responsive */

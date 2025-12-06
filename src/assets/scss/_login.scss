@@ -1,0 +1,183 @@
+#login {
+    .container {
+        width: 100%;
+        background-image: url(/img/contacto.jpg);
+        padding: 2em 0;
+        min-height: 83vh;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+
+        .selector {
+            background-color: #fff;
+            width: 40%;
+            margin: 0 30%;
+            padding: 0 1em;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+
+            a {
+                width: 25%;
+                padding: 1em 0em 1.5em 0;
+                text-decoration: none;
+                color: #606060;
+                text-transform: uppercase;
+                font-family: 'Gilroy-SemiBold';
+                text-align: center;
+                border-top: .5em solid #fff;
+                cursor: pointer;
+            }
+
+            .active {
+                border-top: .5em solid $individual;
+            }
+
+            .separador {
+                width: 100%;
+                margin: 0 auto;
+                padding: 0 1em;
+                background-color: $gris-oscuro;
+                height: 1px;
+            }
+        }
+
+        .formularios {
+            width: calc(40% + 2em);
+            margin: 0 auto;
+
+            form {
+                width: calc(100% - 2em) !important;
+                margin: 0 auto;
+                padding: 1em 1em;
+                background-color: #fff;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+                display: flex !important;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+
+                label {
+                    font-family: 'Gilroy-SemiBold';
+                    width: 100%;
+                    text-transform: uppercase;
+                    padding: 10px 0;
+                    display: block;
+                    font-size: .8em;
+                }
+
+                input {
+                    width: 100%;
+                    border: 2px solid $gris-oscuro;
+                    padding: 10px;
+                    margin-bottom: 1em;
+                    border-radius: 12px;
+                    font-family: "Gilroy";
+                    font-size: .8em;
+                    outline: none;
+
+                    &:focus {
+                        border-color: $individual;
+                    }
+                }
+
+                input::placeholder {
+                    font-family: 'Gilroy-SemiBold';
+                    color: rgba(0, 0, 0, .25);
+                }
+
+                input[type="submit"] {
+                    font-family: 'Gilroy-SemiBold';
+                    background: $individual;
+                    border: 1px solid $individual;
+                    color: #fff;
+                    transition: ease .5s;
+                    width: 100%;
+                    cursor: pointer;
+                    text-transform: uppercase;
+
+                    &:hover {
+                        background-color: #fff;
+                        color: $individual;
+                    }
+                }
+
+                .col12 {
+                    width: 45%;
+
+                    input {
+                        width: 100%;
+                    }
+                }
+
+                .row {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                    margin-bottom: 1em;
+
+                    label {
+                        height: 1.5em;
+                        width: 50%;
+                        font-size: .7em;
+                        text-transform: uppercase;
+                        display: flex;
+                        align-items: center;
+                        cursor: pointer;
+                        position: relative;
+                        padding: 0;
+                        padding-left: 3em;
+
+                        input {
+                            width: 0;
+                            position: absolute;
+                            opacity: 0;
+                            height: 0;
+                        }
+
+                        .checkmark {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            height: 1.5em;
+                            width: 1.5em;
+                            border-radius: 5px;
+                            border: 1px solid $individual;
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                            align-items: center;
+
+                            &:after {
+                                font-family: "Font Awesome 5 Free";
+                                content: "\f00c";
+                                font-weight: 900;
+                                color: #fff;
+                                position: absolute;
+                                display: block;
+                            }
+                        }
+                    }
+
+                    a {
+                        font-size: .7em;
+                        text-transform: uppercase;
+                        text-decoration: none;
+                        color: #606060;
+                        font-family: 'Gilroy-SemiBold';
+                    }
+
+                    label input:checked~.checkmark {
+                        background-color: $individual;
+                    }
+                }
+            }
+        }
+    }
+}

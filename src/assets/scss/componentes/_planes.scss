@@ -1,0 +1,299 @@
+.plan.planes-sidebar {
+    cursor: pointer;
+
+    .info {
+        .icon {
+            float: left;
+            width: 25%;
+        }
+
+        .infoWrapper {
+            float: left;
+            width: 75%;
+        }
+
+        .button-options {
+
+            a {
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+.plan.planes-sidebar.selected {
+    background: #f9f9f9 !important;
+}
+
+.plan.planes-sidebar.selected svg .cls-1 {
+    fill: #dcb244;
+}
+
+.planes-meals .btnLeftoverRecipe,
+.planes-meals .btnDeleteRecipe {
+    display: none;
+}
+
+.planner-calendario .button-hamburger.active button {
+    background: #d4aa44;
+    color: #fff;
+}
+
+#application #menu-vue .planner-calendario.general-container .sub-container .overflow-right .receta .sub-menu a {
+    padding: 10px;
+    color: #b7b7b7;
+    display: flex;
+}
+
+.planner-calendario.general-container .sub-container .overflow-right .receta .sub-menu a svg .cls-1 {
+    fill: #b7b7b7;
+}
+
+.planner-calendario .button-hamburger .sub-menu a:hover {
+    color: #dcb244 !important;
+}
+
+.planner-calendario .button-hamburger .sub-menu {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    width: 200px;
+    border: 1px solid #7a7a7a;
+    border-radius: 5px;
+    z-index: 1;
+    background: #fafafa;
+}
+
+.planner-calendario .button-hamburger .sub-menu a:first-child {
+    border-top: none !important;
+}
+
+.sub-container .overflow-left {
+    border-right: 1px solid $border-line-lighter;
+}
+
+.nutrition {
+    height: 100%;
+    width: 100%;
+}
+
+.nutrition .table__row.table__row--nutrition {
+    will-change: transform;
+    border-bottom: 1px solid #dae1e9;
+    display: flex;
+}
+
+.nutrition .table__row {
+    outline: none;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+.nutrition .table__row [class^="col-"]:first-child {
+    padding: 0;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__caption {
+    padding: 0;
+    border-right: 1px solid $border-line-lighter;
+}
+
+.nutrition .table__row [class^="col-"] .table__caption {
+    min-height: 100%;
+    padding-top: 49px;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__caption.table__caption--tabs .table__cell-container {
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+
+.nutrition .table__row [class^="col-"] .table__caption .table__cell-container {
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    max-width: 100%;
+    display: flex;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__caption.table__caption--tabs .table__cell-container .table__header:not(:last-child) {
+    border-bottom: 1px solid #dae1e9;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__caption.table__caption--tabs .table__cell-container .table__header.table__header--active {
+    position: relative;
+    background-color: #dcb244;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__caption.table__caption--tabs .table__cell-container .table__header {
+    cursor: pointer;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__caption .table__cell-container .table__header {
+    border: 0;
+    border-bottom-color: currentcolor;
+    border-bottom-style: none;
+    border-bottom-width: 0px;
+}
+
+.nutrition .table__row [class^="col-"] .table__caption .table__cell-container .table__header {
+    height: auto;
+    border-width: 1px 0 0 0;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    max-width: 100%;
+}
+
+.col-xs {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    max-width: 100%;
+    border-top: 1px solid $border-line-lighter;
+}
+
+.icon-caption {
+    width: 5%;
+}
+
+.data-nutritions {
+    width: calc(95% / 7);
+    height: 100%;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__caption .table__cell-container .table__header--active svg {
+    fill: #fff;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column {
+    position: relative;
+    color: #424242;
+    font-size: 14px;
+    height: 100%;
+    min-height: 192px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap {
+    padding: 5px 10px;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item {
+    cursor: pointer;
+    margin: 10px 0;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    display: flex;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item div {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item div::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+    display: inline-block;
+    background-color: #42bd41;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item .table__nutrition-item-label {
+    font-weight: 500;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item div span {
+    margin-right: 5px;
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item div span::before {
+    content: attr(data-desktop);
+}
+
+.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item .table__nutrition-item-amount {
+    color: #4a4a4a;
+    margin-left: auto;
+    -webkit-flex-shrink: 0;
+    -ms-flex-shrink: 0;
+    flex-shrink: 0;
+}
+
+input.calendar_scale {
+    width: 100%;
+    height: 2.5em;
+    font-size: 20px;
+    font-family: 'Gilroy-Medium' !important;
+    color: #BDBDBD;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: 1px solid #7a7a7a;
+    margin-bottom: 1em;
+}
+
+.scale-calender {
+    position: relative;
+}
+
+.scale-calender .form__group-label {
+    position: absolute;
+    right: 45px;
+    top: 15px;
+    font-family: 'Gilroy-Medium' !important;
+    color: #BDBDBD;
+}
+
+.free.plan.planes-sidebar:nth-child(n+3) {
+    cursor: default;
+    pointer-events: none;
+    filter: blur(4px);
+    -moz-filter: blur(4px);
+    -webkit-filter: blur(4px);
+}
+
+.planner-calendario .overflow-left.special-overflow {
+    position: relative;
+}
+
+.planner-calendario .receta-upgrade-membresia-btn {
+    position: absolute;
+    top: 128px;
+}
+
+.planes-btn-options .disabled:hover {
+    border-color: #999696;
+    color: #999696;
+}
+
+.button-options.planes-btn-options .disabled:hover i {
+    color: #d3d3d3 !important;
+}

@@ -1,0 +1,11 @@
+.icon-svg{
+	svg{
+	    width: 100%;
+	    -webkit-transition: ease .5s;
+	    transition: ease .5s;
+	    fill: #e7e7e7;
+	    &:hover{
+	    	fill: #DCB244;
+	    }
+	}
+}

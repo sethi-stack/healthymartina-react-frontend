@@ -1,0 +1,57 @@
+.sitem-search {
+    position: relative;
+}
+.sitem-search-box {
+    position: relative;
+}
+.sitem-search-box > .fa-search {
+    position: absolute;
+	top: 16px;
+    left: 10px;
+    font-size: 14px;
+    color: #b6b6b6;
+}
+input.sitem-search-input {
+    width: 100%;
+    line-height: 22px;
+    padding: 11px 10px 11px 30px;
+    border: 1px solid #dcb244;
+    border-radius: 7px;
+    font-size: 14px;
+    font-family: 'Gilroy-Medium';
+    color: #8E8E8E;
+}
+.sitems-list {
+	max-height: 250px;
+    overflow-y: scroll;
+    border: 1px solid #d0d0d0;
+}
+.sitem-info {
+    border-bottom: 1px solid #d0d0d0;
+    cursor: pointer;
+}
+.sitem-img {
+    width: 30px;
+    margin: 10px;
+    text-align: center;
+}
+.sitem-img img {
+    max-width: 100%;
+    height: auto;
+}
+.sitem-txt {
+    margin: 10px 0;
+}
+.sitem-inf {
+    font-size: 13px;
+    margin: 5px 0 0;
+}
+.afterSelReceta {
+    display: none;
+}
+.select2-container--default .select2-results > .select2-results__options{
+	max-height: calc(100vh - 200px);
+}
+#select2-coverRecipe-results{
+    max-height: calc(50vh - 90px);
+}

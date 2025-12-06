@@ -1,3 +1,5 @@
+@import '@/assets/scss/init';
+
 /* Public Header Styles */
 
 .public-header {
@@ -45,11 +47,11 @@
 
 .public-header__nav a:hover,
 .public-header__link:hover {
-	color: #dcb244;
+	color: $individual;
 }
 
 .public-header__link--register {
-	background: #dcb244;
+	background: $individual;
 	color: #fff !important;
 	padding: 0.5rem 1rem;
 	border-radius: 4px;
@@ -57,7 +59,7 @@
 }
 
 .public-header__link--register:hover {
-	background: #c9a03a;
+	background: darken($individual, 10%);
 	color: #fff !important;
 }
 
@@ -148,7 +150,7 @@
 }
 
 .public-header__collapse .public-header__link--register {
-	background: #dcb244;
+	background: $individual;
 	color: #fff !important;
 	margin: 0 2rem;
 	border-radius: 4px;

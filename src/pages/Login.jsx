@@ -42,8 +42,8 @@ export function Login() {
 		setRegisterError(null);
 		try {
 			await registerMutation.mutateAsync({
-				name: registerData.name,
-				last_name: registerData.lastName,
+				name: registerData.nombre,
+				last_name: registerData.apellidos,
 				email: registerData.email,
 				password: registerData.password,
 				password_confirmation: registerData.passwordConfirmation,

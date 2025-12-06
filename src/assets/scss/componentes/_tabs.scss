@@ -1,0 +1,69 @@
+.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	border-bottom: 1px solid $gris-oscuro;
+	a {
+		width: 25%;
+		text-align: center;
+		text-decoration: none;
+		text-transform: uppercase;
+		padding: 10px 0;
+		color: #BABABA;
+		font-family: 'Gilroy-Medium';
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		svg {
+			height: 1em;
+			padding-right: 10px;
+			.cls-1 {
+				fill: #BABABA;	
+			}
+		}
+		p {
+			margin: 0;
+		}
+	}
+	.active {
+		background: $individual;
+		color: #fff;
+		svg {
+			.cls-1 {
+				fill: #fff;
+			}
+		}
+	}
+}
+.tabs.typ2 {
+    width: 100%;
+    justify-content: unset;
+	background: #f6f6f6;
+	border: 0;
+    margin: 20px 0 0;
+	a {
+		width: auto;
+		text-transform: capitalize;
+		font-weight: 400;
+		padding: 5px 15px;
+		p {
+			margin: 0;
+			font-family: "Gilroy" !important;
+			color: #999;
+		}
+	}
+	a.active {
+		background: none;
+		p {
+			color: $individual;
+		}
+	}
+}
+.tab-pane {
+    display: none;
+}
+.tab-pane.active {
+	display: block;
+}

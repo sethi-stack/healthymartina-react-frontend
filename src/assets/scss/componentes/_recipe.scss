@@ -1,0 +1,1014 @@
+.recipe {
+	background-color: #f9f9f9;
+	.teGusto {
+		background: #f9f9f9;
+		text-align: center;
+		padding-top: 15px;
+		padding-bottom: 20px;
+		h3 {
+			margin-bottom: 5px;
+		}
+		a {
+			font-size: 1.75em;
+			letter-spacing: 0.3em;
+			color: initial;
+			// color:$gris-oscuro;
+			color: #edd8a1;
+			transition: all 0.4s;
+			&:hover {
+				color: $individual;
+			}
+		}
+	}
+	.comments-container {
+		max-width: 1280px;
+		width: 90%;
+		margin: 0 auto;
+		display: block;
+		background: #fff;
+		text-align: center;
+		border: 1px solid $border-line-lighter;
+		border-bottom: 0px;
+		.top {
+			border-bottom: 1px solid $border-line-lighter;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: center;
+			padding: 12px 30px;
+			h3 {
+				text-transform: uppercase;
+				color: $individual;
+				margin: 0;
+				font-weight: 300;
+			}
+			.right {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+				font-size: 0.9em;
+				p {
+					margin: 0;
+					margin-right: 15px;
+				}
+				a {
+					color: initial;
+					// color:$gris-oscuro;
+					color: #fff;
+					background-color: $individual;
+					border: 1px solid $individual;
+					transition: all 0.4s;
+					padding: 5px 10px;
+					text-transform: uppercase;
+					text-decoration: none;
+					border-radius: 5px;
+					&:hover {
+						color: $individual;
+						background-color: transparent;
+					}
+				}
+			}
+		}
+		.comments {
+			display: block;
+			text-align: left;
+			.comment:first-of-type{
+				border-top:0px !important;
+			}
+			.comment {
+				border-top: 1px solid #7a7a7a;
+				padding: 15px 30px;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				align-items: flex-start;
+				.comment-date {
+					color: #d2d2d2;
+					font-family: "Gilroy-Medium";
+					margin-right: 10px;
+					p {
+						margin: 0;
+						text-align: center;
+						font-size: 2em;
+					}
+					span {
+						text-align: center;
+						display: inline-block;
+						width: 100%;
+					}
+				}
+				.comment-content {
+					flex: 1;
+					padding: 0 15px;
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: flex-start;
+					align-items: flex-start;
+					.comment-img {
+						height: 70px;
+						width: 70px;
+						border-radius: 10px;
+						background-size: cover;
+						background-position: center;
+						margin-right: 15px;
+					}
+					h3 {
+						margin: 0;
+						span {
+							color: #d2d2d2;
+							font-size: 0.9em;
+						}
+					}
+					p {
+						margin: 10px 0;
+					}
+				}
+				.comment-menu {
+					align-self: center;
+					position: relative;
+					button {
+						border: 1px solid #7a7a7a;
+						padding: 5px;
+						background-color: transparent;
+						border-radius: 7px;
+						span {
+							display: block;
+							height: 2px;
+							width: 20px;
+							background-color: #7a7a7a;
+							margin: 3px 0;
+						}
+					}
+					.comment-nav {
+						background: white;
+						z-index: 100;
+						position: absolute;
+						top: calc(100% + 5px);
+						right: 0;
+						display: none;
+						border: 1px solid #7a7a7a;
+						background-color: #fff;
+						border-radius: 7px;
+						a {
+							font-size: 0.8em;
+							text-decoration: none;
+							color: #7a7a7a;
+							display: flex;
+							flex-wrap: wrap;
+							justify-content: center;
+							align-items: center;
+							width: 190px;
+							padding: 11px 5px;
+							i {
+								margin-right: 5px;
+							}
+						}
+					}
+				}
+				.active {
+					button {
+						border-color: $individual;
+						span {
+							background-color: $individual;
+						}
+					}
+					.comment-nav {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+	#menu-vue {
+		.general-container {
+			background-color: #fff;
+			.options {
+				.porcion-cantidad {
+					display: inline;
+				}
+				p {
+					a {
+						color: $profesional !important;
+						transition: all 0.4s;
+						text-decoration: none;
+						&:hover {
+							color: $individual !important;
+						}
+					}
+				}
+				span {
+					font-weight: bold;
+					padding-left: 5px;
+				}
+				.smallFraction {
+					font-size: 0.85em;
+				}
+			}
+			.tiempo-receta {
+				font-size: 0.85em;
+				padding-left: 10px;
+				color: #dcb244;
+			}
+			.imagen-receta {
+				height: 450px;
+				width: 100%;
+				overflow: hidden;
+				background-position: center;
+				background-size: cover;
+			}
+			.botones {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				align-items: center;
+				border-bottom: 1px solid $border-line-lighter;
+				.left {
+					display: flex;
+					flex-wrap: wrap;
+					margin: 20px 0 20px 15px;
+					button {
+						background: #fff;
+						border: 1px solid #7a7a7a;
+						border-radius: 5px;
+						margin: 5px 20px 5px 0;
+						position: relative;
+						svg {
+							height: 30px;
+							width: 50px;
+							fill: $gris-oscuro;
+							padding: 5px 0 0 0;
+							g g path {
+								fill: inherit;
+							}
+							&:hover {
+								g g path {
+									fill: $individual;
+								}
+							}
+						}
+						.fix {
+							padding: 7px 0 5px 0;
+						}
+						p {
+							visibility: hidden;
+							position: absolute;
+							top: -30px;
+							margin: 0;
+							height: 1.5em;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							background: $individual;
+							border-radius: 4px;
+							font-family: "Gilroy";
+							color: #fff;
+							padding: 0 5px;
+						}
+						i {
+							display: flex;
+							flex-wrap: wrap;
+							justify-content: center;
+							align-items: center;
+							font-size: 20px;
+							color: #7a7a7a;
+							height: 30px;
+							width: 50px;
+						}
+						&:hover {
+							border-color: $individual;
+							i {
+								color: $individual;
+							}
+							p {
+								visibility: visible;
+								white-space: nowrap;
+							}
+						}
+						&:nth-child(1) {
+							p {
+								left: -10px;
+							}
+						}
+						&:nth-child(2) {
+							p {
+								left: -10px;
+							}
+						}
+						&:nth-child(3) {
+							p {
+								left: -40px;
+							}
+						}
+					}
+				}
+			}
+			.container-receta {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				flex-flow: row;
+				.info-left {
+					width: 50%;
+					min-width: 300px;
+					border-right: 1px solid $border-line-lighter;
+					.indicadores {
+						display: flex;
+						flex-wrap: wrap;
+						justify-content: space-around;
+						border-bottom: 1px solid $border-line-lighter;
+						background: #f9f9f9;
+						a {
+							color: inherit;
+							text-transform: uppercase;
+							letter-spacing: 1px;
+							padding: 15px 0;
+							text-decoration: none;
+							font-weight: 600;
+							font-family: "Gilroy-SemiBold" !important;
+						}
+						.active {
+							color: $individual;
+							border-bottom: 4px solid $individual;
+						}
+					}
+					.options {
+						width: 100%;
+						min-height: 40em;
+						padding-bottom: 70px;
+						.slide {
+							padding: 0 20px;
+							width: 100%;
+							display: none;
+							position: relative;
+							.rango {
+								width: 100%;
+								margin: 10px 0;
+								padding-bottom: 1em;
+								border-bottom: 1px solid $border-line-lighter;
+								// excess height to improve interactive area / accessibility
+								$height: 40px;
+								$thumb-height: 18px;
+								$track-height: 10px;
+								// colours
+								$upper-color: #eed9a6;
+								$lower-color: #dcb244;
+								$thumb-color: #dcb244;
+								$thumb-hover-color: #dcb244;
+								$upper-background: linear-gradient(to bottom, $upper-color, $upper-color) 100% 50% /
+									100% $track-height no-repeat transparent;
+								$lower-background: linear-gradient(to bottom, $lower-color, $lower-color) 100% 50% /
+									100% $track-height no-repeat transparent;
+								// Webkit cannot style progress so we fake it with a long shadow
+								// on the thumb element
+								@function webkit-slider-thumb-shadow($i: 1) {
+									$val: #{$i}px 0 0 -#{($thumb-height - $track-height) / 2} #{$upper-color};
+									@if $i == 1 {
+										@for $k from 2 through 1000 {
+											$val: #{$val}, webkit-slider-thumb-shadow($k);
+										}
+									}
+									@return $val;
+								}
+								.e-range {
+									display: block;
+									appearance: none;
+									width: 100%;
+									margin: 0;
+									height: $height;
+									border-radius: 100%;
+									overflow: hidden;
+									cursor: pointer;
+									&:focus {
+										outline: none;
+									}
+								}
+								// Webkit
+								.e-range::-webkit-slider-runnable-track {
+									width: 100%;
+									height: $height;
+									background: $lower-background;
+									border-radius: 100%;
+								}
+								.e-range::-webkit-slider-thumb {
+									position: relative;
+									appearance: none;
+									height: $thumb-height;
+									width: $thumb-height;
+									background: $thumb-color;
+									border-radius: 100%;
+									border: 0;
+									top: 50%;
+									margin-top: (-$thumb-height/2);
+									box-shadow: webkit-slider-thumb-shadow();
+									transition: background-color 150ms;
+								}
+								// Firefox
+								.e-range::-moz-range-track,
+								.e-range::-moz-range-progress {
+									width: 100%;
+									height: $height;
+									background: $upper-background;
+								}
+								.e-range::-moz-range-progress {
+									background: $lower-background;
+								}
+								.e-range::-moz-range-thumb {
+									appearance: none;
+									margin: 0;
+									height: $thumb-height;
+									width: $thumb-height;
+									background: $thumb-color;
+									border-radius: 100%;
+									border: 0;
+									transition: background-color 150ms;
+								}
+								// Internet Exploder
+								.e-range::-ms-track {
+									width: 100%;
+									height: $height;
+									border: 0;
+									// color needed to hide track marks
+									color: transparent;
+									background: transparent;
+								}
+								.e-range::-ms-fill-lower {
+									background: $lower-background;
+								}
+								.e-range::-ms-fill-upper {
+									background: $upper-background;
+								}
+								.e-range::-ms-thumb {
+									appearance: none;
+									height: $thumb-height;
+									width: $thumb-height;
+									background: $thumb-color;
+									border-radius: 100%;
+									border: 0;
+									transition: background-color 150ms;
+									// IE Edge thinks it can support -webkit prefixes
+									top: 0;
+									margin: 0;
+									box-shadow: none;
+								}
+								.e-range:hover,
+								.e-range:focus {
+									&::-webkit-slider-thumb {
+										background-color: $thumb-hover-color;
+									}
+									&::-moz-range-thumb {
+										background-color: $thumb-hover-color;
+									}
+									&::-ms-thumb {
+										background-color: $thumb-hover-color;
+									}
+								}
+							}
+							h4 {
+								border-bottom: 1px solid $border-line-lighter;
+								margin: 0;
+								padding: 15px 0;
+								margin-bottom: 5px;
+							}
+							.datos {
+								.header-ingredientes {
+									display: flex;
+									flex-wrap: wrap;
+									justify-content: flex-end;
+									align-items: center;
+									margin-bottom: 5px;
+									font-size: 0.8em;
+									a {
+										text-decoration: none;
+										color: #7f7f7f;
+										display: flex;
+										#equivalences {
+											position: absolute;
+											right: 26%;
+											width: fit-content;
+											background: #fff;
+											border: 1px solid #7a7a7a;
+											border-radius: 15px;
+											color: gray;
+											padding: 10px;
+											visibility: hidden;
+											font-family: "Gotham-light";
+											top: 13.5%;
+											font-size: 15px;
+											text-align: justify;
+											p {
+												display: flex;
+											}
+										}
+										i {
+											// color: $individual;
+											// @include transition(0.4s);
+											margin-right: 10px;
+											color: #eed9a6;
+											&:hover {
+												color: $individual;
+											}
+										}
+										&:hover {
+											#equivalences {
+												visibility: visible;
+											}
+										}
+									}
+								}
+								.ingrediente {
+									display: flex;
+									justify-content: space-between;
+									padding: 5px 0;
+									font-size: 15px;
+									font-weight: 900 !important;
+									// letter-spacing: 1px;
+									.nombre {
+										width: 80%;
+									}
+									.cantidad {
+										font-family: Gotham-Book;
+										font-weight: bold;
+										width: 20%;
+										text-align: right;
+									}
+								}
+							}
+							.list {
+								.row {
+									display: flex;
+									justify-content: space-between;
+									padding: 2px 0;
+									font-size: 15px;
+									width: 100%;
+									.name {
+										font-family: Gotham-Book;
+										font-weight: bold;
+										width: 25%;
+									}
+									.barra {
+										width: 54%;
+										display: flex;
+										flex-wrap: wrap;
+										justify-content: space-between;
+										align-items: center;
+										.cantidad {
+											width: 100px;
+											////////
+											text-align: right;
+										}
+										.bar {
+											width: 6vw;
+											height: 6px;
+											background: #D3D3D3;
+											border-radius: 15px;
+											position: relative;
+											overflow: hidden;
+											.bar-porcent {
+												position: absolute;
+												height: 100%;
+												border-radius: 15px;
+											}
+										}
+										.porcent {
+											width: 40px;
+											text-align: left;
+										}
+									}
+								}
+							}
+							.valor-diario {
+								position: absolute;
+								top: 100%;
+								width: 100%;
+								height: 70px;
+								display: flex;
+								flex-wrap: wrap;
+								justify-content: center;
+								align-items: center;
+							}
+						}
+						.active {
+							display: block;
+							height: 100%;
+							overflow: auto;
+						}
+					}
+				}
+				.info-right {
+					width: 60%;
+					.indicadores {
+						background: #f9f9f9;
+						display: flex;
+						flex-wrap: wrap;
+						justify-content: flex-start;
+						border-bottom: 1px solid $border-line-lighter;
+						padding-left: 20px;
+						a {
+							color: inherit;
+							text-transform: uppercase;
+							letter-spacing: 1px;
+							padding: 15px 0;
+							text-decoration: none;
+							font-weight: 600;
+							margin: 0 10px;
+							font-family: "Gilroy-SemiBold" !important;
+						}
+						.active {
+							color: $individual;
+							border-bottom: 4px solid $individual;
+						}
+					}
+					.options {
+						background-color: #fff;
+						.slide {
+							display: none;
+							margin: 20px 0;
+							.instruccion {
+								display: flex;
+								flex-wrap: wrap;
+								justify-content: flex-start;
+								align-items: flex-start;
+								width: 100%;
+								flex-flow: row;
+								flex-direction: row;
+								margin-bottom: 25px;
+								padding-right: 25px;
+								font-size: 15px;
+								font-weight: 900 !important;
+								// letter-spacing: 1px;
+								// p {
+								// 	text-align: justify;
+								// }
+								span {
+									margin: 0 15px;
+									height: 32px;
+									width: 32px;
+									background-color: $individual;
+									border-radius: 50%;
+									display: flex;
+									flex-wrap: wrap;
+									justify-content: center;
+									align-items: center;
+									font-size: 25px;
+									font-weight: bold;
+									color: #fff;
+									margin-right: 35px;
+									padding: 0;
+								}
+							}
+							.tip {
+								p {
+									margin: 0 15px 15px;
+									font-size: 15px;
+									// letter-spacing: 1px;
+									text-align: justify;
+									b {
+										font-family: Gotham-Book;
+										letter-spacing: 1px;
+									}
+								}
+								text{
+									font-weight: 900 !important;
+								}
+							}
+						}
+						.active {
+							display: block;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.add-meal-form .form-group {
+    margin: 15px 0;
+}
+
+.add-meal-form .type-calender label.radiobox-label {
+    width: auto !important;
+    float: left;
+    border-right: none !important;
+}
+
+.add-meal-form .type-calender {
+    display: inline-block;
+    width: 100%;
+    background: #f6f6f6;
+    border: none;
+    border-radius: 0;
+}
+
+.type-calender label.radiobox-label input:checked~.radiolabel {
+    color: #dcb244 !important;
+    background-color: transparent !important;
+}
+
+.type-calender label.radiobox-label .radiolabel {
+    margin: 0;
+    font-family: "Gilroy" !important;
+    color: #999 !important;
+    padding: 5px 15px !important;
+    font-size: 17px !important;
+}
+
+.add-meal-form .radio-box-sec label.radiobox-label {
+    width: 50%;
+}
+
+.add-meal-form .radio-box-sec label.radiobox-label .radiolabel {
+    width: 100%;
+    text-align: center;
+}
+
+.add-meal-form .radio-box-sec label.radiobox-label .radiolabel {
+    text-transform: capitalize;
+    font-weight: 400;
+    padding: 10px 5px;
+    font-size: 14px;
+}
+
+.dropbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover,
+.dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+#myInputDays,
+#myInputMeals {
+    box-sizing: border-box;
+    background-position: 14px 12px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 14px 20px 12px 45px;
+    border: none;
+    border-bottom: 1px solid #dcb244;
+    margin: 0;
+}
+
+#myInputDays:focus,
+#myInputMeals:focus {
+    outline: 3px solid #ddd;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #dcb244;
+    z-index: 1;
+    border-radius: 10px;
+    margin: 0 0 15px;
+    position: relative;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 15px;
+}
+
+.dropdown a:hover {
+    background-color: #ddd;
+}
+
+.dropdown-content>.fa-search {
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    font-size: 14px;
+    color: #b6b6b6;
+}
+
+.checkbox-label.recpdaynum-disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.afterSelReceta label.checkbox-label {
+    padding: 0 0 0 20px;
+    width: auto;
+    display: inline-block;
+}
+
+.afterSelReceta label.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.afterSelReceta .recpday-tabs {
+    width: 100%;
+    display: inline-block;
+}
+
+.add-meal-btn-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.dropdown-content a.name-value-days,
+.dropdown-content a.name-value-meals {
+    background: #fff;
+	border-bottom: 1px solid #7a7a7a;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.dropdown-content a.name-value-days:hover,
+.dropdown-content a.name-value-meals:hover {
+    background: #FCF7EC;
+}
+
+.recipe #menu-vue .general-container .container-receta .info-left .options {
+    background: #fff;
+}
+
+.button-hamburger .active {
+    color: #fff;
+}
+
+.jscroll-loading {
+    text-align: center;
+    width: 100%;
+}
+
+// #application #menu-vue .general-container .sub-container .col13 a {
+// 	display: flex;
+// 	width: 100%;
+// }
+// .sub-container .col13 .imagen{
+// 	width: 100%;
+// }
+// .sub-container .col13 .imagen img {
+//     opacity: 1 !important;
+//     height: 300px !important;
+//     object-fit: cover;
+//     object-position: center;
+// 	width: 100% !important;
+// 	max-width: min-content !important;
+// }
+#application #menu-vue .general-container .sub-container .col13 .imagen img {
+    opacity: 1 !important;
+    object-fit: cover;
+    min-width: 100%;
+}
+
+.recetario-page .button-options .btn-filtro.active:hover {
+    background-color: #fff !important;
+    //border-color: #fff !important;
+}
+
+.recetario-page .button-options .btn-filtro.active:hover {
+    fill: #fff !important;
+}
+
+.col13.libre-usuarios .receta-membresia-inner {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.libre-usuarios.col13.receta-show .receta-membresia-inner {
+    pointer-events: auto;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.receta-show .receta-upgrade-membresia-btn {
+    display: none;
+}
+
+.receta-upgrade-membresia-btn {
+    position: absolute;
+    right: 0;
+    background: #dcb244;
+    border-radius: 0 0 0 60px;
+    width: 60px;
+    height: 50px;
+    text-align: center;
+    padding: 6px 0 0 10px;
+    z-index: 1;
+    box-shadow: 0px 0px 10px #fff;
+}
+
+.receta-upgrade-membresia-btn img {
+    width: 30px;
+}
+
+.porcion-cantidad.porcionNumero {
+    font-weight: bold;
+}
+
+.porcionRango .receta-porcion.porcionTexto {
+    display: none;
+}
+
+.tabcontent {
+    display: none;
+}
+
+.tablinks.current {
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    background-color: #ffffff;
+    border-bottom: 0;
+}
+
+.tablinks {
+    cursor: pointer;
+    position: relative;
+    margin: 0;
+    border-color: #dae1e9;
+    border-bottom-color: rgb(218, 225, 233);
+    border-style: solid;
+    border-bottom-style: solid;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -webkit-justify-content: center !important;
+    justify-content: center !important;
+    -webkit-align-items: center !important;
+    align-items: center !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-decoration: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: flex;
+}
+
+.tablinks::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px solid transparent;
+}
+
+.snippet-panel-tab-inner {
+    padding: 0;
+    border-width: 0;
+    overflow: visible;
+    background-color: #fafafa;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    border-color: #dae1e9;
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    -webkit-flex: 0 0 54px;
+    -ms-flex: 0 0 54px;
+    flex: 0 0 54px;
+    display: flex;
+    margin: 0 0 10px;
+}
+
+#snippet-tab {
+    display: block;
+}
+
+.tablinks {
+    border: 1px solid #dae1e9;
+    padding: 15px 0;
+    color: #BDBDBD;
+    font-weight: 600;
+}
+
+.tablinks.current {
+    color: #dcb244;
+}
+
+.tablinks.current::before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: #dcb244;
+}
+.receta-field input.recipient_email_ad.recetaname {
+    padding: 15px;
+}

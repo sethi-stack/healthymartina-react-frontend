@@ -1,0 +1,266 @@
+.sub-container-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    border-top: 1px solid $border-line-lighter;
+    margin-top: 0;
+    background: #fff;
+
+    .col13 {
+        width: calc(100%/3);
+        position: relative;
+        border-bottom: 1px solid $border-line-lighter;
+        padding-bottom: 50px;
+
+        &:nth-child(3n + 2) {
+            border-left: 1px solid $border-line-lighter;
+            border-right: 1px solid $border-line-lighter;
+        }
+
+        .title {
+            width: 100%;
+            padding: 20px 15px;
+            border-bottom: 1px solid $border-line-lighter;
+            background-color: #f6f6f6;
+
+            p {
+                width: 100%;
+                font-family: 'Gilroy-Medium';
+                margin: 0;
+            }
+        }
+
+        .list {
+            padding: 0 15px;
+            padding-top: 15px;
+            margin-bottom: 5em;
+
+            .ingredient {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                padding: 3px 20px 2px 15px;
+                position: relative;
+
+                input {
+                    width: 0;
+                    position: absolute;
+                    opacity: 0;
+                    height: 0;
+                }
+
+                .button-hamburger {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+
+                    button {
+                        padding: 2px 3px;
+
+                        .fas.fa-ellipsis-v {
+                            font-size: 12px;
+                        }
+                    }
+                }
+
+                .smaller-candid {
+                    font-size: 0.85em;
+                }
+
+                span {
+                    width: calc(100% - 100px);
+                    font-family: 'Gilroy-Medium';
+                    display: inline-block;
+                    padding-left: 5px;
+                    font-size: 15px;
+                }
+
+                h3 {
+                    max-width: 100%;
+                    width: 100px;
+                    margin: 0;
+                    padding: 0 0 0 10px;
+                    font-family: 'Gilroy-Medium' !important;
+                    font-size: 15px;
+
+                    span {
+                        width: auto;
+                        padding: 0;
+                    }
+                }
+
+                p {
+                    margin: 0;
+                    align-self: flex-end;
+                    font-family: 'Gilroy-Medium';
+                }
+
+                .checkbox {
+                    position: absolute;
+                    top: 2px;
+                    left: 0;
+                    height: 16px;
+                    width: 16px;
+                    border-radius: 3px;
+                    border: 1px solid #dcb244;
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -ms-flex-wrap: wrap;
+                    flex-wrap: wrap;
+                    -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                    justify-content: center;
+                    -webkit-box-align: center;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    padding: 0;
+                    cursor: pointer;
+
+                    &:after {
+                        font-family: "Font Awesome 5 Free";
+                        content: "\F00C";
+                        font-weight: 900;
+                        color: #fff;
+                        position: absolute;
+                        display: block;
+                        font-size: 11px;
+                    }
+                }
+            }
+
+            label input:checked~.checkbox {
+                &:after {
+                    color: #fff;
+                    background-color: #dcb244;
+                    height: 100%;
+                    width: 100%;
+                    text-align: center;
+                }
+
+            }
+        }
+
+        .add {
+            width: 100%;
+            padding: 20px 0;
+            font-family: 'Gilroy-Medium';
+            color: rgba(0, 0, 0, .5);
+            background: #fff;
+            border: none;
+            border-top: 1px solid $border-line-lighter;
+            font-size: 1em;
+            margin: 0px;
+            position: absolute;
+            bottom: 0;
+            letter-spacing: 1px;
+            transition: ease .5s;
+
+            &:hover {
+                color: $individual;
+            }
+
+            i {
+                padding-right: 15px;
+            }
+        }
+    }
+}
+
+.lista-json .sub-container-list .col13 .list .ingredient .sub-menu span {
+    width: auto;
+}
+
+.lista-json .indicador {
+	border: 1px solid $border-line-lighter;
+	border-bottom: none !important ;
+	background: #fff;
+}
+
+.lista-json .indicador .right p {
+    display: inline-block;
+}
+
+.lista-json .indicador .right p img {
+    margin-bottom: -1px;
+}
+
+.button-options button:hover,
+.button-options a:hover i {
+    color: #dcb244 !important;
+}
+
+.lista-json .sub-container-list .col13 .list .ingredient .cantidad {
+    align-self: auto !important;
+    margin: -3px 0 0 !important;
+    width: 100px;
+}
+
+.lista-json .sub-container-list .col13 .list .ingredient .cantidad span {
+    width: auto;
+    margin: 0 5px 0 2px;
+    display: inline-block;
+}
+
+.lista-json .smallFraction {
+    font-size: 12px !important;
+    padding: 0 !important;
+}
+
+.background-light-gray {
+    background-color: #f6f6f6;
+    height: 50px;
+    border: 1px solid $border-line-lighter;
+} 
+.lista-calendrio .loader-lista-ingrediente img{
+	width: 60px;
+}
+
+.loader-lista-ingrediente {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    text-align: center;
+}
+
+.general-container.lista-json {
+    border: none !important;
+}
+
+.sub-container-list .col13:nth-child(3n) {
+    border-right: 1px solid $border-line-lighter !important;
+}
+
+.sub-container-list .col13:nth-child(3n+1) {
+    border-left: 1px solid $border-line-lighter !important;
+}
+
+.sub-container-empty {
+    height: 20px;
+    border-left: 1px solid $border-line-lighter;
+    border-right: 1px solid $border-line-lighter;
+}
+label.ingredient.ingrediente {
+    cursor: pointer;
+}
+input.lista_recipient_email_ad.recetaname {
+    padding: 15px;
+}
+.ingrediente_data_inner {
+  display: inline-block;
+  width: 100%;
+}
+.ingrediente_data_inner label {
+  width: 30% !important;
+  float: left;
+}
+.ingrediente_data_inner .ingrediente_title {
+  float: left;
+  width: 70%;
+  color: #606060;
+  font-size: 15px;
+  font-family: 'Gilroy-Medium';
+  cursor: pointer;
+}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { colors } from '../theme';
 import { PrimaryButton } from '../theme';
 import { imagePaths } from '../utils/imagePaths';
-import './AuthPage.css';
+import './AuthPage.scss';
 
 /**
  * Combined Login/Register page component with tab switching.

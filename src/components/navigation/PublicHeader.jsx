@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { imagePaths } from '../../utils/imagePaths';
-import './PublicHeader.css';
+import './PublicHeader.scss';
 
 /**
  * Public header component for logged-out users.

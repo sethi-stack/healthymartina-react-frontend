@@ -1,8 +1,12 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AuthenticatedNav } from '../components/navigation';
+import {
+	AuthenticatedHeader,
+	AuthenticatedNav,
+} from '../components/navigation';
 import { Footer } from '../components/Footer';
-import './AuthenticatedLayout.css';
+import './AuthenticatedLayout.scss';
+import { useAuthStore } from '../stores/authStore';
 
 /**
  * Authenticated layout wrapper for logged-in pages.
@@ -10,17 +14,36 @@ import './AuthenticatedLayout.css';
  * Layout autenticado para páginas de usuarios logueados.
  * Incluye navegación y pie de página.
  */
-export function AuthenticatedLayout({
-	children,
-	user,
-	permissions,
-	searchData,
-}) {
+export function AuthenticatedLayout({ children, permissions, searchData }) {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const user = useAuthStore((state) => state.user);
+	const clearAuth = useAuthStore((state) => state.clearAuth);
 
 	const handleNavigate = (path) => {
+		if (!path) return;
 		navigate(path);
+	};
+
+	const handleLogout = () => {
+		clearAuth?.();
+		localStorage.removeItem('auth_token');
+		localStorage.removeItem('auth_user');
+		localStorage.removeItem('firstVisit');
+		navigate('/login');
+	};
+
+	const handleHelpClick = () => {
+		// hooking Help beacon placeholder
+		if (typeof window !== 'undefined') {
+			console.info('Help widget triggered');
+		}
+	};
+
+	const handleWizardClick = () => {
+		if (typeof window !== 'undefined') {
+			console.info('Wizard assistant triggered');
+		}
 	};
 
 	const handleSearch = (selectedOptions) => {
@@ -28,7 +51,6 @@ export function AuthenticatedLayout({
 		console.log('Search selected:', selectedOptions);
 	};
 
-	// Default permissions if not provided
 	const defaultPermissions = permissions || {
 		recetario_view: true,
 		calendario_view: true,
@@ -36,7 +58,6 @@ export function AuthenticatedLayout({
 		planes_view: true,
 	};
 
-	// Default search data if not provided
 	const defaultSearchData = searchData || {
 		recipes: [],
 		ingredients: [],
@@ -45,6 +66,13 @@ export function AuthenticatedLayout({
 
 	return (
 		<div className='authenticated-layout'>
+			<AuthenticatedHeader
+				user={user}
+				onNavigate={handleNavigate}
+				onHelpClick={handleHelpClick}
+				onWizardClick={handleWizardClick}
+				onLogout={handleLogout}
+			/>
 			<AuthenticatedNav
 				currentPath={location.pathname}
 				permissions={defaultPermissions}

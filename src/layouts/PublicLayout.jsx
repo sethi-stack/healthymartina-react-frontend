@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PublicHeader } from '../components/navigation';
 import { Footer } from '../components/Footer';
-import './PublicLayout.css';
+import './PublicLayout.scss';
 
 /**
  * Public layout wrapper for unauthenticated pages.

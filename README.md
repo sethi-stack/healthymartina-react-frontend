@@ -66,7 +66,9 @@ react-front-app/
 │   │   └── navigation/         # Navigation components
 │   │       ├── PublicHeader.jsx      # Public navigation (logged out)
 │   │       ├── PublicHeader.css
-│   │       ├── AuthenticatedNav.jsx  # Authenticated navigation
+│   │       ├── AuthenticatedHeader.jsx # Header + profile dropdown for logged-in users
+│   │       ├── AuthenticatedHeader.css
+│   │       ├── AuthenticatedNav.jsx  # Icon-based sub navigation
 │   │       ├── AuthenticatedNav.css
 │   │       └── index.js
 │   ├── pages/
@@ -108,8 +110,9 @@ react-front-app/
 ### ✅ Navigation System
 
 - **Public Header**: For logged-out users (Blog, Login, Register)
-- **Authenticated Navigation**: For logged-in users with permission-based menu items
-- **Mobile Support**: Responsive hamburger menu for mobile devices
+- **Authenticated Header**: Gold `header-app` replica with white logotype and profile dropdown that mirrors the Blade view
+- **Authenticated Navigation**: Icon-driven nav menu (Recetas, Calendario, Lista, Planes) based on `nav-sub-menu.blade.php`
+- **Mobile Support**: Responsive behavior and dropdown handling for narrow viewports
 
 ### ✅ Icon System
 
