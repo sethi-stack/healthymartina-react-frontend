@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePortionConverter } from '../../hooks/usePortionConverter';
 
 /**
@@ -6,26 +6,48 @@ import { usePortionConverter } from '../../hooks/usePortionConverter';
  * Displays ingredients list with portion slider for quantity conversion
  */
 export function RecipeIngredients({ ingredients, portions }) {
-	const [currentPortion, setCurrentPortion] = useState(portions?.cantidad || 1);
+	const basePortion = portions?.cantidad || 1;
+	const [currentPortion, setCurrentPortion] = useState(basePortion);
 
-	const { convertQuantity, formatPortion } = usePortionConverter({
+	const { convertQuantity, setPortion } = usePortionConverter({
 		unitMeasure: 'metric', // TODO: Get from user preferences
-		defaultPortion: portions?.cantidad || 1,
+		defaultPortion: basePortion,
 	});
+
+	// Sync hook's currentPortion with component state whenever it changes
+	useEffect(() => {
+		setPortion(currentPortion);
+	}, [currentPortion, setPortion]);
 
 	const handlePortionChange = (e) => {
 		const newPortion = parseInt(e.target.value);
 		setCurrentPortion(newPortion);
 	};
 
-	const basePortion = portions?.cantidad || 1;
+	// Format portion display - show whole numbers only (always integer)
+	const formatPortionDisplay = (portion) => {
+		return Math.round(portion).toString();
+	};
+
 	const minPortion = 1;
 	const maxPortion = 27;
+
+	// Helper to render ingredient name (handles HTML links)
+	const renderIngredientName = (ingrediente) => {
+		const name = ingrediente.ingrediente || '';
+		// Check if it contains HTML (link)
+		if (name.includes('<a') || name.includes('href=')) {
+			return <span dangerouslySetInnerHTML={{ __html: name }} />;
+		}
+		return name;
+	};
 
 	return (
 		<div className='slide active'>
 			<form className='rango porcionRango'>
-				<p className='porcion-cantidad porcionNumero'>{currentPortion}</p>
+				<p className='porcion-cantidad porcionNumero'>
+					{formatPortionDisplay(currentPortion)}
+				</p>
 				<span
 					className={`porcionTexto ${
 						portions?.tipo_medida_id === 1 ? 'receta-porcion' : ''
@@ -71,15 +93,20 @@ export function RecipeIngredients({ ingredients, portions }) {
 						unitPlural: ingrediente.medida_plural,
 					});
 
-					const displayQuantity =
+					// For converted quantities, use the text which includes both quantity and unit
+					// The convertPortionQuantity function returns {text, servingValue}
+					// where text already includes the unit (e.g., "2 tzs" or "1/2 cda")
+					// Note: text may contain HTML like "<span class='smallFraction'>2/3</span> tzs"
+					const displayText =
 						ingrediente.tipo_medida_id === 4
 							? ingrediente.medida
-							: converted?.text || ingrediente.cantidad;
+							: converted?.text ||
+							  `${ingrediente.cantidad} ${ingrediente.medida}`;
 
-					const displayUnit =
-						ingrediente.tipo_medida_id === 4
-							? ''
-							: converted?.unit || ingrediente.medida;
+					// Check if displayText contains HTML tags
+					const hasHTML =
+						displayText &&
+						(displayText.includes('<') || displayText.includes('</'));
 
 					return (
 						<div
@@ -91,7 +118,7 @@ export function RecipeIngredients({ ingredients, portions }) {
 								data-nombre_english={ingrediente.nombre_english}
 								data-action={ingrediente['sub-url'] || '#'}
 							>
-								{ingrediente.ingrediente}
+								{renderIngredientName(ingrediente)}
 							</p>
 							{ingrediente.nota && ingrediente.nota !== '' && (
 								<p className='notaTiempo'>{ingrediente.nota}</p>
@@ -106,13 +133,10 @@ export function RecipeIngredients({ ingredients, portions }) {
 								data-tipo_medida_id={ingrediente.tipo_medida_id}
 								data-porcion={basePortion}
 							>
-								{ingrediente.tipo_medida_id === 4 ? (
-									displayQuantity
+								{hasHTML ? (
+									<span dangerouslySetInnerHTML={{ __html: displayText }} />
 								) : (
-									<>
-										<span className='value'>{displayQuantity}</span>{' '}
-										{displayUnit}
-									</>
+									displayText
 								)}
 							</p>
 						</div>

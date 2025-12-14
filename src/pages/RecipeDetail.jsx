@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useParams, Navigate } from 'react-router-dom';
+import { useRecipe } from '../hooks/useRecipe';
 import { RecipeHeader } from '../components/recipes/RecipeHeader';
 import { RecipeImage } from '../components/recipes/RecipeImage';
 import { RecipeActions } from '../components/recipes/RecipeActions';
@@ -15,231 +17,129 @@ import './RecipeDetail.scss';
  * Displays full recipe information with ingredients, instructions, nutrition, etc.
  */
 export function RecipeDetail() {
-	// Hard-coded recipe data for initial design
-	const recipe = {
-		id: 1,
-		slug: 'pollo-al-horno',
-		titulo: 'Pollo al Horno con Hierbas',
-		tiempo: 45,
-		ingredientes_count: 8,
-		imagen_principal: 'recipes/pollo-al-horno.jpg',
-		imagen_secundaria: 'recipes/pollo-al-horno-hero.jpg',
-		porciones: {
-			cantidad: 4,
-			nombre: 'Porción',
-			nombre_plural: 'Porciones',
-			nombre_english: 'serving',
-			tipo_medida_id: 1,
-		},
-		ingredientes: [
-			{
-				ingrediente: 'Pollo entero',
-				nombre_english: 'whole chicken',
-				cantidad: 1,
-				medida: 'pieza',
-				medida_plural: 'piezas',
-				medida_english: 'piece',
-				tipo_medida_id: 4,
-				nota: '',
-				type: 'main',
-				ingred_uid: 'ing-1',
-			},
-			{
-				ingrediente: 'Aceite de oliva',
-				nombre_english: 'olive oil',
-				cantidad: 3,
-				medida: 'cda',
-				medida_plural: 'cdas',
-				medida_english: 'tablespoon',
-				tipo_medida_id: 1,
-				nota: '',
-				type: 'main',
-				ingred_uid: 'ing-2',
-			},
-			{
-				ingrediente: 'Ajo',
-				nombre_english: 'garlic',
-				cantidad: 4,
-				medida: 'dientes',
-				medida_plural: 'dientes',
-				medida_english: 'clove',
-				tipo_medida_id: 4,
-				nota: '',
-				type: 'main',
-				ingred_uid: 'ing-3',
-			},
-			{
-				ingrediente: 'Romero fresco',
-				nombre_english: 'fresh rosemary',
-				cantidad: 2,
-				medida: 'ramitas',
-				medida_plural: 'ramitas',
-				medida_english: 'sprig',
-				tipo_medida_id: 4,
-				nota: '',
-				type: 'main',
-				ingred_uid: 'ing-4',
-			},
-			{
-				ingrediente: 'Tomillo fresco',
-				nombre_english: 'fresh thyme',
-				cantidad: 3,
-				medida: 'ramitas',
-				medida_plural: 'ramitas',
-				medida_english: 'sprig',
-				tipo_medida_id: 4,
-				nota: '',
-				type: 'main',
-				ingred_uid: 'ing-5',
-			},
-			{
-				ingrediente: 'Sal',
-				nombre_english: 'salt',
-				cantidad: 1,
-				medida: 'cdta',
-				medida_plural: 'cdtas',
-				medida_english: 'teaspoon',
-				tipo_medida_id: 1,
-				nota: 'al gusto',
-				type: 'main',
-				ingred_uid: 'ing-6',
-			},
-			{
-				ingrediente: 'Pimienta negra',
-				nombre_english: 'black pepper',
-				cantidad: 0.5,
-				medida: 'cdta',
-				medida_plural: 'cdtas',
-				medida_english: 'teaspoon',
-				tipo_medida_id: 1,
-				nota: '',
-				type: 'main',
-				ingred_uid: 'ing-7',
-			},
-			{
-				ingrediente: 'Limón',
-				nombre_english: 'lemon',
-				cantidad: 1,
-				medida: 'pieza',
-				medida_plural: 'piezas',
-				medida_english: 'piece',
-				tipo_medida_id: 4,
-				nota: '',
-				type: 'main',
-				ingred_uid: 'ing-8',
-			},
-		],
-		instrucciones: [
-			'Precalentar el horno a 200°C (400°F).',
-			'Lavar y secar el pollo completamente. Retirar las vísceras si las tiene.',
-			'En un mortero, machacar el ajo con un poco de sal hasta formar una pasta.',
-			'Mezclar el ajo machacado con el aceite de oliva, romero y tomillo picados.',
-			'Frotar la mezcla de hierbas sobre toda la superficie del pollo, incluyendo debajo de la piel.',
-			'Salpimentar el pollo por dentro y por fuera.',
-			'Colocar el pollo en una bandeja para horno con el pecho hacia arriba.',
-			'Hornear durante 45-50 minutos o hasta que la temperatura interna alcance 75°C (165°F).',
-			'Dejar reposar 10 minutos antes de cortar.',
-			'Servir con rodajas de limón.',
-		],
-		tips: [
-			'Para un pollo más jugoso, déjalo marinar con las hierbas durante 2-4 horas antes de hornear.',
-			'Si la piel se está dorando demasiado rápido, cubre el pollo con papel aluminio y retíralo los últimos 10 minutos.',
-			'Puedes agregar verduras como papas, zanahorias o cebollas alrededor del pollo para una comida completa.',
-			'El tiempo de cocción puede variar según el tamaño del pollo. Usa un termómetro de cocina para verificar.',
-			'Para un sabor más intenso, puedes agregar mantequilla derretida a la mezcla de hierbas.',
-			'Si prefieres un pollo más crujiente, aumenta la temperatura a 220°C los últimos 10 minutos.',
-		],
-		nutrientes: {
-			info: [
-				{
-					id: 1,
-					nombre: 'Calorías',
-					cantidad: 250,
-					unidad_medida: 'kcal',
-					porcentaje: 12.5,
-					color: '#dcb244',
-					mostrar: true,
-				},
-				{
-					id: 2,
-					nombre: 'Proteína',
-					cantidad: 30,
-					unidad_medida: 'g',
-					porcentaje: 60,
-					color: '#98bfbf',
-					mostrar: true,
-				},
-				{
-					id: 3,
-					nombre: 'Grasa',
-					cantidad: 12,
-					unidad_medida: 'g',
-					porcentaje: 18,
-					color: '#eed9a6',
-					mostrar: true,
-				},
-				{
-					id: 4,
-					nombre: 'Carbohidratos',
-					cantidad: 2,
-					unidad_medida: 'g',
-					porcentaje: 1,
-					color: '#7a7a7a',
-					mostrar: true,
-				},
-			],
-		},
-		comments: [
-			{
-				id: 1,
-				user: {
-					name: 'María González',
-					username: 'maria_g',
-					image: 'users/maria.jpg',
-				},
-				comment: '¡Excelente receta! El pollo quedó muy jugoso y sabroso.',
-				day: '15',
-				month: 'Mar',
-			},
-			{
-				id: 2,
-				user: {
-					name: 'Carlos Rodríguez',
-					username: 'carlos_r',
-					image: 'users/carlos.jpg',
-				},
-				comment:
-					'La seguí al pie de la letra y quedó perfecto. Gracias por compartirla.',
-				day: '12',
-				month: 'Mar',
-			},
-		],
-		reactions: {
-			likes: 45,
-			dislikes: 2,
-			userReaction: 1, // 1 = like, 0 = dislike, null = no reaction
-		},
-	};
+	const { slug } = useParams();
+	const { data: recipeResponse, isLoading, isError, error } = useRecipe(slug);
 
 	const [activeLeftTab, setActiveLeftTab] = useState('ingredientes');
 	const [activeRightTab, setActiveRightTab] = useState('instrucciones');
+
+	// Loading state
+	if (isLoading) {
+		return (
+			<div id='application' className='recipe'>
+				<div id='menu-vue'>
+					<div
+						className='general-container'
+						style={{ textAlign: 'center', padding: '50px' }}
+					>
+						<img src='/img/progress.gif' alt='Loading...' />
+						<p>Cargando receta...</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	// Error state - redirect to recetario if 404, show error otherwise
+	if (isError) {
+		if (error?.response?.status === 404) {
+			return <Navigate to='/recetario' replace />;
+		}
+		return (
+			<div id='application' className='recipe'>
+				<div id='menu-vue'>
+					<div
+						className='general-container'
+						style={{ textAlign: 'center', padding: '50px' }}
+					>
+						<h3>Error al cargar la receta</h3>
+						<p>
+							{error?.message ||
+								'No se pudo cargar la receta. Por favor, intenta de nuevo.'}
+						</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	// No recipe data
+	if (!recipeResponse) {
+		return <Navigate to='/recetario' replace />;
+	}
+
+	// Map API response to component structure
+	// Handle different possible API response structures
+	const recipe = recipeResponse.data || recipeResponse.receta || recipeResponse;
+
+	// Debug: Log API response
+	console.log('RecipeDetail - Full API response:', recipeResponse);
+	console.log('RecipeDetail - Extracted recipe:', recipe);
+	console.log('RecipeDetail - Tips:', recipe.tips);
+	console.log('RecipeDetail - Nutrientes:', recipe.nutrientes);
+
+	// Ensure we have the required data structure
+	const recipeData = {
+		id: recipe.id,
+		slug: recipe.slug,
+		titulo: recipe.titulo || recipe.title,
+		tiempo: recipe.tiempo || recipe.time || 0,
+		ingredientes_count:
+			recipe.ingredientes_count ||
+			recipe.ingredients_count ||
+			(recipe.ingredientes ? recipe.ingredientes.length : 0),
+		imagen_principal:
+			recipe.imagen_principal || recipe.main_image || recipe.image,
+		imagen_secundaria: recipe.imagen_secundaria || recipe.secondary_image,
+		porciones: recipe.porciones ||
+			recipe.portions ||
+			recipe.getPorciones?.() || {
+				cantidad: 1,
+				nombre: 'Porción',
+				nombre_plural: 'Porciones',
+				nombre_english: 'serving',
+				tipo_medida_id: 1,
+			},
+		ingredientes:
+			recipe.ingredientes ||
+			recipe.ingredients ||
+			recipe.getIngredientes?.() ||
+			[],
+		instrucciones:
+			recipe.instrucciones ||
+			recipe.instructions ||
+			recipe.getInstrucciones?.() ||
+			[],
+		tips: recipe.tips || recipe.getTips?.() || [],
+		nutrientes: recipe.nutrientes || recipe.nutrition || { info: [] },
+		filter_info: recipe.filter_info || [],
+		comments: recipe.comments || [],
+		reactions: recipe.reactions || {
+			likes: 0,
+			dislikes: 0,
+			userReaction: null,
+		},
+	};
 
 	return (
 		<div id='application' className='recipe'>
 			<div id='menu-vue'>
 				<div className='general-container general-container-json'>
 					<RecipeHeader
-						title={recipe.titulo}
-						time={recipe.tiempo}
-						ingredientsCount={recipe.ingredientes_count}
+						title={recipeData.titulo}
+						time={recipeData.tiempo}
+						ingredientsCount={recipeData.ingredientes_count}
 					/>
 
 					<RecipeImage
-						primaryImage={recipe.imagen_principal}
-						secondaryImage={recipe.imagen_secundaria}
+						primaryImage={recipeData.imagen_principal}
+						secondaryImage={recipeData.imagen_secundaria}
 					/>
 
-					<RecipeActions recipeId={recipe.id} recipeTitle={recipe.titulo} />
+					<RecipeActions
+						recipeId={recipeData.id}
+						recipeTitle={recipeData.titulo}
+					/>
 
 					<div className='container-receta'>
 						<div className='info-left'>
@@ -268,12 +168,16 @@ export function RecipeDetail() {
 							<div className='options'>
 								{activeLeftTab === 'ingredientes' && (
 									<RecipeIngredients
-										ingredients={recipe.ingredientes}
-										portions={recipe.porciones}
+										ingredients={recipeData.ingredientes}
+										portions={recipeData.porciones}
 									/>
 								)}
 								{activeLeftTab === 'nutricion' && (
-									<RecipeNutrition nutrientes={recipe.nutrientes} />
+									<RecipeNutrition
+										nutrientes={recipeData.nutrientes}
+										filterInfo={recipeData.filter_info}
+										key={`nutrition-${recipeData.id}`}
+									/>
 								)}
 							</div>
 						</div>
@@ -303,17 +207,30 @@ export function RecipeDetail() {
 							</div>
 							<div className='options'>
 								{activeRightTab === 'instrucciones' && (
-									<RecipeInstructions instrucciones={recipe.instrucciones} />
+									<RecipeInstructions
+										instrucciones={recipeData.instrucciones}
+									/>
 								)}
-								{activeRightTab === 'tips' && <RecipeTips tips={recipe.tips} />}
+								{activeRightTab === 'tips' && (
+									<RecipeTips
+										tips={recipeData.tips}
+										key={`tips-${recipeData.id}`}
+									/>
+								)}
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<RecipeReactions recipeId={recipe.id} reactions={recipe.reactions} />
+				<RecipeReactions
+					recipeId={recipeData.id}
+					reactions={recipeData.reactions}
+				/>
 
-				<RecipeComments recipeId={recipe.id} comments={recipe.comments} />
+				<RecipeComments
+					recipeId={recipeData.id}
+					comments={recipeData.comments}
+				/>
 			</div>
 		</div>
 	);

@@ -20,3 +20,58 @@ export const getRecipeBySlug = async (slug) => {
 	return response.data;
 };
 
+/**
+ * Add or update reaction to a recipe
+ * @param {number} recipeId - Recipe ID
+ * @param {boolean} isLike - true for like, false for dislike
+ * @returns {Promise<Object>} - Response with reaction data
+ */
+export const addRecipeReaction = async (recipeId, isLike) => {
+	const response = await apiClient.post(`/recipes/${recipeId}/react`, {
+		is_like: isLike,
+	});
+	return response.data;
+};
+
+/**
+ * Remove reaction from a recipe
+ * @param {number} recipeId - Recipe ID
+ * @returns {Promise<Object>} - Response
+ */
+export const removeRecipeReaction = async (recipeId) => {
+	const response = await apiClient.delete(`/recipes/${recipeId}/react`);
+	return response.data;
+};
+
+/**
+ * Get comments for a recipe
+ * @param {number} recipeId - Recipe ID
+ * @returns {Promise<Object>} - Response with comments array
+ */
+export const getRecipeComments = async (recipeId) => {
+	const response = await apiClient.get(`/recipes/${recipeId}/comments`);
+	return response.data;
+};
+
+/**
+ * Add a comment to a recipe
+ * @param {number} recipeId - Recipe ID
+ * @param {string} comment - Comment text
+ * @returns {Promise<Object>} - Response with comment data
+ */
+export const addRecipeComment = async (recipeId, comment) => {
+	const response = await apiClient.post(`/recipes/${recipeId}/comments`, {
+		comment,
+	});
+	return response.data;
+};
+
+/**
+ * Delete a comment
+ * @param {number} commentId - Comment ID
+ * @returns {Promise<Object>} - Response
+ */
+export const deleteRecipeComment = async (commentId) => {
+	const response = await apiClient.delete(`/recipes/comments/${commentId}`);
+	return response.data;
+};

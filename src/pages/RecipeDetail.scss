@@ -179,6 +179,12 @@
 					padding-bottom: 70px;
 					background: #fff;
 
+					// Remove default margins from all p elements and set default font
+					p {
+						margin: 0;
+						@include font-gotham-light;
+					}
+
 					.slide {
 						padding: 0 20px;
 						width: 100%;
@@ -210,10 +216,10 @@
 								display: block;
 								appearance: none;
 								width: 100%;
-								margin: 10px 0;
+								margin: 15px 0 10px 0;
 								height: 40px;
 								border-radius: 100%;
-								overflow: hidden;
+								overflow: visible;
 								cursor: pointer;
 								background: linear-gradient(to bottom, #eed9a6, #eed9a6) 100%
 									50% / 100% 10px no-repeat transparent;
@@ -238,8 +244,10 @@
 									background: #dcb244;
 									border-radius: 100%;
 									border: 0;
-									margin-top: -9px;
+									margin-top: 11px;
 									transition: background-color 150ms;
+									position: relative;
+									z-index: 1;
 								}
 
 								// Firefox
@@ -318,12 +326,18 @@
 									}
 
 									i {
-										margin-right: 10px;
-										color: #eed9a6;
+										margin-right: 8px;
+										color: #dcb244;
+										font-size: 16px;
+										display: inline-block;
 
 										&:hover {
-											color: #dcb244;
+											color: #c9a035;
 										}
+									}
+
+									p {
+										margin: 0;
 									}
 
 									&:hover {
@@ -343,6 +357,18 @@
 
 								.nombre {
 									width: 80%;
+									font-weight: 900 !important;
+
+									// Make links bold
+									a {
+										font-weight: 900 !important;
+										text-decoration: none;
+										color: inherit;
+
+										&:hover {
+											text-decoration: underline;
+										}
+									}
 								}
 
 								.notaTiempo {
@@ -354,13 +380,28 @@
 								}
 
 								.cantidad {
-									@include font-gotham-book;
-									font-weight: bold;
+									font-family: 'Gotham-Book' !important;
 									width: 20%;
+									font-weight: bold !important;
 									text-align: right;
 
+									// Ensure all child elements (spans) inherit bold
+									* {
+										font-family: 'Gotham-Book' !important;
+										font-weight: bold !important;
+									}
+
 									.value {
-										font-weight: bold;
+										font-family: 'Gotham-Book' !important;
+										font-weight: bold !important;
+									}
+
+									.smallFraction {
+										font-family: 'Gotham-Book' !important;
+										font-size: 0.85em;
+										vertical-align: baseline;
+										line-height: 1;
+										font-weight: bold !important;
 									}
 								}
 							}
@@ -483,7 +524,7 @@
 							font-weight: 900 !important;
 
 							.index {
-								margin: 0 15px;
+								margin: 0 0px;
 								height: 32px;
 								width: 32px;
 								background-color: #dcb244;
