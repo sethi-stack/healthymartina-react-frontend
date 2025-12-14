@@ -1,4 +1,5 @@
 @import '@/assets/scss/init';
+@import '@/styles/slider';
 
 // Recipe Detail Page Styles
 // Based on resources/sass/componentes/_recipe.scss
@@ -108,7 +109,8 @@
 						white-space: nowrap;
 					}
 
-					i {
+					i,
+					svg {
 						display: flex;
 						align-items: center;
 						font-size: 20px;
@@ -120,6 +122,7 @@
 
 						svg {
 							fill: #dcb244;
+							color: #dcb244;
 						}
 
 						i {
@@ -175,9 +178,11 @@
 
 				.options {
 					width: 100%;
-					min-height: 40em;
 					padding-bottom: 70px;
 					background: #fff;
+					// Remove max-height and overflow restrictions
+					max-height: none;
+					overflow: visible;
 
 					// Remove default margins from all p elements and set default font
 					p {
@@ -193,8 +198,6 @@
 
 						&.active {
 							display: block;
-							height: 100%;
-							overflow: auto;
 						}
 
 						.rango {
@@ -212,77 +215,10 @@
 								margin-left: 5px;
 							}
 
+							// Use the imported slider styles from _slider.scss
+							// Only override margin for this specific context
 							.e-range {
-								display: block;
-								appearance: none;
-								width: 100%;
 								margin: 15px 0 10px 0;
-								height: 40px;
-								border-radius: 100%;
-								overflow: visible;
-								cursor: pointer;
-								background: linear-gradient(to bottom, #eed9a6, #eed9a6) 100%
-									50% / 100% 10px no-repeat transparent;
-
-								&:focus {
-									outline: none;
-								}
-
-								// Webkit
-								&::-webkit-slider-runnable-track {
-									width: 100%;
-									height: 40px;
-									background: linear-gradient(to bottom, #dcb244, #dcb244) 100%
-										50% / 100% 10px no-repeat transparent;
-									border-radius: 100%;
-								}
-
-								&::-webkit-slider-thumb {
-									appearance: none;
-									height: 18px;
-									width: 18px;
-									background: #dcb244;
-									border-radius: 100%;
-									border: 0;
-									margin-top: 11px;
-									transition: background-color 150ms;
-									position: relative;
-									z-index: 1;
-								}
-
-								// Firefox
-								&::-moz-range-track {
-									width: 100%;
-									height: 40px;
-									background: linear-gradient(to bottom, #eed9a6, #eed9a6) 100%
-										50% / 100% 10px no-repeat transparent;
-								}
-
-								&::-moz-range-progress {
-									background: linear-gradient(to bottom, #dcb244, #dcb244) 100%
-										50% / 100% 10px no-repeat transparent;
-								}
-
-								&::-moz-range-thumb {
-									appearance: none;
-									margin: 0;
-									height: 18px;
-									width: 18px;
-									background: #dcb244;
-									border-radius: 100%;
-									border: 0;
-									transition: background-color 150ms;
-								}
-
-								&:hover,
-								&:focus {
-									&::-webkit-slider-thumb {
-										background-color: #dcb244;
-									}
-									&::-moz-range-thumb {
-										background-color: #dcb244;
-									}
-								}
 							}
 						}
 
@@ -294,6 +230,10 @@
 						}
 
 						.datos {
+							// Remove any max-height or overflow restrictions
+							max-height: none;
+							overflow: visible;
+
 							.header-ingredientes {
 								display: flex;
 								flex-wrap: wrap;
@@ -313,23 +253,43 @@
 										position: absolute;
 										right: 26%;
 										width: fit-content;
+										max-width: 450px;
+										min-width: 250px;
 										background: #fff;
 										border: 1px solid #7a7a7a;
 										border-radius: 15px;
 										color: gray;
-										padding: 10px;
+										padding: 10px 15px;
 										visibility: hidden;
 										font-size: 15px;
-										text-align: justify;
+										text-align: left;
 										top: 13.5%;
 										z-index: 10;
+										box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+										p {
+											margin: 0;
+											padding: 0;
+										}
 									}
 
-									i {
+									i,
+									svg {
 										margin-right: 8px;
 										color: #dcb244;
-										font-size: 16px;
-										display: inline-block;
+										font-size: 18px;
+										display: inline-flex;
+										align-items: center;
+										justify-content: center;
+										width: 20px;
+										height: 20px;
+										opacity: 1;
+										visibility: visible;
+										font-family: 'Font Awesome 5 Free';
+										font-weight: 900;
+										font-style: normal;
+										-webkit-font-smoothing: antialiased;
+										-moz-osx-font-smoothing: grayscale;
 
 										&:hover {
 											color: #c9a035;
@@ -520,6 +480,7 @@
 							flex-direction: row;
 							margin-bottom: 25px;
 							padding-right: 25px;
+							padding-left: 25px;
 							font-size: 15px;
 							font-weight: 900 !important;
 
@@ -558,7 +519,7 @@
 								text-align: justify;
 
 								b {
-									@include font-gotham-book;
+									font-family: 'Gotham-Book' !important;
 									letter-spacing: 1px;
 								}
 

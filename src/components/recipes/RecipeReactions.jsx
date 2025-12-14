@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { FaSmile, FaFrown } from 'react-icons/fa';
 import { addRecipeReaction, removeRecipeReaction } from '../../lib/api/recipes';
 
 /**
@@ -88,12 +89,12 @@ export function RecipeReactions({ recipeId, reactions }) {
 						handleReaction(1);
 					}}
 				>
-					<i
-						className='reaction fas fa-smile'
+					<FaSmile
+						className='reaction'
 						style={{
 							color: userReaction === 1 ? '#dcb244' : '',
 						}}
-					></i>
+					/>
 				</a>
 				<a
 					href='#'
@@ -102,12 +103,12 @@ export function RecipeReactions({ recipeId, reactions }) {
 						handleReaction(0);
 					}}
 				>
-					<i
-						className='reaction fas fa-frown'
+					<FaFrown
+						className='reaction'
 						style={{
 							color: userReaction === 0 ? '#dcb244' : '',
 						}}
-					></i>
+					/>
 				</a>
 			</div>
 		</div>

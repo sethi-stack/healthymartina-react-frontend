@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaFileExport } from 'react-icons/fa';
 
 /**
  * Recipe Actions Component
@@ -49,7 +50,7 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 					data-recipe={recipeTitle}
 				>
 					<p>Exportar</p>
-					<i className='fas fa-file-export'></i>
+					<FaFileExport />
 				</button>
 			</div>
 			<div className='right'></div>

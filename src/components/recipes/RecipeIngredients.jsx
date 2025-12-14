@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaInfoCircle } from 'react-icons/fa';
 import { usePortionConverter } from '../../hooks/usePortionConverter';
 
 /**
@@ -75,11 +76,30 @@ export function RecipeIngredients({ ingredients, portions }) {
 			<div className='datos' id='datosIngrediente'>
 				<div className='header-ingredientes'>
 					<a href='#'>
-						<i className='fas fa-info-circle'></i>
+						<FaInfoCircle />
 						<p>Equivalencia</p>
-						<div id='equivalences'>
-							<p>Información sobre equivalencias de unidades</p>
-						</div>
+						<div
+							id='equivalences'
+							dangerouslySetInnerHTML={{
+								__html: `
+									<p style="line-height: 1;">1/32 cdta&nbsp;= 1/2 pizcas</p>
+									<p style="line-height: 2;">1/16&nbsp;cdtas&nbsp;= 1 pizca</p>
+									<p style="line-height: 2;">1 1/2 cdtas&nbsp;= 1/2 cda</p>
+									<p style="line-height: 2;">3 cdtas&nbsp;= 1&nbsp;cda</p>
+									<p style="line-height: 2;">4 cdtas = 1 &nbsp;1 /3 cdas</p>
+									<p style="line-height: 2;">1/16 cda = 1/4 cdta</p>
+									<p style="line-height: 2;">1 cda = 1/16 tz</p>
+									<p style="line-height: 2;">2 cdas&nbsp;= 1/8 tz</p>
+									<p style="line-height: 2;">4 cdas &nbsp;= 1/4 tz</p>
+									<p style="line-height: 2;">5 cdas +&nbsp;1 &nbsp;1/2 cdtas &nbsp;= 1/3&nbsp;tz</p>
+									<p style="line-height: 2;">1 cdta&nbsp; = 5 ml</p>
+									<p style="line-height: 2;">1 cda&nbsp; = 15 ml</p>
+									<p style="line-height: 2;">1 tz &nbsp; &nbsp; &nbsp;= &nbsp;250 ml</p>
+									<p style="line-height: 2;">2 tz &nbsp; &nbsp; &nbsp;= &nbsp;1/2 l</p>
+									<p style="line-height: 2;">4 tz = &nbsp;1 l</p>
+								`,
+							}}
+						></div>
 					</a>
 				</div>
 				{ingredients?.map((ingrediente, index) => {

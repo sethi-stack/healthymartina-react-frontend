@@ -1,0 +1,137 @@
+// Slider Range Input Styles
+// Extracted from original Laravel app: resources/sass/componentes/_recipe.scss
+// Original SASS variables converted to CSS custom properties and hardcoded values
+
+// Variables (converted from SASS)
+$height: 40px;
+$thumb-height: 18px;
+$track-height: 10px;
+$upper-color: #eed9a6;
+$lower-color: #dcb244;
+$thumb-color: #dcb244;
+$thumb-hover-color: #dcb244;
+
+$upper-background: linear-gradient(to bottom, $upper-color, $upper-color) 100%
+	50% / 100% $track-height no-repeat transparent;
+$lower-background: linear-gradient(to bottom, $lower-color, $lower-color) 100%
+	50% / 100% $track-height no-repeat transparent;
+
+// Generate webkit slider thumb shadow
+// Original SASS function generated shadows for positions 1-1000
+// This creates the lighter orange overlay for the unselected portion
+@function webkit-slider-thumb-shadow($i: 1) {
+	$val: #{$i}px 0 0 -#{($thumb-height - $track-height) / 2} #{$upper-color};
+	@if $i == 1 {
+		@for $k from 2 through 1000 {
+			$val: #{$val}, webkit-slider-thumb-shadow($k);
+		}
+	}
+	@return $val;
+}
+
+// Main slider container
+.e-range {
+	display: block;
+	appearance: none;
+	width: 100%;
+	margin: 0 !important;
+	height: $height;
+	border-radius: 100%;
+	overflow: hidden;
+	cursor: pointer;
+
+	&:focus {
+		outline: none;
+	}
+}
+
+// Webkit (Chrome, Safari, Edge)
+.e-range::-webkit-slider-runnable-track {
+	width: 100%;
+	height: $height;
+	background: $lower-background;
+	border-radius: 100%;
+}
+
+.e-range::-webkit-slider-thumb {
+	position: relative;
+	appearance: none;
+	height: $thumb-height;
+	width: $thumb-height;
+	background: $thumb-color;
+	border-radius: 100%;
+	border: 0;
+	top: 50%;
+	margin-top: (-$thumb-height/2);
+	box-shadow: webkit-slider-thumb-shadow();
+	transition: background-color 150ms;
+}
+
+// Firefox
+.e-range::-moz-range-track,
+.e-range::-moz-range-progress {
+	width: 100%;
+	height: $height;
+	background: $upper-background;
+}
+
+.e-range::-moz-range-progress {
+	background: $lower-background;
+}
+
+.e-range::-moz-range-thumb {
+	appearance: none;
+	margin: 0;
+	height: $thumb-height;
+	width: $thumb-height;
+	background: $thumb-color;
+	border-radius: 100%;
+	border: 0;
+	transition: background-color 150ms;
+}
+
+// Internet Explorer / Edge (legacy)
+.e-range::-ms-track {
+	width: 100%;
+	height: $height;
+	border: 0;
+	// color needed to hide track marks
+	color: transparent;
+	background: transparent;
+}
+
+.e-range::-ms-fill-lower {
+	background: $lower-background;
+}
+
+.e-range::-ms-fill-upper {
+	background: $upper-background;
+}
+
+.e-range::-ms-thumb {
+	appearance: none;
+	height: $thumb-height;
+	width: $thumb-height;
+	background: $thumb-color;
+	border-radius: 100%;
+	border: 0;
+	transition: background-color 150ms;
+	// IE Edge thinks it can support -webkit prefixes
+	top: 0;
+	margin: 0;
+	box-shadow: none;
+}
+
+// Hover and focus states
+.e-range:hover,
+.e-range:focus {
+	&::-webkit-slider-thumb {
+		background-color: $thumb-hover-color;
+	}
+	&::-moz-range-thumb {
+		background-color: $thumb-hover-color;
+	}
+	&::-ms-thumb {
+		background-color: $thumb-hover-color;
+	}
+}
