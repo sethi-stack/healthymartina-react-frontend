@@ -45,3 +45,4 @@ export function ListaIcon({ className = 'cls-1', ...props }) {
 }
 
 export default ListaIcon;
+

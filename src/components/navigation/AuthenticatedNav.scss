@@ -52,7 +52,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 0.4rem;
-	font-family: 'Gilroy-Medium', 'Gilroy', sans-serif;
+	@include font-gilroy-medium;
 	font-size: 0.95rem;
 	color: $gris-oscuro;
 	background: transparent;

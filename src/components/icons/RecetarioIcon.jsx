@@ -30,3 +30,4 @@ export function RecetarioIcon({ className = 'cls-1', ...props }) {
 }
 
 export default RecetarioIcon;
+

@@ -7,6 +7,7 @@ import { Register } from './pages/Register';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { Dashboard } from './pages/Dashboard';
 import { Recetario } from './pages/Recetario';
+import { RecipeDetail } from './pages/RecipeDetail';
 
 /**
  * Root application component with routing.
@@ -61,6 +62,16 @@ export function App() {
 						<ProtectedRoute>
 							<AuthenticatedLayout>
 								<Recetario />
+							</AuthenticatedLayout>
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path='/receta/:slug'
+					element={
+						<ProtectedRoute>
+							<AuthenticatedLayout>
+								<RecipeDetail />
 							</AuthenticatedLayout>
 						</ProtectedRoute>
 					}

@@ -1,15 +1,8 @@
 @import '@/assets/scss/init';
 
 /* Recetario Page specific styles override or additions if needed */
-#application {
-	// margin-top: 150px; // Already handled by AuthenticatedLayout padding-top
-}
 
 .recetario-page {
-	&.general-container {
-		// Inherited from _aplication.scss
-	}
-
 	.indicador {
 		display: flex;
 		justify-content: space-between;
@@ -20,7 +13,7 @@
 
 		h3 {
 			margin: 0;
-			font-family: 'Gilroy-SemiBold', sans-serif;
+			@include font-gilroy-semibold;
 			color: $gris-oscuro;
 			font-size: 1.5rem;
 			text-transform: uppercase;
@@ -47,7 +40,7 @@
 				border-radius: 5px;
 				padding: 8px 15px;
 				cursor: pointer;
-				font-family: 'Gilroy-Medium', sans-serif;
+				@include font-gilroy-medium;
 				color: $gris-oscuro;
 				transition: all 0.3s ease;
 
@@ -93,7 +86,226 @@
 		.sub-container {
 			display: flex;
 			flex-wrap: wrap;
-			// margin: 0 -10px; // Adjust for gutter if needed based on _aplication.scss
+			gap: 0;
+
+			.col13 {
+				width: calc(100% / 3);
+				max-width: calc(100% / 3);
+				flex: 0 0 calc(100% / 3);
+				box-sizing: border-box;
+				padding: 10px;
+
+				.receta-membresia-inner {
+					.info {
+						.row {
+							display: flex;
+							flex-wrap: nowrap;
+							justify-content: space-between;
+							align-items: center;
+							width: 100%;
+
+							.name-recipe {
+								flex: 1;
+								min-width: 0;
+								display: inline-block;
+								max-width: 80%;
+
+								.name {
+									font-size: 20px;
+									width: 100%;
+									line-height: 1.2em;
+									white-space: nowrap;
+									overflow: hidden;
+									text-overflow: ellipsis;
+									max-width: 300px;
+									margin: 0;
+									@include font-gilroy-medium;
+									text-transform: uppercase;
+								}
+							}
+
+							.button-hamburger {
+								flex-shrink: 0;
+								margin-left: 10px;
+								position: relative;
+
+								button {
+									border-radius: 5px;
+									border: 1px solid $gris-oscuro;
+									background: #fff;
+									color: inherit;
+									padding: 7px 6px 5px 6px;
+									cursor: pointer;
+									display: flex;
+									align-items: center;
+									justify-content: center;
+
+									svg {
+										height: 13px;
+										width: 13px;
+										color: #b7b7b7;
+
+										path {
+											fill: #b7b7b7;
+										}
+									}
+
+									&.active {
+										background-color: $individual;
+										border-color: $individual;
+
+										svg {
+											color: #fff;
+
+											path {
+												fill: #fff !important;
+											}
+										}
+									}
+								}
+
+								.sub-menu {
+									position: absolute;
+									top: 110%;
+									right: 0;
+									width: 200px;
+									border: 1px solid $gris-oscuro;
+									border-radius: 5px;
+									z-index: 1;
+									background: $gris;
+
+									button,
+									a {
+										display: flex;
+										align-items: center;
+										gap: 10px;
+										width: 100%;
+										padding: 10px;
+										background: none;
+										border: none;
+										border-top: 1px solid $gris-oscuro;
+										cursor: pointer;
+										@include font-gilroy-medium;
+										font-size: 14px;
+										color: #b7b7b7;
+										text-align: left;
+										text-decoration: none;
+										transition: 0.3s ease;
+
+										&:first-child {
+											border-top: none;
+										}
+
+										svg {
+											flex-shrink: 0;
+											width: 15px;
+											height: 15px;
+											margin-right: 0;
+
+											.cls-1 {
+												fill: #7a7a7a;
+											}
+										}
+
+										span {
+											display: inline-block;
+										}
+
+										&:hover {
+											color: $individual;
+
+											svg .cls-1 {
+												fill: $individual !important;
+											}
+										}
+									}
+								}
+							}
+						}
+
+						.special-info {
+							span {
+								i {
+									display: inline-flex;
+									align-items: center;
+									justify-content: center;
+									margin-right: 5px;
+									width: 20px;
+									height: 20px;
+
+									svg {
+										width: 16px;
+										height: 16px;
+
+										path,
+										circle,
+										rect {
+											fill: $gris-oscuro;
+										}
+									}
+								}
+							}
+						}
+					}
+
+					.imagen {
+						position: relative;
+						overflow: hidden;
+						min-width: 100%;
+						min-height: 270px;
+						height: 270px;
+
+						&.recipe-image-container {
+							.recipe-image-background {
+								position: absolute;
+								top: 0;
+								left: 0;
+								width: 100%;
+								height: 100%;
+								min-width: 100%;
+								min-height: 270px;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								background: linear-gradient(
+									135deg,
+									rgba($gris-oscuro, 0.05) 0%,
+									rgba($gris-oscuro, 0.1) 100%
+								);
+
+								svg {
+									width: 120px;
+									height: 120px;
+									opacity: 0.2;
+
+									.cls-1 {
+										fill: rgba($gris-oscuro, 0.3);
+									}
+								}
+							}
+
+							.recipe-image-overlay {
+								position: relative;
+								z-index: 1;
+								width: 100%;
+								height: 100%;
+								min-width: 100%;
+								min-height: 270px;
+								object-fit: cover;
+							}
+						}
+
+						img {
+							opacity: 1 !important;
+							object-fit: cover;
+							min-width: 100%;
+							min-height: 270px;
+							width: 100%;
+							height: 100%;
+						}
+					}
+				}
+			}
 		}
 	}
 }

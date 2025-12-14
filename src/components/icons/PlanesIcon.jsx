@@ -25,3 +25,4 @@ export function PlanesIcon({ className = 'cls-1', ...props }) {
 }
 
 export default PlanesIcon;
+

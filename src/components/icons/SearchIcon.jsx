@@ -17,3 +17,4 @@ export function SearchIcon({ className = 'cls-2', ...props }) {
 }
 
 export default SearchIcon;
+

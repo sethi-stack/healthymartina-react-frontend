@@ -19,3 +19,4 @@ export const ResetFilterIcon = () => (
 		</g>
 	</svg>
 );
+

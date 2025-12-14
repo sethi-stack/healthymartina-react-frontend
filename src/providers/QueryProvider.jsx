@@ -33,3 +33,4 @@ export function QueryProvider({ children }) {
 }
 
 export default QueryProvider;
+

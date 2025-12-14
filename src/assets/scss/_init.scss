@@ -6,211 +6,315 @@ $border-line-lighter: #ded7d7;
 $border: rgba(0, 0, 0, 0.25);
 $verde: #3d5652;
 
-@font-face {
-    font-family: "Font Awesome 5 Brands";
-    font-style: normal;
-    font-weight: normal;
-    // font-display: $fa-font-display;
-    src: url("/fonts/fa-brands-400.eot");
-    src: url("/fonts/fa-brands-400.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/fa-brands-400.woff2") format("woff2"), url("/fonts/fa-brands-400.woff") format("woff"),
-        url("/fonts/fa-brands-400.ttf") format("truetype"), url("/fonts/fa-brands-400.svg#fontawesome") format("svg");
+// Typography Variables
+$font-gilroy: 'Gilroy';
+$font-gilroy-medium: 'Gilroy-Medium';
+$font-gilroy-semibold: 'Gilroy-SemiBold';
+$font-gilroy-bold: 'Gilroy Bold';
+$font-gotham-book: 'Gotham-Book';
+$font-gotham-bold: 'Gotham-Bold';
+$font-gotham-light: 'Gotham-Light';
+$font-gotham-medium: 'Gotham-Medium';
+$font-awesome: 'Font Awesome 5 Free';
+$font-awesome-brands: 'Font Awesome 5 Brands';
+
+// Typography Mixins
+@mixin font-gilroy {
+	font-family: $font-gilroy;
+}
+
+@mixin font-gilroy-medium {
+	font-family: $font-gilroy-medium;
+}
+
+@mixin font-gilroy-semibold {
+	font-family: $font-gilroy-semibold !important;
+}
+
+@mixin font-gilroy-bold {
+	font-family: $font-gilroy-bold;
+}
+
+@mixin font-gotham-book {
+	font-family: $font-gotham-book;
+}
+
+@mixin font-gotham-bold {
+	font-family: $font-gotham-bold;
+}
+
+@mixin font-gotham-light {
+	font-family: $font-gotham-light;
+}
+
+@mixin font-gotham-medium {
+	font-family: $font-gotham-medium;
 }
 
 @font-face {
-    font-family: "Font Awesome 5 Free";
-    font-style: normal;
-    font-weight: 900;
-    // font-display: $fa-font-display;
-    src: url("/fonts/fa-solid-900.eot");
-    src: url("/fonts/fa-solid-900.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/fa-solid-900.woff2") format("woff2"), url("/fonts/fa-solid-900.woff") format("woff"),
-        url("/fonts/fa-solid-900.ttf") format("truetype"), url("/fonts/fa-solid-900.svg#fontawesome") format("svg");
+	font-family: 'Font Awesome 5 Brands';
+	font-style: normal;
+	font-weight: normal;
+	// font-display: $fa-font-display;
+	src: url('/fonts/fa-brands-400.eot');
+	src: url('/fonts/fa-brands-400.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/fa-brands-400.woff2') format('woff2'),
+		url('/fonts/fa-brands-400.woff') format('woff'),
+		url('/fonts/fa-brands-400.ttf') format('truetype'),
+		url('/fonts/fa-brands-400.svg#fontawesome') format('svg');
 }
 
 @font-face {
-    font-family: "Font Awesome 5 Free";
-    font-style: normal;
-    font-weight: 400;
-    // font-display: $fa-font-display;
-    src: url("/fonts/fa-regular-400.eot");
-    src: url("/fonts/fa-regular-400.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/fa-regular-400.woff2") format("woff2"), url("/fonts/fa-regular-400.woff") format("woff"),
-        url("/fonts/fa-regular-400.ttf") format("truetype"), url("/fonts/fa-regular-400.svg#fontawesome") format("svg");
+	font-family: 'Font Awesome 5 Free';
+	font-style: normal;
+	font-weight: 900;
+	// font-display: $fa-font-display;
+	src: url('/fonts/fa-solid-900.eot');
+	src: url('/fonts/fa-solid-900.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/fa-solid-900.woff2') format('woff2'),
+		url('/fonts/fa-solid-900.woff') format('woff'),
+		url('/fonts/fa-solid-900.ttf') format('truetype'),
+		url('/fonts/fa-solid-900.svg#fontawesome') format('svg');
 }
 
 @font-face {
-    font-family: "Gilroy";
-    src: url("/fonts/Gilroy-UltraLight.eot");
-    src: url("/fonts/Gilroy-UltraLight.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/Gilroy-UltraLight.woff2") format("woff2"), url("/fonts/Gilroy-UltraLight.woff") format("woff"),
-        url("/fonts/Gilroy-UltraLight.ttf") format("truetype"),
-        url("/fonts/Gilroy-UltraLight.svg#Gilroy-UltraLight") format("svg");
-    font-weight: 200;
-    font-style: normal;
+	font-family: 'Font Awesome 5 Free';
+	font-style: normal;
+	font-weight: 400;
+	// font-display: $fa-font-display;
+	src: url('/fonts/fa-regular-400.eot');
+	src: url('/fonts/fa-regular-400.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/fa-regular-400.woff2') format('woff2'),
+		url('/fonts/fa-regular-400.woff') format('woff'),
+		url('/fonts/fa-regular-400.ttf') format('truetype'),
+		url('/fonts/fa-regular-400.svg#fontawesome') format('svg');
 }
 
 @font-face {
-    font-family: "Gilroy Bold";
-    src: url("/fonts/Gilroy-Bold.eot");
-    src: url("/fonts/Gilroy-Bold.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/Gilroy-Bold.woff2") format("woff2"), url("/fonts/Gilroy-Bold.woff") format("woff"),
-        url("/fonts/Gilroy-Bold.ttf") format("truetype"), url("/fonts/Gilroy-Bold.svg#Gilroy-Bold") format("svg");
-    font-weight: bold;
-    font-style: normal;
+	font-family: 'Gilroy';
+	src: url('/fonts/Gilroy-UltraLight.eot');
+	src: url('/fonts/Gilroy-UltraLight.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/Gilroy-UltraLight.woff2') format('woff2'),
+		url('/fonts/Gilroy-UltraLight.woff') format('woff'),
+		url('/fonts/Gilroy-UltraLight.ttf') format('truetype'),
+		url('/fonts/Gilroy-UltraLight.svg#Gilroy-UltraLight') format('svg');
+	font-weight: 200;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Gilroy-SemiBold";
-    src: url("/fonts/Gilroy-SemiBold.eot");
-    src: url("/fonts/Gilroy-SemiBold.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/Gilroy-SemiBold.woff2") format("woff2"), url("/fonts/Gilroy-SemiBold.woff") format("woff"),
-        url("/fonts/Gilroy-SemiBold.ttf") format("truetype"),
-        url("/fonts/Gilroy-SemiBold.svg#Gilroy-SemiBold") format("svg");
-    font-weight: 600;
-    font-style: normal;
+	font-family: 'Gilroy Bold';
+	src: url('/fonts/Gilroy-Bold.eot');
+	src: url('/fonts/Gilroy-Bold.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/Gilroy-Bold.woff2') format('woff2'),
+		url('/fonts/Gilroy-Bold.woff') format('woff'),
+		url('/fonts/Gilroy-Bold.ttf') format('truetype'),
+		url('/fonts/Gilroy-Bold.svg#Gilroy-Bold') format('svg');
+	font-weight: bold;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Gilroy-Medium";
-    src: url("/fonts/Gilroy-Medium.eot");
-    src: url("/fonts/Gilroy-Medium.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/Gilroy-Medium.woff2") format("woff2"), url("/fonts/Gilroy-Medium.woff") format("woff"),
-        url("/fonts/Gilroy-Medium.ttf") format("truetype"), url("/fonts/Gilroy-Medium.svg#Gilroy-Medium") format("svg");
-    font-weight: 500;
-    font-style: normal;
+	font-family: 'Gilroy-SemiBold';
+	src: url('/fonts/Gilroy-SemiBold.eot');
+	src: url('/fonts/Gilroy-SemiBold.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/Gilroy-SemiBold.woff2') format('woff2'),
+		url('/fonts/Gilroy-SemiBold.woff') format('woff'),
+		url('/fonts/Gilroy-SemiBold.ttf') format('truetype'),
+		url('/fonts/Gilroy-SemiBold.svg#Gilroy-SemiBold') format('svg');
+	font-weight: 600;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Gotham-Book";
-    src: url("/fonts/Gotham-Book.eot");
-    src: url("/fonts/Gotham-Book.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/Gotham-Book.woff2") format("woff2"), url("/fonts/Gotham-Book.woff") format("woff"),
-        url("/fonts/Gotham-Book.ttf") format("truetype"), url("/fonts/Gotham-Book.svg#Gilroy-Medium") format("svg");
-    font-weight: 500;
-    font-style: normal;
+	font-family: 'Gilroy-Medium';
+	src: url('/fonts/Gilroy-Medium.eot');
+	src: url('/fonts/Gilroy-Medium.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/Gilroy-Medium.woff2') format('woff2'),
+		url('/fonts/Gilroy-Medium.woff') format('woff'),
+		url('/fonts/Gilroy-Medium.ttf') format('truetype'),
+		url('/fonts/Gilroy-Medium.svg#Gilroy-Medium') format('svg');
+	font-weight: 500;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Gotham-Bold";
-    src: url("/fonts/Gotham-Bold.eot");
-    src: url("/fonts/Gotham-Bold.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/Gotham-Bold.woff2") format("woff2"), url("/fonts/Gotham-Bold.woff") format("woff"),
-        url("/fonts/Gotham-Bold.ttf") format("truetype"), url("/fonts/Gotham-Bold.svg#Gotham-Bold") format("svg");
-    font-weight: bold;
-    font-style: normal;
+	font-family: 'Gotham-Book';
+	src: url('/fonts/Gotham-Book.eot');
+	src: url('/fonts/Gotham-Book.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/Gotham-Book.woff2') format('woff2'),
+		url('/fonts/Gotham-Book.woff') format('woff'),
+		url('/fonts/Gotham-Book.ttf') format('truetype'),
+		url('/fonts/Gotham-Book.svg#Gilroy-Medium') format('svg');
+	font-weight: 500;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Gotham-Light";
-    src: url("/fonts/Gotham-Light.eot");
-    src: url("/fonts/Gotham-Light.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/Gotham-Light.woff2") format("woff2"), url("/fonts/Gotham-Light.woff") format("woff"),
-        url("/fonts/Gotham-Light.ttf") format("truetype"), url("/fonts/Gotham-Light.svg#Gotham-Light") format("svg");
-    font-weight: 300;
-    font-style: normal;
+	font-family: 'Gotham-Bold';
+	src: url('/fonts/Gotham-Bold.eot');
+	src: url('/fonts/Gotham-Bold.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/Gotham-Bold.woff2') format('woff2'),
+		url('/fonts/Gotham-Bold.woff') format('woff'),
+		url('/fonts/Gotham-Bold.ttf') format('truetype'),
+		url('/fonts/Gotham-Bold.svg#Gotham-Bold') format('svg');
+	font-weight: bold;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Gotham-Medium";
-    src: url("/fonts/Gotham-Medium.eot");
-    src: url("/fonts/Gotham-Medium.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/Gotham-Medium.woff2") format("woff2"), url("/fonts/Gotham-Medium.woff") format("woff"),
-        url("/fonts/Gotham-Medium.ttf") format("truetype"), url("/fonts/Gotham-Medium.svg#Gotham-Medium") format("svg");
-    font-weight: 500;
-    font-style: normal;
+	font-family: 'Gotham-Light';
+	src: url('/fonts/Gotham-Light.eot');
+	src: url('/fonts/Gotham-Light.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/Gotham-Light.woff2') format('woff2'),
+		url('/fonts/Gotham-Light.woff') format('woff'),
+		url('/fonts/Gotham-Light.ttf') format('truetype'),
+		url('/fonts/Gotham-Light.svg#Gotham-Light') format('svg');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Gotham-Medium';
+	src: url('/fonts/Gotham-Medium.eot');
+	src: url('/fonts/Gotham-Medium.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/Gotham-Medium.woff2') format('woff2'),
+		url('/fonts/Gotham-Medium.woff') format('woff'),
+		url('/fonts/Gotham-Medium.ttf') format('truetype'),
+		url('/fonts/Gotham-Medium.svg#Gotham-Medium') format('svg');
+	font-weight: 500;
+	font-style: normal;
 }
 
 html {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 *,
 *:before,
 *:after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html,
 body {
-    font-size: 17px;
-    font-family: "Gilroy";
-    margin: 0;
-    color: #606060;
-    background: #f9f9f9;
-    // overflow: auto;
+	font-size: 17px;
+	font-family: 'Gilroy' !important;
+	margin: 0;
+	color: #606060;
+	background: #f9f9f9;
+	// overflow: auto;
+}
+
+// Ensure all elements within the app use Gilroy
+// Target the root containers and all their children
+#application,
+#application *,
+#root,
+#root *,
+#react-root,
+#react-root *,
+#menu-vue,
+#menu-vue *,
+body,
+body * {
+	font-family: 'Gilroy';
+}
+
+// Explicitly set Gilroy for common elements with higher specificity
+div,
+span,
+p,
+a,
+li,
+ul,
+ol,
+td,
+th,
+label,
+button,
+section,
+article,
+header,
+footer,
+nav,
+main,
+aside {
+	font-family: 'Gilroy';
 }
 
 input {
-    border-radius: 0;
-    -webkit-appearance: none;
+	border-radius: 0;
+	-webkit-appearance: none;
 }
 
-input[type="text"], input[type="email"] {
-    font-family: 'Gilroy-Medium' !important;
-    color: #8E8E8E !important;
+input[type='text'],
+input[type='email'] {
+	font-family: 'Gilroy-Medium' !important;
+	color: #8e8e8e !important;
 }
 
 h2,
 h3,
 h4 {
-    font-family: "Gilroy-SemiBold" !important;
-    font-weight: normal !important;
+	font-family: 'Gilroy-SemiBold' !important;
+	font-weight: normal !important;
 }
 
 h2 {
-    font-size: 2em !important;
-    letter-spacing: 2px !important;
+	font-size: 2em !important;
+	letter-spacing: 2px !important;
 }
 
 button {
-    cursor: pointer;
-    &:focus {
-        outline: none;
-    }
+	cursor: pointer;
+	&:focus {
+		outline: none;
+	}
 }
 
-input[type="submit"] {
-    cursor: pointer;
+input[type='submit'] {
+	cursor: pointer;
 }
 
 input {
-    &:focus {
-        border-color: $individual;
-    }
+	&:focus {
+		border-color: $individual;
+	}
 }
 
 .errorContainer {
-    background: red;
-    color: #fff;
-    padding: 0.5em 0;
-    ul {
-        li {
-            padding: 5px 0;
-        }
-    }
+	background: red;
+	color: #fff;
+	padding: 0.5em 0;
+	ul {
+		li {
+			padding: 5px 0;
+		}
+	}
 }
 .form-group {
-    margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 .flex-center {
-    align-items: center;
-    display: flex;
-    justify-content: center;
+	align-items: center;
+	display: flex;
+	justify-content: center;
 }
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #444;
-    line-height: 38px;
+.select2-container--default
+	.select2-selection--single
+	.select2-selection__rendered {
+	color: #444;
+	line-height: 38px;
 }
-.select2-container .select2-search--inline
-{
-    width: 100% !important;
+.select2-container .select2-search--inline {
+	width: 100% !important;
 }
 
 #modal-tiempo {
-    p {
-        padding-left: 20px;
-        position: relative;
-        /*&:before {
+	p {
+		padding-left: 20px;
+		position: relative;
+		/*&:before {
 			font-family: "Font Awesome 5 Free";
 			content: "\f067";
 			font-weight: 900;
@@ -219,18 +323,18 @@ input {
 			font-size: 12px;
 			left: 0;
 		}*/
-    }
+	}
 }
 
 .fancybox-is-open .fancybox-bg {
-    opacity: 0;
+	opacity: 0;
 }
 
 .fancybox-content {
-    border: 1px solid black;
-    border-radius: 5px;
+	border: 1px solid black;
+	border-radius: 5px;
 }
 
 .select2-results__option {
-    display: flex;
+	display: flex;
 }

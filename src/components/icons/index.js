@@ -10,3 +10,4 @@ export { BookmarkIcon } from './BookmarkIcon';
 export { ClockIcon } from './ClockIcon';
 export { CartIcon } from './CartIcon';
 export { EllipsisVerticalIcon } from './EllipsisVerticalIcon';
+export { CalendarMenuIcon } from './CalendarMenuIcon';

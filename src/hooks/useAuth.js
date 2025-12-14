@@ -27,7 +27,7 @@ export const useLogin = () => {
 			queryClient.invalidateQueries({ queryKey: ['auth', 'user'] });
 
 			// Navigate to dashboard
-			navigate('/dashboard');
+			navigate('/recetario');
 		},
 		onError: (error) => {
 			// Error handling is done by the component

@@ -19,3 +19,4 @@ export const getRecipeBySlug = async (slug) => {
 	const response = await apiClient.get(`/recipes/${slug}`);
 	return response.data;
 };
+
