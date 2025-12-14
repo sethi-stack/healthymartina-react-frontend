@@ -72,12 +72,6 @@ export function RecipeDetail() {
 	// Handle different possible API response structures
 	const recipe = recipeResponse.data || recipeResponse.receta || recipeResponse;
 
-	// Debug: Log API response
-	console.log('RecipeDetail - Full API response:', recipeResponse);
-	console.log('RecipeDetail - Extracted recipe:', recipe);
-	console.log('RecipeDetail - Tips:', recipe.tips);
-	console.log('RecipeDetail - Nutrientes:', recipe.nutrientes);
-
 	// Ensure we have the required data structure
 	const recipeData = {
 		id: recipe.id,
@@ -166,19 +160,27 @@ export function RecipeDetail() {
 								</a>
 							</div>
 							<div className='options'>
-								{activeLeftTab === 'ingredientes' && (
+								<div
+									className={`mobile-section ${
+										activeLeftTab === 'ingredientes' ? 'active' : ''
+									}`}
+								>
 									<RecipeIngredients
 										ingredients={recipeData.ingredientes}
 										portions={recipeData.porciones}
 									/>
-								)}
-								{activeLeftTab === 'nutricion' && (
+								</div>
+								<div
+									className={`mobile-section ${
+										activeLeftTab === 'nutricion' ? 'active' : ''
+									}`}
+								>
 									<RecipeNutrition
 										nutrientes={recipeData.nutrientes}
 										filterInfo={recipeData.filter_info}
 										key={`nutrition-${recipeData.id}`}
 									/>
-								)}
+								</div>
 							</div>
 						</div>
 
@@ -206,17 +208,25 @@ export function RecipeDetail() {
 								</a>
 							</div>
 							<div className='options'>
-								{activeRightTab === 'instrucciones' && (
+								<div
+									className={`mobile-section ${
+										activeRightTab === 'instrucciones' ? 'active' : ''
+									}`}
+								>
 									<RecipeInstructions
 										instrucciones={recipeData.instrucciones}
 									/>
-								)}
-								{activeRightTab === 'tips' && (
+								</div>
+								<div
+									className={`mobile-section ${
+										activeRightTab === 'tips' ? 'active' : ''
+									}`}
+								>
 									<RecipeTips
 										tips={recipeData.tips}
 										key={`tips-${recipeData.id}`}
 									/>
-								)}
+								</div>
 							</div>
 						</div>
 					</div>

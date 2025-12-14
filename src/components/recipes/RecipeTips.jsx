@@ -32,7 +32,7 @@ export function RecipeTips({ tips }) {
 
 	if (groupedTips.length === 0) {
 		return (
-			<div className='slide active'>
+			<div className='slide'>
 				<p style={{ padding: '20px', color: '#7a7a7a' }}>
 					No hay tips disponibles para esta receta.
 				</p>
@@ -51,7 +51,7 @@ export function RecipeTips({ tips }) {
 	};
 
 	return (
-		<div className='slide active'>
+		<div className='slide'>
 			{groupedTips.map((tip, index) => (
 				<div key={index} className='tip'>
 					<p>

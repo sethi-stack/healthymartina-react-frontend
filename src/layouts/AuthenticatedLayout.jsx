@@ -71,6 +71,9 @@ export function AuthenticatedLayout({ children, permissions, searchData }) {
 				onHelpClick={handleHelpClick}
 				onWizardClick={handleWizardClick}
 				onLogout={handleLogout}
+				permissions={defaultPermissions}
+				onSearch={handleSearch}
+				searchData={defaultSearchData}
 			/>
 			<AuthenticatedNav
 				permissions={defaultPermissions}

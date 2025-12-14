@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { imagePaths } from '../../utils/imagePaths';
+import { MobileHamburgerMenu } from './MobileHamburgerMenu';
 import './AuthenticatedHeader.scss';
 
 const profileLinks = [
@@ -26,8 +27,12 @@ export function AuthenticatedHeader({
 	onHelpClick,
 	onWizardClick,
 	onLogout,
+	permissions,
+	onSearch,
+	searchData,
 }) {
 	const [profileOpen, setProfileOpen] = useState(false);
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const headerRef = useRef(null);
 
 	const userName = user?.name || 'Luciana';
@@ -91,6 +96,17 @@ export function AuthenticatedHeader({
 				onClick={() => setProfileOpen(false)}
 			/>
 			<header className='header-app'>
+				{/* Mobile Hamburger Button */}
+				<button
+					className='mobile-hamburger-button'
+					onClick={() => setMobileMenuOpen(true)}
+					aria-label='Open menu'
+				>
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+
 				<a
 					className='header-app__brand'
 					href='/recetario'
@@ -164,6 +180,15 @@ export function AuthenticatedHeader({
 					</div>
 				</div>
 			</header>
+
+			{/* Mobile Hamburger Menu */}
+			<MobileHamburgerMenu
+				isOpen={mobileMenuOpen}
+				onClose={() => setMobileMenuOpen(false)}
+				permissions={permissions}
+				onSearch={onSearch}
+				searchData={searchData}
+			/>
 		</div>
 	);
 }

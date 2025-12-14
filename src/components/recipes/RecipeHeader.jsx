@@ -1,5 +1,5 @@
 import React from 'react';
-import { CartIcon, ClockIcon } from '../icons';
+import { FaShoppingCart, FaClock } from 'react-icons/fa';
 
 /**
  * Recipe Header Component
@@ -14,7 +14,7 @@ export function RecipeHeader({ title, time, ingredientsCount }) {
 			<div className='left'>
 				<div className='info'>
 					<i>
-						<CartIcon />
+						<FaShoppingCart />
 					</i>
 					<p>
 						{ingredientsCount}{' '}
@@ -23,7 +23,7 @@ export function RecipeHeader({ title, time, ingredientsCount }) {
 				</div>
 				<div className='info time-tooltip'>
 					<i>
-						<ClockIcon />
+						<FaClock />
 					</i>
 					<a>
 						<p>{time} min</p>

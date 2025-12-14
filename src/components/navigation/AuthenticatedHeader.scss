@@ -186,6 +186,41 @@
 	visibility: visible;
 }
 
+/* Mobile Hamburger Button */
+.mobile-hamburger-button {
+	display: none;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 8px;
+	flex-direction: column;
+	gap: 5px;
+	width: 32px;
+	height: 32px;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+
+	span {
+		display: block;
+		width: 24px;
+		height: 2px;
+		background: #fff;
+		border-radius: 2px;
+		transition: all 0.3s ease;
+	}
+
+	/* Only show on mobile */
+	@media (max-width: 768px) {
+		display: flex;
+	}
+
+	/* Hide on desktop */
+	@media (min-width: 769px) {
+		display: none !important;
+	}
+}
+
 .header-app__caret {
 	margin-left: 0.25rem;
 	display: inline-block;
@@ -226,4 +261,39 @@
 .header-app__overlay.visible {
 	opacity: 1;
 	visibility: visible;
+}
+
+/* Mobile Hamburger Button */
+.mobile-hamburger-button {
+	display: none;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 8px;
+	flex-direction: column;
+	gap: 5px;
+	width: 32px;
+	height: 32px;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+
+	span {
+		display: block;
+		width: 24px;
+		height: 2px;
+		background: #fff;
+		border-radius: 2px;
+		transition: all 0.3s ease;
+	}
+
+	/* Only show on mobile */
+	@media (max-width: 768px) {
+		display: flex;
+	}
+
+	/* Hide on desktop */
+	@media (min-width: 769px) {
+		display: none !important;
+	}
 }

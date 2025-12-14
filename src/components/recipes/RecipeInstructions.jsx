@@ -6,7 +6,7 @@ import React from 'react';
  */
 export function RecipeInstructions({ instrucciones }) {
 	return (
-		<div className='slide active'>
+		<div className='slide'>
 			{instrucciones?.map((instruccion, index) => (
 				<div key={index} className='instruccion'>
 					<div className='index'>

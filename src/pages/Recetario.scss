@@ -95,6 +95,14 @@
 				box-sizing: border-box;
 				padding: 10px;
 
+				/* Mobile: Full width */
+				@media (max-width: 768px) {
+					width: 100%;
+					max-width: 100%;
+					flex: 0 0 100%;
+					padding: 10px 8px;
+				}
+
 				.receta-membresia-inner {
 					.info {
 						.row {
