@@ -757,6 +757,183 @@
 }
 
 // Responsive adjustments
+// Popup styles for comments
+.popup {
+	height: 100vh;
+	width: 100vw;
+	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999999;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: start;
+	overflow: auto;
+
+	.container-popup {
+		width: 550px;
+		background-color: #fff;
+		border: 3px solid #dcb244;
+		border-radius: 25px;
+		position: relative;
+		padding: 15px 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		margin: 20px 0;
+
+		button.close {
+			position: absolute;
+			top: -10px;
+			right: -10px;
+			height: 30px;
+			width: 30px;
+			border-radius: 50%;
+			border: 1px solid #7a7a7a;
+			color: #7a7a7a;
+			background-color: #fff;
+			transition: all 0.4s;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			&:hover {
+				border-color: #dcb244;
+				color: #dcb244;
+			}
+
+			svg {
+				font-size: 14px;
+			}
+		}
+
+		h3 {
+			color: #dcb244;
+			font-family: 'Gilroy-Medium' !important;
+			font-size: 25px;
+			text-transform: uppercase;
+			font-weight: 400;
+			letter-spacing: 1px;
+			padding-bottom: 10px;
+			width: 100%;
+			margin: 0 2.5%;
+
+			&.response-to {
+				text-transform: initial;
+				border-bottom: 1px solid #7a7a7a;
+				font-size: 21px;
+			}
+		}
+
+		p {
+			font-family: 'Gilroy-Medium' !important;
+			color: #bdbdbd;
+			margin-bottom: 10px;
+			width: 100%;
+			text-align: center;
+			padding: 0 60px;
+
+			&.label {
+				padding: 0;
+				text-align: left;
+				margin: 10px 2.5% 5px;
+			}
+		}
+
+		img {
+			width: 80px;
+			margin-top: 15px;
+		}
+
+		form {
+			width: 95%;
+			margin: 0 auto;
+
+			textarea.comment {
+				width: 100%;
+				min-height: 120px;
+				font-size: 16px;
+				font-family: 'Gilroy-Medium' !important;
+				color: #7a7a7a;
+				padding: 10px;
+				border-radius: 10px;
+				border: 1px solid #7a7a7a;
+				margin-top: 10px;
+				resize: vertical;
+
+				&:focus {
+					outline: none !important;
+					border: 1px solid #dcb244;
+					box-shadow: 0 0 10px #dcb244;
+				}
+			}
+
+			input[type='submit'].send-comment {
+				width: 100%;
+				padding: 15px 0;
+				margin-top: 20px;
+				background-color: #dcb244;
+				color: #fff;
+				border: 2px solid #dcb244;
+				border-radius: 7px;
+				font-size: 16px;
+				font-family: 'Gilroy-Medium' !important;
+				cursor: pointer;
+				transition: all 0.4s;
+
+				&:hover {
+					background-color: #c9a038;
+					border-color: #c9a038;
+				}
+			}
+		}
+
+		a.button {
+			width: 250px;
+			margin: 15px calc((100% - 250px) / 2) !important;
+			text-align: center;
+			background-color: #dcb244;
+			color: #fff;
+			border: 2px solid #dcb244;
+			text-decoration: none;
+			padding: 10px;
+			border-radius: 7px;
+			display: block;
+			transition: all 0.4s;
+
+			&:hover {
+				background-color: #c9a038;
+				border-color: #c9a038;
+			}
+		}
+
+		a.second {
+			font-size: 0.9em;
+			display: inline-block;
+			color: #7a7a7a;
+			text-decoration: none;
+			margin-top: 10px;
+			width: 100%;
+			text-align: center;
+		}
+	}
+
+	&.comment {
+		.container-popup {
+			h3 {
+				text-transform: initial;
+				border-bottom: 1px solid #7a7a7a;
+				font-size: 21px;
+				padding-bottom: 5px;
+			}
+		}
+	}
+}
+
 @media (max-width: 768px) {
 	.recipe {
 		.general-container {
@@ -766,6 +943,17 @@
 					width: 100%;
 					border-right: none;
 				}
+			}
+		}
+	}
+
+	.popup {
+		.container-popup {
+			width: 90%;
+			margin: 20px auto;
+
+			p {
+				padding: 0 20px;
 			}
 		}
 	}

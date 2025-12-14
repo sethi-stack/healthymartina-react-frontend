@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { FaReply, FaTrash } from 'react-icons/fa';
 import {
 	getRecipeComments,
 	addRecipeComment,
 	deleteRecipeComment,
 } from '../../lib/api/recipes';
+import { RecipeCommentInfoPopup } from './RecipeCommentInfoPopup';
+import { RecipeCommentForm } from './RecipeCommentForm';
+import { RecipeDeleteCommentPopup } from './RecipeDeleteCommentPopup';
 
 /**
  * Recipe Comments Component
@@ -12,7 +16,14 @@ import {
  */
 export function RecipeComments({ recipeId, comments: initialComments }) {
 	const queryClient = useQueryClient();
-	const [showAddComment, setShowAddComment] = useState(false);
+	const [showInfoPopup, setShowInfoPopup] = useState(false);
+	const [showCommentForm, setShowCommentForm] = useState(false);
+	const [showDeletePopup, setShowDeletePopup] = useState(false);
+	const [showReplyInfoPopup, setShowReplyInfoPopup] = useState(false);
+	const [showReplyForm, setShowReplyForm] = useState(false);
+	const [replyTo, setReplyTo] = useState(null);
+	const [commentToDelete, setCommentToDelete] = useState(null);
+	const [openMenuId, setOpenMenuId] = useState(null);
 
 	// Fetch comments from API
 	const {
@@ -35,7 +46,11 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 		onSuccess: () => {
 			// Refetch comments after adding
 			refetchComments();
-			setShowAddComment(false);
+			setShowCommentForm(false);
+			setShowInfoPopup(false);
+			setShowReplyForm(false);
+			setShowReplyInfoPopup(false);
+			setReplyTo(null);
 		},
 	});
 
@@ -44,25 +59,86 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 		onSuccess: () => {
 			// Refetch comments after deleting
 			refetchComments();
+			setShowDeletePopup(false);
+			setCommentToDelete(null);
 		},
 	});
 
 	const handleAddComment = () => {
-		setShowAddComment(true);
-		// TODO: Implement comment modal/popup
-		console.log('Add comment for recipe:', recipeId);
+		setShowInfoPopup(true);
 	};
 
-	const handleDeleteComment = async (commentId) => {
-		if (window.confirm('¿Estás seguro que deseas eliminar este comentario?')) {
+	const handleProceedToForm = () => {
+		setShowInfoPopup(false);
+		setShowCommentForm(true);
+	};
+
+	const handleSubmitComment = async (commentText) => {
+		try {
+			await addCommentMutation.mutateAsync({ recipeId, comment: commentText });
+		} catch (error) {
+			console.error('Error adding comment:', error);
+			alert('Error al agregar el comentario. Por favor, intenta de nuevo.');
+		}
+	};
+
+	const handleReply = (comment) => {
+		setReplyTo({
+			name: comment.user?.name || comment.user?.nombre,
+			username: comment.user?.username || comment.user?.usuario,
+			commentId: comment.id,
+		});
+		setShowReplyInfoPopup(true);
+	};
+
+	const handleProceedToReplyForm = () => {
+		setShowReplyInfoPopup(false);
+		setShowReplyForm(true);
+	};
+
+	const handleSubmitReply = async (replyText) => {
+		try {
+			// For now, replies are treated as regular comments
+			// If backend supports parent_id, we can add it here
+			await addCommentMutation.mutateAsync({ recipeId, comment: replyText });
+		} catch (error) {
+			console.error('Error adding reply:', error);
+			alert('Error al agregar la respuesta. Por favor, intenta de nuevo.');
+		}
+	};
+
+	const handleDeleteClick = (commentId) => {
+		setCommentToDelete(commentId);
+		setShowDeletePopup(true);
+	};
+
+	const handleConfirmDelete = async () => {
+		if (commentToDelete) {
 			try {
-				await deleteCommentMutation.mutateAsync(commentId);
+				await deleteCommentMutation.mutateAsync(commentToDelete);
 			} catch (error) {
 				console.error('Error deleting comment:', error);
 				alert('Error al eliminar el comentario. Por favor, intenta de nuevo.');
 			}
 		}
 	};
+
+	// Close menu when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (openMenuId && !event.target.closest('.comment-menu')) {
+				setOpenMenuId(null);
+			}
+		};
+
+		if (openMenuId) {
+			document.addEventListener('click', handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+		};
+	}, [openMenuId]);
 
 	return (
 		<div className='comments-container'>
@@ -133,15 +209,36 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 										<p>{comment.comment || comment.comentario}</p>
 									</div>
 								</div>
-								<div className='comment-menu'>
-									<button>
+								<div
+									className={`comment-menu ${
+										openMenuId === comment.id ? 'active' : ''
+									}`}
+								>
+									<button
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+											setOpenMenuId(
+												openMenuId === comment.id ? null : comment.id
+											);
+										}}
+									>
 										<span></span>
 										<span></span>
 										<span></span>
 									</button>
 									<div className='comment-nav'>
-										<a className='make-response' href='#'>
-											<i className='fas fa-reply'></i>Responder comentario
+										<a
+											className='make-response'
+											href='#'
+											onClick={(e) => {
+												e.preventDefault();
+												setOpenMenuId(null);
+												handleReply(comment);
+											}}
+										>
+											<FaReply />
+											Responder comentario
 										</a>
 										{/* Show delete only if comment is owned by current user */}
 										{comment.is_owned_by_current_user !== false && (
@@ -150,10 +247,12 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 												href='#'
 												onClick={(e) => {
 													e.preventDefault();
-													handleDeleteComment(comment.id);
+													setOpenMenuId(null);
+													handleDeleteClick(comment.id);
 												}}
 											>
-												<i className='fas fa-trash'></i>Eliminar comentario
+												<FaTrash />
+												Eliminar comentario
 											</a>
 										)}
 									</div>
@@ -163,6 +262,57 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 					})
 				)}
 			</div>
+
+			{/* Popups */}
+			{showInfoPopup && (
+				<RecipeCommentInfoPopup
+					onProceed={handleProceedToForm}
+					onClose={() => setShowInfoPopup(false)}
+				/>
+			)}
+
+			{showCommentForm && (
+				<RecipeCommentForm
+					recipeId={recipeId}
+					onSubmit={handleSubmitComment}
+					onClose={() => setShowCommentForm(false)}
+				/>
+			)}
+
+			{showReplyInfoPopup && replyTo && (
+				<RecipeCommentInfoPopup
+					onProceed={handleProceedToReplyForm}
+					onClose={() => {
+						setShowReplyInfoPopup(false);
+						setReplyTo(null);
+					}}
+					isReply={true}
+					replyTo={replyTo}
+				/>
+			)}
+
+			{showReplyForm && replyTo && (
+				<RecipeCommentForm
+					recipeId={recipeId}
+					onSubmit={handleSubmitReply}
+					onClose={() => {
+						setShowReplyForm(false);
+						setReplyTo(null);
+					}}
+					isReply={true}
+					replyTo={replyTo}
+				/>
+			)}
+
+			{showDeletePopup && (
+				<RecipeDeleteCommentPopup
+					onConfirm={handleConfirmDelete}
+					onClose={() => {
+						setShowDeletePopup(false);
+						setCommentToDelete(null);
+					}}
+				/>
+			)}
 		</div>
 	);
 }
