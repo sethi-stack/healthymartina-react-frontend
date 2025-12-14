@@ -73,8 +73,8 @@
 		.comments {
 			display: block;
 			text-align: left;
-			.comment:first-of-type{
-				border-top:0px !important;
+			.comment:first-of-type {
+				border-top: 0px !important;
 			}
 			.comment {
 				border-top: 1px solid #7a7a7a;
@@ -85,7 +85,7 @@
 				align-items: flex-start;
 				.comment-date {
 					color: #d2d2d2;
-					font-family: "Gilroy-Medium";
+					font-family: 'Gilroy-Medium';
 					margin-right: 10px;
 					p {
 						margin: 0;
@@ -261,7 +261,7 @@
 							align-items: center;
 							background: $individual;
 							border-radius: 4px;
-							font-family: "Gilroy";
+							font-family: 'Gilroy';
 							color: #fff;
 							padding: 0 5px;
 						}
@@ -325,7 +325,7 @@
 							padding: 15px 0;
 							text-decoration: none;
 							font-weight: 600;
-							font-family: "Gilroy-SemiBold" !important;
+							font-family: 'Gilroy-SemiBold' !important;
 						}
 						.active {
 							color: $individual;
@@ -355,10 +355,18 @@
 								$lower-color: #dcb244;
 								$thumb-color: #dcb244;
 								$thumb-hover-color: #dcb244;
-								$upper-background: linear-gradient(to bottom, $upper-color, $upper-color) 100% 50% /
-									100% $track-height no-repeat transparent;
-								$lower-background: linear-gradient(to bottom, $lower-color, $lower-color) 100% 50% /
-									100% $track-height no-repeat transparent;
+								$upper-background: linear-gradient(
+										to bottom,
+										$upper-color,
+										$upper-color
+									)
+									100% 50% / 100% $track-height no-repeat transparent;
+								$lower-background: linear-gradient(
+										to bottom,
+										$lower-color,
+										$lower-color
+									)
+									100% 50% / 100% $track-height no-repeat transparent;
 								// Webkit cannot style progress so we fake it with a long shadow
 								// on the thumb element
 								@function webkit-slider-thumb-shadow($i: 1) {
@@ -492,7 +500,7 @@
 											color: gray;
 											padding: 10px;
 											visibility: hidden;
-											font-family: "Gotham-light";
+											font-family: 'Gotham-light';
 											top: 13.5%;
 											font-size: 15px;
 											text-align: justify;
@@ -560,7 +568,7 @@
 										.bar {
 											width: 6vw;
 											height: 6px;
-											background: #D3D3D3;
+											background: #d3d3d3;
 											border-radius: 15px;
 											position: relative;
 											overflow: hidden;
@@ -579,13 +587,10 @@
 							}
 							.valor-diario {
 								position: absolute;
-								top: 100%;
+								bottom: 0;
 								width: 100%;
 								height: 70px;
-								display: flex;
-								flex-wrap: wrap;
-								justify-content: center;
-								align-items: center;
+								text-align: center;
 							}
 						}
 						.active {
@@ -612,7 +617,7 @@
 							text-decoration: none;
 							font-weight: 600;
 							margin: 0 10px;
-							font-family: "Gilroy-SemiBold" !important;
+							font-family: 'Gilroy-SemiBold' !important;
 						}
 						.active {
 							color: $individual;
@@ -668,7 +673,7 @@
 										letter-spacing: 1px;
 									}
 								}
-								text{
+								text {
 									font-weight: 900 !important;
 								}
 							}
@@ -684,147 +689,147 @@
 }
 
 .add-meal-form .form-group {
-    margin: 15px 0;
+	margin: 15px 0;
 }
 
 .add-meal-form .type-calender label.radiobox-label {
-    width: auto !important;
-    float: left;
-    border-right: none !important;
+	width: auto !important;
+	float: left;
+	border-right: none !important;
 }
 
 .add-meal-form .type-calender {
-    display: inline-block;
-    width: 100%;
-    background: #f6f6f6;
-    border: none;
-    border-radius: 0;
+	display: inline-block;
+	width: 100%;
+	background: #f6f6f6;
+	border: none;
+	border-radius: 0;
 }
 
-.type-calender label.radiobox-label input:checked~.radiolabel {
-    color: #dcb244 !important;
-    background-color: transparent !important;
+.type-calender label.radiobox-label input:checked ~ .radiolabel {
+	color: #dcb244 !important;
+	background-color: transparent !important;
 }
 
 .type-calender label.radiobox-label .radiolabel {
-    margin: 0;
-    font-family: "Gilroy" !important;
-    color: #999 !important;
-    padding: 5px 15px !important;
-    font-size: 17px !important;
+	margin: 0;
+	font-family: 'Gilroy' !important;
+	color: #999 !important;
+	padding: 5px 15px !important;
+	font-size: 17px !important;
 }
 
 .add-meal-form .radio-box-sec label.radiobox-label {
-    width: 50%;
+	width: 50%;
 }
 
 .add-meal-form .radio-box-sec label.radiobox-label .radiolabel {
-    width: 100%;
-    text-align: center;
+	width: 100%;
+	text-align: center;
 }
 
 .add-meal-form .radio-box-sec label.radiobox-label .radiolabel {
-    text-transform: capitalize;
-    font-weight: 400;
-    padding: 10px 5px;
-    font-size: 14px;
+	text-transform: capitalize;
+	font-weight: 400;
+	padding: 10px 5px;
+	font-size: 14px;
 }
 
 .dropbtn {
-    background-color: #04AA6D;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
+	background-color: #04aa6d;
+	color: white;
+	padding: 16px;
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
 }
 
 .dropbtn:hover,
 .dropbtn:focus {
-    background-color: #3e8e41;
+	background-color: #3e8e41;
 }
 
 #myInputDays,
 #myInputMeals {
-    box-sizing: border-box;
-    background-position: 14px 12px;
-    background-repeat: no-repeat;
-    font-size: 16px;
-    padding: 14px 20px 12px 45px;
-    border: none;
-    border-bottom: 1px solid #dcb244;
-    margin: 0;
+	box-sizing: border-box;
+	background-position: 14px 12px;
+	background-repeat: no-repeat;
+	font-size: 16px;
+	padding: 14px 20px 12px 45px;
+	border: none;
+	border-bottom: 1px solid #dcb244;
+	margin: 0;
 }
 
 #myInputDays:focus,
 #myInputMeals:focus {
-    outline: 3px solid #ddd;
+	outline: 3px solid #ddd;
 }
 
 .dropdown {
-    position: relative;
-    display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .dropdown-content {
-    background-color: #f6f6f6;
-    min-width: 230px;
-    overflow: auto;
-    border: 1px solid #dcb244;
-    z-index: 1;
-    border-radius: 10px;
-    margin: 0 0 15px;
-    position: relative;
+	background-color: #f6f6f6;
+	min-width: 230px;
+	overflow: auto;
+	border: 1px solid #dcb244;
+	z-index: 1;
+	border-radius: 10px;
+	margin: 0 0 15px;
+	position: relative;
 }
 
 .dropdown-content a {
-    color: black;
-    padding: 10px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 15px;
+	color: black;
+	padding: 10px 16px;
+	text-decoration: none;
+	display: block;
+	font-size: 15px;
 }
 
 .dropdown a:hover {
-    background-color: #ddd;
+	background-color: #ddd;
 }
 
-.dropdown-content>.fa-search {
-    position: absolute;
-    top: 13px;
-    left: 10px;
-    font-size: 14px;
-    color: #b6b6b6;
+.dropdown-content > .fa-search {
+	position: absolute;
+	top: 13px;
+	left: 10px;
+	font-size: 14px;
+	color: #b6b6b6;
 }
 
 .checkbox-label.recpdaynum-disabled {
-    opacity: 0.5;
-    cursor: default;
+	opacity: 0.5;
+	cursor: default;
 }
 
 .afterSelReceta label.checkbox-label {
-    padding: 0 0 0 20px;
-    width: auto;
-    display: inline-block;
+	padding: 0 0 0 20px;
+	width: auto;
+	display: inline-block;
 }
 
-.afterSelReceta label.checkbox-label input[type="checkbox"] {
-    display: none;
+.afterSelReceta label.checkbox-label input[type='checkbox'] {
+	display: none;
 }
 
 .afterSelReceta .recpday-tabs {
-    width: 100%;
-    display: inline-block;
+	width: 100%;
+	display: inline-block;
 }
 
 .add-meal-btn-disabled {
-    opacity: 0.5;
-    pointer-events: none;
+	opacity: 0.5;
+	pointer-events: none;
 }
 
 .dropdown-content a.name-value-days,
 .dropdown-content a.name-value-meals {
-    background: #fff;
+	background: #fff;
 	border-bottom: 1px solid #7a7a7a;
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -832,20 +837,20 @@
 
 .dropdown-content a.name-value-days:hover,
 .dropdown-content a.name-value-meals:hover {
-    background: #FCF7EC;
+	background: #fcf7ec;
 }
 
 .recipe #menu-vue .general-container .container-receta .info-left .options {
-    background: #fff;
+	background: #fff;
 }
 
 .button-hamburger .active {
-    color: #fff;
+	color: #fff;
 }
 
 .jscroll-loading {
-    text-align: center;
-    width: 100%;
+	text-align: center;
+	width: 100%;
 }
 
 // #application #menu-vue .general-container .sub-container .col13 a {
@@ -864,151 +869,151 @@
 // 	max-width: min-content !important;
 // }
 #application #menu-vue .general-container .sub-container .col13 .imagen img {
-    opacity: 1 !important;
-    object-fit: cover;
-    min-width: 100%;
+	opacity: 1 !important;
+	object-fit: cover;
+	min-width: 100%;
 }
 
 .recetario-page .button-options .btn-filtro.active:hover {
-    background-color: #fff !important;
-    //border-color: #fff !important;
+	background-color: #fff !important;
+	//border-color: #fff !important;
 }
 
 .recetario-page .button-options .btn-filtro.active:hover {
-    fill: #fff !important;
+	fill: #fff !important;
 }
 
 .col13.libre-usuarios .receta-membresia-inner {
-    cursor: default;
-    pointer-events: none;
-    opacity: 0.3;
+	cursor: default;
+	pointer-events: none;
+	opacity: 0.3;
 }
 
 .libre-usuarios.col13.receta-show .receta-membresia-inner {
-    pointer-events: auto;
-    cursor: pointer;
-    opacity: 1;
+	pointer-events: auto;
+	cursor: pointer;
+	opacity: 1;
 }
 
 .receta-show .receta-upgrade-membresia-btn {
-    display: none;
+	display: none;
 }
 
 .receta-upgrade-membresia-btn {
-    position: absolute;
-    right: 0;
-    background: #dcb244;
-    border-radius: 0 0 0 60px;
-    width: 60px;
-    height: 50px;
-    text-align: center;
-    padding: 6px 0 0 10px;
-    z-index: 1;
-    box-shadow: 0px 0px 10px #fff;
+	position: absolute;
+	right: 0;
+	background: #dcb244;
+	border-radius: 0 0 0 60px;
+	width: 60px;
+	height: 50px;
+	text-align: center;
+	padding: 6px 0 0 10px;
+	z-index: 1;
+	box-shadow: 0px 0px 10px #fff;
 }
 
 .receta-upgrade-membresia-btn img {
-    width: 30px;
+	width: 30px;
 }
 
 .porcion-cantidad.porcionNumero {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 .porcionRango .receta-porcion.porcionTexto {
-    display: none;
+	display: none;
 }
 
 .tabcontent {
-    display: none;
+	display: none;
 }
 
 .tablinks.current {
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
-    background-color: #ffffff;
-    border-bottom: 0;
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+	background-color: #ffffff;
+	border-bottom: 0;
 }
 
 .tablinks {
-    cursor: pointer;
-    position: relative;
-    margin: 0;
-    border-color: #dae1e9;
-    border-bottom-color: rgb(218, 225, 233);
-    border-style: solid;
-    border-bottom-style: solid;
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-justify-content: center !important;
-    justify-content: center !important;
-    -webkit-align-items: center !important;
-    align-items: center !important;
-    overflow: hidden;
-    white-space: nowrap;
-    text-decoration: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    display: flex;
+	cursor: pointer;
+	position: relative;
+	margin: 0;
+	border-color: #dae1e9;
+	border-bottom-color: rgb(218, 225, 233);
+	border-style: solid;
+	border-bottom-style: solid;
+	-webkit-box-flex: 1;
+	-ms-flex-positive: 1;
+	flex-grow: 1;
+	-ms-flex-preferred-size: 0;
+	flex-basis: 0;
+	-webkit-justify-content: center !important;
+	justify-content: center !important;
+	-webkit-align-items: center !important;
+	align-items: center !important;
+	overflow: hidden;
+	white-space: nowrap;
+	text-decoration: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	display: flex;
 }
 
 .tablinks::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    border-bottom: 1px solid transparent;
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 1px;
+	border-bottom: 1px solid transparent;
 }
 
 .snippet-panel-tab-inner {
-    padding: 0;
-    border-width: 0;
-    overflow: visible;
-    background-color: #fafafa;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    border-color: #dae1e9;
-    border-style: solid;
-    border-width: 0 0 1px 0;
-    -webkit-flex: 0 0 54px;
-    -ms-flex: 0 0 54px;
-    flex: 0 0 54px;
-    display: flex;
-    margin: 0 0 10px;
+	padding: 0;
+	border-width: 0;
+	overflow: visible;
+	background-color: #fafafa;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	border-color: #dae1e9;
+	border-style: solid;
+	border-width: 0 0 1px 0;
+	-webkit-flex: 0 0 54px;
+	-ms-flex: 0 0 54px;
+	flex: 0 0 54px;
+	display: flex;
+	margin: 0 0 10px;
 }
 
 #snippet-tab {
-    display: block;
+	display: block;
 }
 
 .tablinks {
-    border: 1px solid #dae1e9;
-    padding: 15px 0;
-    color: #BDBDBD;
-    font-weight: 600;
+	border: 1px solid #dae1e9;
+	padding: 15px 0;
+	color: #bdbdbd;
+	font-weight: 600;
 }
 
 .tablinks.current {
-    color: #dcb244;
+	color: #dcb244;
 }
 
 .tablinks.current::before {
-    content: '';
-    position: absolute;
-    top: 0px;
-    left: 0;
-    height: 2px;
-    width: 100%;
-    background: #dcb244;
+	content: '';
+	position: absolute;
+	top: 0px;
+	left: 0;
+	height: 2px;
+	width: 100%;
+	background: #dcb244;
 }
 .receta-field input.recipient_email_ad.recetaname {
-    padding: 15px;
+	padding: 15px;
 }

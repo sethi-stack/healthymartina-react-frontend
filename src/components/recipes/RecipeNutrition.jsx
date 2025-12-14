@@ -88,9 +88,10 @@ export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
 						</div>
 					</div>
 				))}
-			</div>
-			<div className='valor-diario'>
-				<p>% Valor diario = 2000 calorías</p>
+				<div className='valor-diario'>
+					<hr />
+					<p>% Valor diario = 2000 calorías</p>
+				</div>
 			</div>
 		</div>
 	);
