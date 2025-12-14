@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
 	RecetarioIcon,
 	CalendarioIcon,
@@ -13,13 +14,13 @@ import './AuthenticatedNav.scss';
  * Based on resources/views/partials/nav-sub-menu.blade.php
  */
 export function AuthenticatedNav({
-	currentPath = '',
 	permissions = {},
-	onNavigate,
 	onSearch,
 	searchData = { recipes: [], ingredients: [], calendars: [] },
 }) {
 	const [searchOpen, setSearchOpen] = useState(false);
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	const hasPermission = (permission) => {
 		// For development/demo purposes, return true if permissions prop is empty or undefined
@@ -28,13 +29,7 @@ export function AuthenticatedNav({
 	};
 
 	const isActive = (path) => {
-		return currentPath.includes(path);
-	};
-
-	const handleNavClick = (path) => {
-		if (onNavigate) {
-			onNavigate(path);
-		}
+		return location.pathname.includes(path);
 	};
 
 	const toggleSearch = (e) => {
@@ -61,19 +56,19 @@ export function AuthenticatedNav({
 		// Logic migrated from search.js
 		if (name) {
 			if (type === 'calendar') {
-				if (onNavigate) onNavigate(`/calendario?id=${value}`);
+				// Calendar route not yet implemented in React, use full page reload
+				window.location.href = `/calendario?id=${value}`;
 			} else if (type === 'ingredient') {
-				// Using URLSearchParams for cleaner query construction
-				// var url = '/recetario?' + 'filter=true&ingrediente_incluir%5B%5D=' + value;
+				// Use React Router for recetario route
 				const params = new URLSearchParams();
 				params.append('filter', 'true');
 				params.append('ingrediente_incluir[]', value);
-				if (onNavigate) onNavigate(`/recetario?${params.toString()}`);
+				navigate(`/recetario?${params.toString()}`);
+				handleCloseSearch();
 			} else {
-				// Recipe
-				if (onNavigate) onNavigate(`/receta/${value}`);
+				// Recipe route not yet implemented in React, use full page reload
+				window.location.href = `/receta/${value}`;
 			}
-			handleCloseSearch();
 		}
 	};
 
@@ -84,14 +79,10 @@ export function AuthenticatedNav({
 					<ul>
 						{hasPermission('recetario_view') && (
 							<li className={isActive('recetario') ? 'selected-actv-menu' : ''}>
-								<button
-									type='button'
-									className='auth-nav__link'
-									onClick={() => handleNavClick('/recetario')}
-								>
+								<Link to='/recetario' className='auth-nav__link'>
 									<RecetarioIcon />
 									Recetario
-								</button>
+								</Link>
 							</li>
 						)}
 
@@ -99,40 +90,28 @@ export function AuthenticatedNav({
 							<li
 								className={isActive('calendario') ? 'selected-actv-menu' : ''}
 							>
-								<button
-									type='button'
-									className='auth-nav__link'
-									onClick={() => handleNavClick('/calendario')}
-								>
+								<Link to='/calendario' className='auth-nav__link'>
 									<CalendarioIcon />
 									Calendario
-								</button>
+								</Link>
 							</li>
 						)}
 
 						{hasPermission('lista_view') && (
 							<li className={isActive('listas') ? 'selected-actv-menu' : ''}>
-								<button
-									type='button'
-									className='auth-nav__link'
-									onClick={() => handleNavClick('/listas')}
-								>
+								<Link to='/listas' className='auth-nav__link'>
 									<ListaIcon />
 									Lista
-								</button>
+								</Link>
 							</li>
 						)}
 
 						{hasPermission('planes_view') && (
 							<li className={isActive('planes') ? 'selected-actv-menu' : ''}>
-								<button
-									type='button'
-									className='auth-nav__link'
-									onClick={() => handleNavClick('/planes')}
-								>
+								<Link to='/planes' className='auth-nav__link'>
 									<PlanesIcon />
 									Planes
-								</button>
+								</Link>
 							</li>
 						)}
 

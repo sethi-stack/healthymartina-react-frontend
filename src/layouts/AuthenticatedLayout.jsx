@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
 	AuthenticatedHeader,
 	AuthenticatedNav,
@@ -16,7 +16,6 @@ import { useAuthStore } from '../stores/authStore';
  */
 export function AuthenticatedLayout({ children, permissions, searchData }) {
 	const navigate = useNavigate();
-	const location = useLocation();
 	const user = useAuthStore((state) => state.user);
 	const clearAuth = useAuthStore((state) => state.clearAuth);
 
@@ -74,9 +73,7 @@ export function AuthenticatedLayout({ children, permissions, searchData }) {
 				onLogout={handleLogout}
 			/>
 			<AuthenticatedNav
-				currentPath={location.pathname}
 				permissions={defaultPermissions}
-				onNavigate={handleNavigate}
 				onSearch={handleSearch}
 				searchData={defaultSearchData}
 			/>

@@ -6,6 +6,7 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { Dashboard } from './pages/Dashboard';
+import { Recetario } from './pages/Recetario';
 
 /**
  * Root application component with routing.
@@ -50,6 +51,16 @@ export function App() {
 						<ProtectedRoute>
 							<AuthenticatedLayout>
 								<Dashboard />
+							</AuthenticatedLayout>
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path='/recetario'
+					element={
+						<ProtectedRoute>
+							<AuthenticatedLayout>
+								<Recetario />
 							</AuthenticatedLayout>
 						</ProtectedRoute>
 					}
