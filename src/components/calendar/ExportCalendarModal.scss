@@ -1,0 +1,113 @@
+.exportar-calendar {
+	.container-popup {
+		max-width: 800px;
+	}
+
+	.tabs-container {
+		.tabs {
+			display: flex;
+			border-bottom: 2px solid #e0e0e0;
+			margin-bottom: 20px;
+
+			.tab-link {
+				padding: 12px 20px;
+				text-decoration: none;
+				color: #666;
+				border-bottom: 2px solid transparent;
+				margin-bottom: -2px;
+				transition: all 0.2s;
+
+				&.active {
+					color: #dcb244;
+					border-bottom-color: #dcb244;
+				}
+
+				&:hover {
+					color: #dcb244;
+				}
+
+				p {
+					margin: 0;
+				}
+			}
+		}
+
+		.tabs-content {
+			.tab-pane {
+				.export-options {
+					p {
+						margin-bottom: 15px;
+					}
+
+					.select-buttons {
+						display: flex;
+						gap: 10px;
+						margin-bottom: 20px;
+
+						.calendar-export-select {
+							flex: 1;
+							padding: 15px;
+							border: 2px solid #e0e0e0;
+							background: #fff;
+							border-radius: 4px;
+							cursor: pointer;
+							transition: all 0.2s;
+
+							&:hover {
+								border-color: #dcb244;
+							}
+
+							&.button--active {
+								border-color: #dcb244;
+								background: #fef9e7;
+							}
+
+							.button__content {
+								display: flex;
+								flex-direction: column;
+								align-items: center;
+								gap: 8px;
+
+								svg {
+									path:first-child {
+										fill: #e0e0e0;
+									}
+									path:last-child {
+										fill: #666;
+									}
+								}
+							}
+
+							&.button--active .button__content svg path:first-child {
+								fill: #dcb244;
+							}
+						}
+					}
+
+					.export-btn {
+						width: 100%;
+						padding: 12px;
+						background: #dcb244;
+						color: #fff;
+						border: none;
+						border-radius: 4px;
+						font-size: 16px;
+						font-weight: 500;
+						cursor: pointer;
+						transition: background 0.2s;
+
+						&:hover:not(:disabled) {
+							background: #c9a038;
+						}
+
+						&:disabled {
+							opacity: 0.6;
+							cursor: not-allowed;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+

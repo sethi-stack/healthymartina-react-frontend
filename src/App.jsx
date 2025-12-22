@@ -10,6 +10,7 @@ import { ForgotPassword } from './pages/ForgotPassword';
 import { Dashboard } from './pages/Dashboard';
 import { Recetario } from './pages/Recetario';
 import { RecipeDetail } from './pages/RecipeDetail';
+import Calendar from './pages/Calendar';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -86,6 +87,16 @@ export function App() {
 							<ProtectedRoute>
 								<AuthenticatedLayout>
 									<RecipeDetail />
+								</AuthenticatedLayout>
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path='/calendario'
+						element={
+							<ProtectedRoute>
+								<AuthenticatedLayout>
+									<Calendar />
 								</AuthenticatedLayout>
 							</ProtectedRoute>
 						}

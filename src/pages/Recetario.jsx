@@ -1,12 +1,16 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getRecipes } from '../lib/api/recipes';
+import { getRecipes, getAdvancedFilteredRecipes } from '../lib/api/recipes';
 import { RecipeCard } from '../components/recipes/RecipeCard';
+import { FiltersPopup } from '../components/recipes/FiltersPopup';
 import { FilterIcon, ResetFilterIcon, BookmarkIcon } from '../components/icons';
 import './Recetario.scss';
 
 export function Recetario() {
 	const [hasBookmarkFilter, setHasBookmarkFilter] = useState(false);
+	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+	const [appliedFilters, setAppliedFilters] = useState({});
+	const hasActiveFilters = Object.keys(appliedFilters).length > 0;
 
 	const {
 		data,
@@ -16,9 +20,14 @@ export function Recetario() {
 		status,
 		isLoading,
 	} = useInfiniteQuery({
-		queryKey: ['recipes', { hasBookmarkFilter }],
-		queryFn: ({ pageParam = 1 }) =>
-			getRecipes({ page: pageParam, bookmark: hasBookmarkFilter }),
+		queryKey: ['recipes', { hasBookmarkFilter, filters: appliedFilters }],
+		queryFn: ({ pageParam = 1 }) => {
+			// Use advanced filter if filters are applied, otherwise use regular getRecipes
+			if (hasActiveFilters) {
+				return getAdvancedFilteredRecipes(appliedFilters, pageParam, 27);
+			}
+			return getRecipes({ page: pageParam, bookmark: hasBookmarkFilter });
+		},
 		getNextPageParam: (lastPage) => {
 			// Handle Laravel pagination structure (Resource or standard)
 			const meta = lastPage.meta || lastPage;
@@ -51,13 +60,16 @@ export function Recetario() {
 	};
 
 	const handleFilterClick = () => {
-		console.log('Open filters');
-		// Implement popup logic later
+		setIsFiltersOpen(true);
 	};
 
 	const handleResetFilter = () => {
-		console.log('Reset filters');
+		setAppliedFilters({});
 		setHasBookmarkFilter(false);
+	};
+
+	const handleApplyFilters = (filters) => {
+		setAppliedFilters(filters);
 	};
 
 	const handleBookmarkFilter = () => {
@@ -85,7 +97,7 @@ export function Recetario() {
 						<div className='left'>
 							<div className='button-options'>
 								<button
-									className={`btn-filtro ${hasBookmarkFilter ? 'active' : ''}`}
+									className={`btn-filtro ${hasActiveFilters ? 'active' : ''}`}
 									onClick={handleFilterClick}
 								>
 									<FilterIcon />
@@ -150,6 +162,12 @@ export function Recetario() {
 					</div>
 				</div>
 			</div>
+			<FiltersPopup
+				isOpen={isFiltersOpen}
+				onClose={() => setIsFiltersOpen(false)}
+				onApplyFilters={handleApplyFilters}
+				initialFilters={appliedFilters}
+			/>
 		</div>
 	);
 }

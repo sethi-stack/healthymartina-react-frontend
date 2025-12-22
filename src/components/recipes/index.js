@@ -9,3 +9,5 @@ export { RecipeInstructions } from './RecipeInstructions';
 export { RecipeTips } from './RecipeTips';
 export { RecipeReactions } from './RecipeReactions';
 export { RecipeComments } from './RecipeComments';
+export { FiltersPopup } from './FiltersPopup';
+export { RangeSlider } from './RangeSlider';

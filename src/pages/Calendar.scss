@@ -1,0 +1,71 @@
+@import '../assets/scss/init';
+@import '../assets/scss/componentes/calendar';
+
+.calendar-loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 400px;
+
+	.loader {
+		img {
+			width: 50px;
+		}
+	}
+}
+
+.general-container.calendario-json {
+	.options {
+		background: #fff;
+	}
+
+	.indicador {
+		background: #fafafa;
+		padding: 15px 20px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-top: 1px solid #e0e0e0;
+
+		.left {
+			h3 {
+				margin: 0;
+				font-size: 1.5em;
+				font-weight: bold;
+			}
+		}
+
+		.right {
+			p {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin: 0;
+				color: #666;
+				font-size: 0.9em;
+
+				img {
+					width: 16px;
+					height: 16px;
+				}
+			}
+		}
+	}
+}
+
+.no-cal-sec {
+	min-height: 300px;
+	text-align: center;
+	padding: 40px 20px;
+
+	h3 {
+		margin-bottom: 30px;
+		font-size: 1.5em;
+		color: #333;
+	}
+
+	.button-options {
+		display: inline-block;
+	}
+}
+

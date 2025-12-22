@@ -1,0 +1,184 @@
+@import '@/assets/scss/init';
+
+.popup.filtros {
+	display: flex !important; // Override default display: none when open
+
+	.container-popup {
+		.indicadores {
+			width: 100%;
+			background: #f6f6f6;
+			padding: 7px 5%;
+			display: flex;
+			align-items: center;
+			margin-bottom: 20px;
+
+			a {
+				color: #b8b8b8;
+				margin-right: 15px;
+				text-decoration: none;
+				letter-spacing: 1px;
+				@include font-gilroy-medium;
+				transition: all 0.3s ease;
+
+				&.active {
+					color: $individual;
+				}
+
+				&:hover {
+					color: $individual;
+				}
+			}
+		}
+
+		.slide-indicadores {
+			display: none;
+
+			&.slide-active {
+				display: block;
+			}
+
+			p {
+				margin: 15px 0 8px 0;
+				@include font-gilroy-medium;
+				color: $gris-oscuro;
+
+				a {
+					margin-left: 8px;
+					color: $individual;
+					text-decoration: none;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+			}
+
+			select {
+				width: 100%;
+				padding: 10px;
+				border: 1px solid $gris-oscuro;
+				border-radius: 5px;
+				margin-bottom: 15px;
+				@include font-gilroy-medium;
+				color: $gris-oscuro;
+				background: white;
+
+				&[multiple] {
+					min-height: 120px;
+				}
+			}
+
+			// React-Select styling
+			.filtros-select {
+				width: 100%;
+				margin-bottom: 15px;
+
+				.filtros-select__control {
+					border: 1px solid $gris-oscuro;
+					border-radius: 5px;
+					min-height: 40px;
+					@include font-gilroy-medium;
+					color: $gris-oscuro;
+
+					&:hover {
+						border-color: $gris-oscuro;
+					}
+
+					&--is-focused {
+						border-color: $individual;
+						box-shadow: 0 0 10px $individual;
+					}
+				}
+
+				.filtros-select__value-container {
+					padding: 2px 8px;
+				}
+
+				.filtros-select__input-container {
+					color: $gris-oscuro;
+				}
+
+				.filtros-select__placeholder {
+					color: #bdbdbd;
+				}
+
+				.filtros-select__multi-value {
+					background-color: rgba($individual, 0.1);
+					border-radius: 3px;
+
+					.filtros-select__multi-value__label {
+						color: $gris-oscuro;
+					}
+
+					.filtros-select__multi-value__remove {
+						&:hover {
+							background-color: rgba($individual, 0.2);
+							color: $gris-oscuro;
+						}
+					}
+				}
+
+				.filtros-select__menu {
+					border: 1px solid $gris-oscuro;
+					border-radius: 5px;
+					box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+					margin-top: 4px;
+				}
+
+				.filtros-select__option {
+					&--is-focused {
+						background-color: rgba($individual, 0.1);
+					}
+
+					&--is-selected {
+						background-color: $individual;
+						color: white;
+					}
+				}
+			}
+
+			.subtitle {
+				margin: 20px 0 10px 0;
+				@include font-gilroy-semibold;
+				color: $gris-oscuro;
+				font-size: 1.1rem;
+			}
+
+			.rango {
+				margin: 20px 0;
+			}
+
+			.row-rango {
+				margin-bottom: 20px;
+			}
+
+			input[type='submit'],
+			.new_filter {
+				background: $individual;
+				color: white;
+				border: none;
+				padding: 12px 30px;
+				border-radius: 5px;
+				cursor: pointer;
+				@include font-gilroy-semibold;
+				margin-right: 10px;
+				transition: all 0.3s ease;
+
+				&:hover {
+					background: darken($individual, 10%);
+				}
+			}
+
+			.new {
+				color: $individual;
+				text-decoration: none;
+				@include font-gilroy-medium;
+				transition: all 0.3s ease;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+}

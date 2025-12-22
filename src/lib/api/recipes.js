@@ -75,3 +75,32 @@ export const deleteRecipeComment = async (commentId) => {
 	const response = await apiClient.delete(`/recipes/comments/${commentId}`);
 	return response.data;
 };
+
+/**
+ * Get filter metadata (tags, ingredients, nutrient types, defaults)
+ * @returns {Promise<Object>} - Filter metadata
+ */
+export const getFilterMetadata = async () => {
+	const response = await apiClient.get('/recipes/filter-metadata');
+	return response.data;
+};
+
+/**
+ * Apply advanced filtering to recipes
+ * @param {Object} filters - Filter parameters
+ * @param {number} page - Page number (default: 1)
+ * @param {number} perPage - Items per page (default: 27)
+ * @returns {Promise<Object>} - Filtered recipes with pagination
+ */
+export const getAdvancedFilteredRecipes = async (
+	filters = {},
+	page = 1,
+	perPage = 27
+) => {
+	const response = await apiClient.post('/recipes/advanced-filter', {
+		...filters,
+		page,
+		per_page: perPage,
+	});
+	return response.data;
+};
