@@ -51,9 +51,7 @@ export const removeRecipeReaction = async (recipeId) => {
 export const getRecipeComments = async (recipeId) => {
 	const response = await apiClient.get(`/recipes/${recipeId}/comments`);
 	return response.data;
-};
-
-/**
+};/**
  * Add a comment to a recipe
  * @param {number} recipeId - Recipe ID
  * @param {string} comment - Comment text
