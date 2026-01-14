@@ -1,0 +1,31 @@
+// ListaCategoryGrid - Matching Blade Template Design
+$border-line-lighter: #e0e0e0;
+
+.sub-container-list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	border-top: 1px solid $border-line-lighter;
+	margin-top: 0;
+	background: #fff;
+}
+
+.no-categories {
+	text-align: center;
+	padding: 40px 20px;
+	color: #666;
+	font-size: 16px;
+	width: 100%;
+}
+
+@media (max-width: 1024px) {
+	.sub-container-list {
+		// Keep 3 columns on tablets
+	}
+}
+
+@media (max-width: 768px) {
+	.sub-container-list {
+		flex-direction: column;
+	}
+}

@@ -1,0 +1,132 @@
+// CategoryCard - Matching Blade Template Design
+$border-line-lighter: #e0e0e0;
+$individual: #dcb244;
+
+.col13 {
+	width: calc(100% / 3);
+	position: relative;
+	border-bottom: 1px solid $border-line-lighter;
+	padding-bottom: 50px;
+	background: #fff;
+
+	&:nth-child(3n + 2) {
+		border-left: 1px solid $border-line-lighter;
+		border-right: 1px solid $border-line-lighter;
+	}
+
+	&:nth-child(3n) {
+		border-right: 1px solid $border-line-lighter !important;
+	}
+
+	&:nth-child(3n + 1) {
+		border-left: 1px solid $border-line-lighter !important;
+	}
+
+	.title {
+		width: 100%;
+		padding: 20px 15px;
+		border-bottom: 1px solid $border-line-lighter;
+		background-color: #f6f6f6;
+
+		p {
+			width: 100%;
+			font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+				sans-serif;
+			margin: 0;
+			font-size: 14px;
+			font-weight: 600;
+			text-transform: capitalize;
+		}
+	}
+
+	.lista-calendrio {
+		padding: 0 15px;
+		padding-top: 15px;
+		margin-bottom: 5em;
+		min-height: 200px;
+
+		.no-ingredients {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			min-height: 150px;
+
+			p {
+				color: #999;
+				font-size: 14px;
+				font-style: italic;
+			}
+		}
+
+		.ingredient-list {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
+	button.add {
+		width: 100%;
+		padding: 20px 0;
+		font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			sans-serif;
+		color: rgba(0, 0, 0, 0.5);
+		background: #fff;
+		border: none;
+		border-top: 1px solid $border-line-lighter;
+		font-size: 1em;
+		margin: 0px;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		letter-spacing: 1px;
+		transition: ease 0.5s;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+
+		&:hover {
+			color: $individual;
+		}
+
+		svg {
+			font-size: 14px;
+		}
+	}
+}
+
+@media (max-width: 1024px) {
+	.col13 {
+		width: calc(100% / 2);
+
+		&:nth-child(3n + 2) {
+			border-left: none;
+			border-right: none;
+		}
+
+		&:nth-child(2n + 1) {
+			border-left: 1px solid $border-line-lighter !important;
+			border-right: none !important;
+		}
+
+		&:nth-child(2n) {
+			border-left: 1px solid $border-line-lighter !important;
+			border-right: 1px solid $border-line-lighter !important;
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.col13 {
+		width: 100%;
+		border-left: 1px solid $border-line-lighter !important;
+		border-right: 1px solid $border-line-lighter !important;
+
+		&:nth-child(n) {
+			border-left: 1px solid $border-line-lighter !important;
+			border-right: 1px solid $border-line-lighter !important;
+		}
+	}
+}

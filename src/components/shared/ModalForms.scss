@@ -1,0 +1,180 @@
+// Shared form styles for modal forms
+// Import this in components that use modal forms
+
+.popup .modal-content form {
+	width: 100%;
+
+	// Labels
+	label {
+		margin-bottom: 10px;
+		font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			sans-serif !important;
+		color: #bdbdbd;
+		font-size: inherit;
+		width: 100%;
+		position: relative;
+		display: block;
+		text-align: left;
+		padding: 0;
+	}
+
+	p {
+		margin-bottom: 10px;
+		font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			sans-serif;
+		color: #bdbdbd;
+		font-weight: 400;
+		font-size: inherit;
+		width: 100%;
+		position: relative;
+		display: block;
+		text-align: left;
+	}
+
+	// Two-column row layout
+	.row {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0;
+
+		.col12 {
+			width: 45%;
+
+			label {
+				margin-bottom: 10px;
+			}
+
+			input {
+				width: 100%;
+				margin-bottom: 1em;
+			}
+		}
+	}
+
+	// Input fields
+	input[type='text'],
+	input[type='email'],
+	input[type='number'] {
+		width: 100%;
+		height: 2.5em;
+		font-size: 20px;
+		font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			sans-serif;
+		color: #bdbdbd;
+		padding: 0 10px;
+		border-radius: 10px;
+		border: 1px solid #7a7a7a;
+		margin-bottom: 1em;
+		transition: border-color 0.2s, box-shadow 0.2s;
+
+		&::placeholder {
+			color: #bdbdbd;
+		}
+
+		&:focus {
+			outline: none !important;
+			border: 1px solid #dcb244;
+			box-shadow: 0 0 10px #dcb244;
+		}
+	}
+
+	// Select dropdown
+	select {
+		width: 100%;
+		height: 2.5em;
+		font-size: 20px;
+		font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			sans-serif;
+		color: #bdbdbd;
+		padding: 0 10px;
+		border-radius: 10px;
+		border: 1px solid #7a7a7a;
+		margin-bottom: 1em;
+		background-color: #fff;
+		cursor: pointer;
+		transition: border-color 0.2s, box-shadow 0.2s;
+
+		&:focus {
+			outline: none !important;
+			border: 1px solid #dcb244;
+			box-shadow: 0 0 10px #dcb244;
+		}
+
+		option {
+			padding: 10px;
+		}
+	}
+
+	// Error messages
+	.error-message {
+		display: block;
+		color: #e74c3c;
+		font-size: 12px;
+		margin-top: -10px;
+		margin-bottom: 10px;
+	}
+
+	// Submit button
+	input[type='submit'],
+	button[type='submit'] {
+		padding: 25px 0;
+		font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+			sans-serif;
+		background-color: #fff;
+		width: 100%;
+		border: 1px solid #dcb244;
+		border-radius: 10px;
+		font-size: 20px;
+		color: #dcb244;
+		transition: ease 0.5s;
+		cursor: pointer;
+
+		&:hover:not(:disabled) {
+			background-color: #dcb244;
+			color: #fff;
+		}
+
+		&:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+	}
+
+	// Exclamation/warning section (for delete confirmations, etc.)
+	.exclamacion {
+		text-align: center;
+		margin: 20px 0;
+
+		span {
+			display: block;
+			font-size: 48px;
+			color: #dcb244;
+			margin-bottom: 15px;
+		}
+
+		.bold {
+			font-weight: bold;
+			font-size: 18px;
+			margin: 10px 0;
+		}
+
+		p {
+			margin: 5px 0;
+			color: #666;
+		}
+	}
+
+	// Special button variant (e.g., delete button)
+	input[type='submit'].special,
+	input[type='button'].special,
+	button.special {
+		background: transparent;
+		color: #e74c3c;
+		border-color: #e74c3c;
+
+		&:hover:not(:disabled) {
+			background: #e74c3c;
+			color: #fff;
+		}
+	}
+}

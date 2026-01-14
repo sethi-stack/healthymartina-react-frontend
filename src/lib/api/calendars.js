@@ -186,3 +186,115 @@ export const exportListaPdf = async (calendarId) => {
 	return response.data;
 };
 
+/**
+ * Get lista data for calendar (categories and taken ingredients)
+ * @param {number} calendarId - Calendar ID
+ * @returns {Promise<Object>} - Lista data with categories and taken ingredients
+ */
+export const getListaData = async (calendarId) => {
+	const response = await apiClient.get(`/calendars/${calendarId}/lista/data`);
+	return response.data;
+};
+
+/**
+ * Get all ingredients across all categories for a calendar
+ * @param {number} calendarId - Calendar ID
+ * @returns {Promise<Object>} - All ingredients grouped by category
+ */
+export const getAllListaIngredients = async (calendarId) => {
+	const response = await apiClient.get(`/calendars/${calendarId}/lista/all`);
+	return response.data;
+};
+
+/**
+ * Get ingredients for specific category
+ * @param {number} calendarId - Calendar ID
+ * @param {number} categoryId - Category ID
+ * @returns {Promise<Object>} - Ingredients for the category
+ */
+export const getCategoryIngredients = async (calendarId, categoryId) => {
+	const response = await apiClient.get(
+		`/calendars/${calendarId}/lista/categories/${categoryId}`
+	);
+	return response.data;
+};
+
+/**
+ * Toggle ingredient "taken" status
+ * @param {number} calendarId - Calendar ID
+ * @param {Object} data - Toggle data
+ * @param {number} data.ingredientId - Ingredient ID
+ * @param {number} data.categoryId - Category ID
+ * @param {string} data.type - 'receta' or 'manual'
+ * @returns {Promise<Object>} - Updated taken list
+ */
+export const toggleIngredientTaken = async (calendarId, data) => {
+	const response = await apiClient.post(`/calendars/${calendarId}/lista/toggle`, {
+		ingred_id: data.ingredientId,
+		ingred_cat: data.categoryId,
+		ingred_type: data.type,
+	});
+	return response.data;
+};
+
+/**
+ * Add manual ingredient to lista
+ * @param {number} calendarId - Calendar ID
+ * @param {Object} data - Ingredient data
+ * @param {number} data.cantidad - Quantity
+ * @param {string} data.unidad_medida - Unit of measure
+ * @param {string} data.nombre - Ingredient name
+ * @param {number} data.categoria - Category ID
+ * @returns {Promise<Object>} - Created ingredient
+ */
+export const addListaIngredient = async (calendarId, data) => {
+	const response = await apiClient.post(
+		`/calendars/${calendarId}/lista/ingredients`,
+		{
+			cantidad: data.cantidad,
+			unidad_medida: data.unidad_medida,
+			nombre: data.nombre,
+			categoria: data.categoria,
+		}
+	);
+	return response.data;
+};
+
+/**
+ * Update manual ingredient
+ * @param {number} ingredientId - Ingredient ID
+ * @param {Object} data - Ingredient data
+ * @param {number} data.cantidad - Quantity
+ * @param {string} data.unidad_medida - Unit of measure
+ * @param {string} data.nombre - Ingredient name
+ * @param {number} data.categoria - Category ID
+ * @returns {Promise<Object>} - Updated ingredient
+ */
+export const updateListaIngredient = async (ingredientId, data) => {
+	const response = await apiClient.put(`/lista/ingredients/${ingredientId}`, data);
+	return response.data;
+};
+
+/**
+ * Delete manual ingredient
+ * @param {number} ingredientId - Ingredient ID
+ * @returns {Promise<Object>} - Response
+ */
+export const deleteListaIngredient = async (ingredientId) => {
+	const response = await apiClient.delete(`/lista/ingredients/${ingredientId}`);
+	return response.data;
+};
+
+/**
+ * Send lista via email
+ * @param {number} calendarId - Calendar ID
+ * @param {string} email - Optional email address (defaults to user's email)
+ * @returns {Promise<Object>} - Response
+ */
+export const sendListaEmail = async (calendarId, email) => {
+	const response = await apiClient.post(`/calendars/${calendarId}/lista/email`, {
+		email,
+	});
+	return response.data;
+};
+

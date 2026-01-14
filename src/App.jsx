@@ -11,6 +11,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Recetario } from './pages/Recetario';
 import { RecipeDetail } from './pages/RecipeDetail';
 import Calendar from './pages/Calendar';
+import Lista from './pages/Lista';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -97,6 +98,16 @@ export function App() {
 							<ProtectedRoute>
 								<AuthenticatedLayout>
 									<Calendar />
+								</AuthenticatedLayout>
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path='/listas'
+						element={
+							<ProtectedRoute>
+								<AuthenticatedLayout>
+									<Lista />
 								</AuthenticatedLayout>
 							</ProtectedRoute>
 						}
