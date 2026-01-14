@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateCalendarLabels } from '../../lib/api/calendars';
+import Modal from './Modal';
 import './EditLabelsModal.scss';
 
 /**
@@ -78,70 +79,64 @@ export default function EditLabelsModal({
 	};
 
 	return (
-		<div className='popup popupstyle1 calendario-labels' onClick={onClose}>
-			<div className='container-popup' onClick={(e) => e.stopPropagation()}>
-				<button className='close' onClick={onClose}>
-					<i className='fas fa-times'></i>
-				</button>
-				<h3>Subtítulos del calendario</h3>
-				<form onSubmit={handleSubmit} className='updateLabelsForm'>
-					<input type='hidden' name='label_type' value={labelType} />
-					<input type='hidden' name='label_name' value={selectedLabel} />
+		<Modal onClose={onClose} title='Subtítulos del calendario' className='popupstyle1 calendario-labels'>
+			<form onSubmit={handleSubmit} className='updateLabelsForm'>
+				<input type='hidden' name='label_type' value={labelType} />
+				<input type='hidden' name='label_name' value={selectedLabel} />
 
-					<p>Subtítulos</p>
-					<div className='dropdown-content myDropdown'>
-						<i className='fas fa-search'></i>
-						<input
-							type='text'
-							className='myInput'
-							placeholder='Search..'
-							maxLength='15'
-							value={searchTerm}
-							onChange={(e) => {
-								setSearchTerm(e.target.value);
-								setShowDropdown(true);
-							}}
-							onFocus={() => setShowDropdown(true)}
-							onBlur={() => {
-								// Delay to allow click on dropdown items
-								setTimeout(() => setShowDropdown(false), 200);
-							}}
-						/>
-						{showDropdown && (
-							<div className='dropdown-list'>
-								{filteredLabels.length > 0 ? (
-									filteredLabels.map((label, index) => (
-										<a
-											key={index}
-											className={`name-value ${
-												labelType === 'days'
-													? 'name-value-days'
-													: 'name-value-meals'
-											}`}
-											href='#'
-											data-value={label}
-											onMouseDown={(e) => {
-												e.preventDefault();
-												handleLabelSelect(label);
-											}}
-										>
-											{label}
-										</a>
-									))
-								) : (
-									<div className='dropdown-no-results'>No results found</div>
-								)}
-							</div>
-						)}
-					</div>
+				<p>Subtítulos</p>
+				<div className='dropdown-content myDropdown'>
+					<i className='fas fa-search'></i>
 					<input
-						type='submit'
-						value='Editar subtítulos'
-						disabled={updateMutation.isPending || !selectedLabel.trim()}
+						type='text'
+						className='myInput'
+						placeholder='Search..'
+						maxLength='15'
+						value={searchTerm}
+						onChange={(e) => {
+							setSearchTerm(e.target.value);
+							setShowDropdown(true);
+						}}
+						onFocus={() => setShowDropdown(true)}
+						onBlur={() => {
+							// Delay to allow click on dropdown items
+							setTimeout(() => setShowDropdown(false), 200);
+						}}
 					/>
-				</form>
-			</div>
-		</div>
+					{showDropdown && (
+						<div className='dropdown-list'>
+							{filteredLabels.length > 0 ? (
+								filteredLabels.map((label, index) => (
+									<a
+										key={index}
+										className={`name-value ${
+											labelType === 'days'
+												? 'name-value-days'
+												: 'name-value-meals'
+										}`}
+										href='#'
+										data-value={label}
+										onMouseDown={(e) => {
+											e.preventDefault();
+											handleLabelSelect(label);
+										}}
+									>
+										{label}
+									</a>
+								))
+							) : (
+								<div className='dropdown-no-results'>No results found</div>
+							)}
+						</div>
+					)}
+				</div>
+				<input
+					type='submit'
+					value='Editar subtítulos'
+					disabled={updateMutation.isPending || !selectedLabel.trim()}
+				/>
+			</form>
+		</Modal>
 	);
 }
 

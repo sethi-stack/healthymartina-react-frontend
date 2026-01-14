@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Modal.scss';
+import Modal from './Modal';
 
 export default function CreateCalendarModal({ onClose, onSubmit, isLoading }) {
 	const [nombre, setNombre] = useState('');
@@ -12,31 +12,25 @@ export default function CreateCalendarModal({ onClose, onSubmit, isLoading }) {
 	};
 
 	return (
-		<div className='popup popupstyle1 add-calendar' onClick={onClose}>
-			<div className='container-popup' onClick={(e) => e.stopPropagation()}>
-				<button className='close' onClick={onClose}>
-					<i className='fas fa-times'></i>
-				</button>
-				<h3>Nuevo Calendario</h3>
-				<form onSubmit={handleSubmit}>
-					<p>Nombre</p>
-					<input
-						type='text'
-						name='calendar_title'
-						className='calendar_title'
-						placeholder='Nombre del calendario'
-						value={nombre}
-						onChange={(e) => setNombre(e.target.value)}
-						required
-					/>
-					<input
-						type='submit'
-						value={isLoading ? 'Creando...' : 'Crear calendario'}
-						disabled={isLoading}
-					/>
-				</form>
-			</div>
-		</div>
+		<Modal onClose={onClose} title='Nuevo Calendario' className='popupstyle1 add-calendar'>
+			<form onSubmit={handleSubmit}>
+				<p>Nombre</p>
+				<input
+					type='text'
+					name='calendar_title'
+					className='calendar_title'
+					placeholder='Nombre del calendario'
+					value={nombre}
+					onChange={(e) => setNombre(e.target.value)}
+					required
+				/>
+				<input
+					type='submit'
+					value={isLoading ? 'Creando...' : 'Crear calendario'}
+					disabled={isLoading}
+				/>
+			</form>
+		</Modal>
 	);
 }
 

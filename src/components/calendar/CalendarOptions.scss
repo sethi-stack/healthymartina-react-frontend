@@ -67,6 +67,14 @@
 		}
 	}
 
+	/* Keep all action buttons visually consistent */
+	.button-options button,
+	.button-options a,
+	.button-hamburger button {
+		padding: 8px 16px;
+		min-height: 38px;
+	}
+
 	.button-hamburger {
 		position: relative;
 		flex-shrink: 0;
@@ -75,13 +83,14 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			padding: 8px 16px;
-			min-width: 50px;
 			border: 1px solid #7a7a7a;
 			background: #fff;
 			border-radius: 4px;
 			cursor: pointer;
 			transition: all 0.2s;
+			min-width: auto;
+			width: 44px;
+			padding: 8px 10px;
 
 			&:hover {
 				background: #f5f5f5;
@@ -232,4 +241,3 @@
 		}
 	}
 }
-

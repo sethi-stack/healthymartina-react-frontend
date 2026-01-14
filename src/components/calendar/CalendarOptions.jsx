@@ -72,8 +72,7 @@ export default function CalendarOptions({
 								onClick={(e) => {
 									e.preventDefault();
 									onExportClick();
-								}}
-								style={{ padding: '0 4px' }}
+							}}
 							>
 								<svg
 									xmlns='http://www.w3.org/2000/svg'

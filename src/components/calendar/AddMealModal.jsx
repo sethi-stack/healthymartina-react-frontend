@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './Modal.scss';
+import React from 'react';
+import Modal from './Modal';
 
 /**
  * Add Meal Modal
@@ -15,18 +15,10 @@ export default function AddMealModal({
 	onClose,
 }) {
 	return (
-		<div className='popup popupstyle1 add-meal' onClick={onClose}>
-			<div className='container-popup' onClick={(e) => e.stopPropagation()}>
-				<button className='close' onClick={onClose}>
-					<i className='fas fa-times'></i>
-				</button>
-				<h3>
-					Agregar <span className='add-meal-title'>{mealName}</span>
-				</h3>
-				<p>Funcionalidad de agregar receta - En desarrollo</p>
-				<button onClick={onClose}>Cerrar</button>
-			</div>
-		</div>
+		<Modal onClose={onClose} title={`Agregar ${mealName}`} className='popupstyle1 add-meal'>
+			<p>Funcionalidad de agregar receta - En desarrollo</p>
+			<button onClick={onClose}>Cerrar</button>
+		</Modal>
 	);
 }
 
