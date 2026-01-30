@@ -1,71 +1,182 @@
 @import '../../assets/scss/init';
 
-.calendario-labels {
-	.dropdown-content {
-		position: relative;
-		margin-bottom: 15px;
+// EditLabelsModal styles
+// Uses high specificity to override legacy _popup.scss styles
 
+.popup.calendario-labels {
+	// Override modal title - needs .popup prefix to beat legacy specificity
+	.container-popup {
+		h3 {
+			text-align: left !important;
+			margin-left: 0;
+			padding-left: 0;
+		}
+
+		.modal-content {
+			h3 {
+				text-align: left !important;
+			}
+		}
+	}
+
+	// Form layout
+	.updateLabelsForm {
+		display: flex;
+		flex-direction: column;
+		overflow: visible;
+	}
+
+	// Allow dropdown to overflow modal
+	.container-popup,
+	.modal-content {
+		overflow: visible !important;
+	}
+
+	// Subtitle label "Subtítulos"
+	.container-popup p,
+	.modal-content p,
+	.updateLabelsForm > p {
+		text-align: left !important;
+		color: $color-text-muted !important;
+		font-size: $font-size-sm;
+		margin-bottom: $spacing-sm;
+		position: static !important;
+		order: 1;
+		// Override legacy flex centering from _popup.scss
+		display: block !important;
+		justify-content: initial !important;
+		align-items: initial !important;
+	}
+
+	// Dropdown container - override any legacy absolute positioning
+	.dropdown-content,
+	.dropdown-content.myDropdown {
+		position: relative !important;
+		margin-bottom: $spacing-base;
+		display: block !important;
+		order: 2;
+		width: 100%;
+		float: none !important;
+		left: auto !important;
+		right: auto !important;
+		top: auto !important;
+		bottom: auto !important;
+
+		// Search icon (if using FontAwesome)
 		.fa-search {
 			position: absolute;
-			left: 12px;
+			left: $spacing-md;
 			top: 50%;
 			transform: translateY(-50%);
-			color: #666;
+			color: $color-text-muted;
 			z-index: 1;
 		}
 
+		// Search input
 		.myInput {
 			width: 100%;
-			padding: 12px 12px 12px 40px;
-			border: 1px solid #7a7a7a;
-			border-radius: 4px;
-			font-size: 14px;
+			padding: $input-padding-y $input-padding-x;
+			padding-left: $spacing-lg;
+			border: $input-border-width solid $input-border-color;
+			border-radius: $input-border-radius;
+			font-size: $font-size-sm;
+			font-family: $font-family-medium;
+			box-sizing: border-box;
+			position: static !important;
 
 			&:focus {
 				outline: none;
-				border-color: #dcb244;
+				border-color: $input-focus-border-color;
+			}
+
+			&::placeholder {
+				color: $color-text-light;
 			}
 		}
 
+		// Dropdown list container - always visible with scrolling
 		.dropdown-list {
-			position: absolute;
-			top: 100%;
-			left: 0;
-			right: 0;
-			background: #fff;
-			border: 1px solid #7a7a7a;
-			border-top: none;
-			border-radius: 0 0 4px 4px;
-			max-height: 200px;
+			position: relative;
+			margin-top: $spacing-sm;
+			background: $color-white;
+			border: 1px solid $color-border-light;
+			border-radius: $radius-md;
+			min-height: 200px;
+			max-height: 280px;
 			overflow-y: auto;
-			z-index: 1000;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			box-shadow: $shadow-sm;
 		}
 
+		// No results message
 		.dropdown-no-results {
-			padding: 10px 12px;
-			color: #999;
+			padding: $spacing-md $spacing-lg;
+			color: $color-text-muted;
 			text-align: center;
+			font-size: $font-size-sm;
 		}
 
+		// Dropdown item
 		.name-value {
 			display: block;
-			padding: 10px 12px;
-			color: #333;
+			padding: $spacing-md $spacing-lg;
+			color: $color-text;
 			text-decoration: none;
-			border-bottom: 1px solid #f0f0f0;
+			border-bottom: 1px solid $color-border-light;
 			cursor: pointer;
-			transition: background 0.2s;
+			transition: background $transition-base;
+			font-size: $font-size-sm;
 
 			&:hover {
-				background: #f5f5f5;
+				background: $color-background-alt;
 			}
 
 			&:last-child {
 				border-bottom: none;
 			}
 		}
+
+		// "Create new" option styling
+		.name-value-new {
+			background: $color-primary-lightest;
+			color: darken($color-primary, 15%);
+			border-bottom: 1px solid lighten($color-primary, 30%);
+			font-weight: 500;
+
+			strong {
+				color: $color-primary;
+				margin-right: $spacing-xs;
+			}
+
+			&:hover {
+				background: lighten($color-primary-lightest, 2%);
+			}
+		}
 	}
 
-}
+	// Submit button
+	input[type='submit'] {
+		width: 100%;
+		padding: $btn-padding-y $btn-padding-x;
+		background: $color-white;
+		color: $color-primary;
+		border: $btn-border-width solid $color-primary;
+		border-radius: $btn-border-radius;
+		font-size: $font-size-base;
+		font-family: $font-family-medium;
+		cursor: pointer;
+		transition: all $transition-base;
+		margin-top: $spacing-sm;
+		order: 3;
+		position: static !important;
 
+		&:hover:not(:disabled) {
+			background: $color-primary;
+			color: $color-white;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+}

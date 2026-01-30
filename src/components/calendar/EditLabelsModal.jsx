@@ -17,11 +17,8 @@ export default function EditLabelsModal({
 	onClose,
 	onSuccess,
 }) {
+	// Start with empty search field for easier filtering
 	const [searchTerm, setSearchTerm] = useState('');
-	const [selectedLabel, setSelectedLabel] = useState(
-		currentLabels[selectedLabelKey] || ''
-	);
-	const [showDropdown, setShowDropdown] = useState(false);
 	const queryClient = useQueryClient();
 
 	// Get all available labels (current + original that aren't in current)
@@ -40,6 +37,14 @@ export default function EditLabelsModal({
 		);
 	}, [availableLabels, searchTerm]);
 
+	// Check if the typed value is a new label (not in existing list)
+	const isNewLabel = useMemo(() => {
+		if (!searchTerm.trim()) return false;
+		return !availableLabels.some(
+			(label) => label.toLowerCase() === searchTerm.trim().toLowerCase()
+		);
+	}, [searchTerm, availableLabels]);
+
 	// Update labels mutation
 	const updateMutation = useMutation({
 		mutationFn: (data) => updateCalendarLabels(calendar?.id, data),
@@ -53,14 +58,13 @@ export default function EditLabelsModal({
 	});
 
 	const handleLabelSelect = (label) => {
-		setSelectedLabel(label);
 		setSearchTerm(label);
-		setShowDropdown(false);
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (!selectedLabel.trim()) return;
+		const labelValue = searchTerm.trim();
+		if (!labelValue) return;
 
 		// API expects: label_type, label_name (the key), and the value in 'days' or 'meals' field
 		const data = {
@@ -70,9 +74,9 @@ export default function EditLabelsModal({
 
 		// Add the new label value in the appropriate field
 		if (labelType === 'days') {
-			data.days = selectedLabel.trim();
+			data.days = labelValue;
 		} else {
-			data.meals = selectedLabel.trim();
+			data.meals = labelValue;
 		}
 
 		updateMutation.mutate(data);
@@ -82,58 +86,58 @@ export default function EditLabelsModal({
 		<Modal onClose={onClose} title='Subtítulos del calendario' className='popupstyle1 calendario-labels'>
 			<form onSubmit={handleSubmit} className='updateLabelsForm'>
 				<input type='hidden' name='label_type' value={labelType} />
-				<input type='hidden' name='label_name' value={selectedLabel} />
+				<input type='hidden' name='label_name' value={searchTerm} />
 
 				<p>Subtítulos</p>
 				<div className='dropdown-content myDropdown'>
-					<i className='fas fa-search'></i>
 					<input
 						type='text'
 						className='myInput'
-						placeholder='Search..'
+						placeholder='Buscar o crear nuevo...'
 						maxLength='15'
 						value={searchTerm}
-						onChange={(e) => {
-							setSearchTerm(e.target.value);
-							setShowDropdown(true);
-						}}
-						onFocus={() => setShowDropdown(true)}
-						onBlur={() => {
-							// Delay to allow click on dropdown items
-							setTimeout(() => setShowDropdown(false), 200);
-						}}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						autoFocus
 					/>
-					{showDropdown && (
-						<div className='dropdown-list'>
-							{filteredLabels.length > 0 ? (
-								filteredLabels.map((label, index) => (
-									<a
-										key={index}
-										className={`name-value ${
-											labelType === 'days'
-												? 'name-value-days'
-												: 'name-value-meals'
-										}`}
-										href='#'
-										data-value={label}
-										onMouseDown={(e) => {
-											e.preventDefault();
-											handleLabelSelect(label);
-										}}
-									>
-										{label}
-									</a>
-								))
-							) : (
-								<div className='dropdown-no-results'>No results found</div>
-							)}
-						</div>
-					)}
+					<div className='dropdown-list'>
+						{/* Show "Create new" option when typing a new label */}
+						{isNewLabel && (
+							<a
+								className='name-value name-value-new'
+								href='#'
+								onClick={(e) => e.preventDefault()}
+							>
+								<strong>+ Crear:</strong> "{searchTerm.trim()}"
+							</a>
+						)}
+						{filteredLabels.length > 0 ? (
+							filteredLabels.map((label, index) => (
+								<a
+									key={index}
+									className={`name-value ${
+										labelType === 'days'
+											? 'name-value-days'
+											: 'name-value-meals'
+									}`}
+									href='#'
+									data-value={label}
+									onClick={(e) => {
+										e.preventDefault();
+										handleLabelSelect(label);
+									}}
+								>
+									{label}
+								</a>
+							))
+						) : !isNewLabel ? (
+							<div className='dropdown-no-results'>No hay resultados</div>
+						) : null}
+					</div>
 				</div>
 				<input
 					type='submit'
-					value='Editar subtítulos'
-					disabled={updateMutation.isPending || !selectedLabel.trim()}
+					value={isNewLabel ? 'Crear y aplicar' : 'Editar subtítulos'}
+					disabled={updateMutation.isPending || !searchTerm.trim()}
 				/>
 			</form>
 		</Modal>

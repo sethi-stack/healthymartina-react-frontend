@@ -1,3 +1,16 @@
+// =============================================================================
+// SCSS Architecture - Main Init File
+// =============================================================================
+// This file serves as the main entry point for SCSS imports.
+// Import order matters: tokens first, then mixins, then base styles.
+// =============================================================================
+
+// Design System
+@import 'tokens';  // Design tokens (colors, spacing, typography scales)
+@import 'mixins';  // Reusable style patterns
+
+// Legacy variables - kept for backward compatibility
+// New code should use tokens from _tokens.scss instead
 $individual: #dcb244;
 $profesional: #98bfbf;
 $gris: #fafafa;
