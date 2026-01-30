@@ -22,24 +22,28 @@ export default function CalendarSwitchModal({
 	};
 
 	return (
-		<Modal isOpen={true} onClose={onClose} title='Mi Lista' width={540}>
-			<form onSubmit={handleSubmit}>
-				<label htmlFor='calendar-select'>Listas</label>
-				<select
-					id='calendar-select'
-					value={selectedId || ''}
-					onChange={(e) => setSelectedId(e.target.value)}
-					className='select-ingrediente'
-					required
-				>
-					{calendars.map((calendar) => (
-						<option key={calendar.id} value={calendar.id}>
-							{calendar.title || calendar.nombre}
-						</option>
-					))}
-				</select>
+		<Modal isOpen={true} onClose={onClose} title='Mi Lista' width={540} dataModal='calendar-switch'>
+			<form onSubmit={handleSubmit} className='hm-form'>
+				<div className='hm-form__group'>
+					<label htmlFor='calendar-select' className='hm-form__label'>Listas</label>
+					<select
+						id='calendar-select'
+						value={selectedId || ''}
+						onChange={(e) => setSelectedId(e.target.value)}
+						className='hm-form__select'
+						required
+					>
+						{calendars.map((calendar) => (
+							<option key={calendar.id} value={calendar.id}>
+								{calendar.title}
+							</option>
+						))}
+					</select>
+				</div>
 
-				<input type='submit' value='Ver Lista' />
+				<button type='submit' className='hm-btn hm-btn--outline hm-btn--block'>
+					Ver Lista
+				</button>
 			</form>
 		</Modal>
 	);

@@ -6,7 +6,7 @@ export default function CopyCalendarModal({ calendar, onClose, onSubmit, isLoadi
 
 	useEffect(() => {
 		if (calendar) {
-			setNombre(`${calendar.title || calendar.nombre} copia`);
+			setNombre(`${calendar.title} copia`);
 		}
 	}, [calendar]);
 
@@ -18,23 +18,27 @@ export default function CopyCalendarModal({ calendar, onClose, onSubmit, isLoadi
 	};
 
 	return (
-		<Modal onClose={onClose} title={<span className='calendar-nombro'>Nuevo Calendario</span>} className='popupstyle1 copiar-calendar'>
-			<form onSubmit={handleSubmit}>
-				<p>Nombre</p>
-				<input
-					type='text'
-					name='calendar_title'
-					className='calendar_title'
-					placeholder='Nombre del calendario'
-					value={nombre}
-					onChange={(e) => setNombre(e.target.value)}
-					required
-				/>
-				<input
+		<Modal onClose={onClose} title='Nuevo Calendario' className='popupstyle1 copiar-calendar' dataModal='copy-calendar'>
+			<form onSubmit={handleSubmit} className='hm-form'>
+				<div className='hm-form__group'>
+					<label className='hm-form__label'>Nombre</label>
+					<input
+						type='text'
+						name='calendar_title'
+						className='hm-form__input'
+						placeholder='Nombre del calendario'
+						value={nombre}
+						onChange={(e) => setNombre(e.target.value)}
+						required
+					/>
+				</div>
+				<button
 					type='submit'
-					value={isLoading ? 'Copiando...' : 'Copiar calendario'}
+					className='hm-btn hm-btn--outline hm-btn--block'
 					disabled={isLoading}
-				/>
+				>
+					{isLoading ? 'Copiando...' : 'Copiar calendario'}
+				</button>
 			</form>
 		</Modal>
 	);

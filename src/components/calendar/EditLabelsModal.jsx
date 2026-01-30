@@ -83,62 +83,60 @@ export default function EditLabelsModal({
 	};
 
 	return (
-		<Modal onClose={onClose} title='Subtítulos del calendario' className='popupstyle1 calendario-labels'>
-			<form onSubmit={handleSubmit} className='updateLabelsForm'>
+		<Modal
+			onClose={onClose}
+			title='Subtítulos del calendario'
+			className='popupstyle1 calendario-labels'
+			dataModal='edit-labels'
+		>
+			<form onSubmit={handleSubmit} className='hm-form updateLabelsForm'>
 				<input type='hidden' name='label_type' value={labelType} />
 				<input type='hidden' name='label_name' value={searchTerm} />
 
-				<p>Subtítulos</p>
-				<div className='dropdown-content myDropdown'>
+				<label className='hm-form__label'>Subtítulos</label>
+				<div className='hm-form__group'>
 					<input
 						type='text'
-						className='myInput'
+						className='hm-form__input'
 						placeholder='Buscar o crear nuevo...'
 						maxLength='15'
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 						autoFocus
 					/>
-					<div className='dropdown-list'>
+					<div className='hm-list__container'>
 						{/* Show "Create new" option when typing a new label */}
 						{isNewLabel && (
-							<a
-								className='name-value name-value-new'
-								href='#'
+							<div
+								className='hm-list__item hm-list__item--create'
 								onClick={(e) => e.preventDefault()}
 							>
 								<strong>+ Crear:</strong> "{searchTerm.trim()}"
-							</a>
+							</div>
 						)}
 						{filteredLabels.length > 0 ? (
 							filteredLabels.map((label, index) => (
-								<a
+								<div
 									key={index}
-									className={`name-value ${
-										labelType === 'days'
-											? 'name-value-days'
-											: 'name-value-meals'
-									}`}
-									href='#'
+									className='hm-list__item'
 									data-value={label}
-									onClick={(e) => {
-										e.preventDefault();
-										handleLabelSelect(label);
-									}}
+									onClick={() => handleLabelSelect(label)}
 								>
 									{label}
-								</a>
+								</div>
 							))
 						) : !isNewLabel ? (
-							<div className='dropdown-no-results'>No hay resultados</div>
+							<div className='hm-list__empty'>No hay resultados</div>
 						) : null}
 					</div>
 				</div>
-				<input
+				<button
 					type='submit'
-					value={isNewLabel ? 'Crear y aplicar' : 'Editar subtítulos'}
+					className='hm-btn hm-btn--outline hm-btn--block'
 					disabled={updateMutation.isPending || !searchTerm.trim()}
-				/>
+				>
+					{isNewLabel ? 'Crear y aplicar' : 'Editar subtítulos'}
+				</button>
 			</form>
 		</Modal>
 	);

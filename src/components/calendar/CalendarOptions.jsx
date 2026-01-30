@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaCopy, FaEdit, FaTrashAlt, FaTimes } from 'react-icons/fa';
 import './CalendarOptions.scss';
 
 /**
@@ -50,10 +51,10 @@ export default function CalendarOptions({
 
 						<div
 							className='button-options btn-copiar-calendar'
-							data-calendar={calendar?.title || calendar?.nombre}
+							data-calendar={calendar?.title}
 						>
 							<button onClick={onCopyClick}>
-								<i className='far fa-copy'></i>
+								<FaCopy />
 								<p>Copiar</p>
 							</button>
 						</div>
@@ -68,7 +69,7 @@ export default function CalendarOptions({
 								data-page='calendario'
 								href='#'
 								data-id={calendar?.id}
-								data-calendar={calendar?.title || calendar?.nombre}
+								data-calendar={calendar?.title}
 								onClick={(e) => {
 									e.preventDefault();
 									onExportClick();
@@ -92,8 +93,11 @@ export default function CalendarOptions({
 							</a>
 						</div>
 
-						<div className='button-hamburger calendario-menu-explore'>
-							<button onClick={() => setShowMenu(!showMenu)}>
+						<div className='button-hamburger calendario-menu-explore hm-menu'>
+							<button
+								className={`hm-menu__trigger ${showMenu ? 'hm-menu__trigger--active' : ''}`}
+								onClick={() => setShowMenu(!showMenu)}
+							>
 								<svg
 									xmlns='http://www.w3.org/2000/svg'
 									viewBox='0 0 25.04 14.89'
@@ -125,24 +129,30 @@ export default function CalendarOptions({
 									</g>
 								</svg>
 							</button>
-							{showMenu && (
-								<div className='sub-menu'>
-									<a href='#' onClick={(e) => {
+							<div className={`sub-menu hm-menu__dropdown ${showMenu ? 'hm-menu__dropdown--open' : ''}`}>
+								<button
+									className='hm-menu__item'
+									onClick={(e) => {
 										e.preventDefault();
 										setShowMenu(false);
 										onEditClick();
-									}}>
-										<i className='far fa-edit'></i> Editar nombre
-									</a>
-									<a href='#' onClick={(e) => {
+									}}
+								>
+									<FaEdit className='hm-menu__icon' />
+									Editar nombre
+								</button>
+								<button
+									className='hm-menu__item'
+									onClick={(e) => {
 										e.preventDefault();
 										setShowMenu(false);
 										onDeleteClick();
-									}}>
-										<i className='far fa-trash-alt'></i> Eliminar
-									</a>
-								</div>
-							)}
+									}}
+								>
+									<FaTrashAlt className='hm-menu__icon' />
+									Eliminar
+								</button>
+							</div>
 						</div>
 					</>
 				)}
@@ -175,7 +185,7 @@ export default function CalendarOptions({
 									className='close'
 									onClick={() => setShowCalendarSelector(false)}
 								>
-									<i className='fas fa-times'></i>
+									<FaTimes />
 								</button>
 							</div>
 							<div className='calendar-selector-list'>
@@ -190,7 +200,7 @@ export default function CalendarOptions({
 											setShowCalendarSelector(false);
 										}}
 									>
-										{cal.title || cal.nombre}
+										{cal.title}
 									</button>
 								))}
 							</div>

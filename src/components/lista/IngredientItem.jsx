@@ -53,36 +53,36 @@ export default function IngredientItem({
 	};
 
 	return (
-		<div className={`ingredient-item ${isTaken ? 'taken' : ''}`}>
-			<label className='ingredient-checkbox ingrediente'>
+		<div className={`ingredient-item hm-list__item ${isTaken ? 'taken hm-list__item--checked' : ''}`}>
+			<label className='ingredient-checkbox ingrediente hm-checkbox'>
 				<input
 					type='checkbox'
 					checked={isTaken}
 					onChange={handleToggle}
-					className='checkbox-input'
+					className='checkbox-input hm-checkbox__input'
 				/>
-				<span className='checkbox'></span>
-				<div className='ingredient-content'>
-					<h3 className='ingredient-quantity cantidad'>
+				<span className='checkbox hm-checkbox__box'></span>
+				<div className={`ingredient-content hm-checkbox__content ${isTaken ? 'hm-checkbox__content--strikethrough' : ''}`}>
+					<h3 className='ingredient-quantity cantidad hm-checkbox__quantity'>
 						{getQuantityText() && <span>{getQuantityText()}</span>}
 					</h3>
-					<span className='ingredient-name'>
+					<span className={`ingredient-name hm-checkbox__label ${isTaken ? 'hm-checkbox__label--strikethrough' : ''}`}>
 						{ingredient.ingrediente || ingredient.nombre}
 					</span>
 				</div>
 			</label>
 
 			{isManual && (
-				<div className='ingredient-actions button-hamburger'>
+				<div className='ingredient-actions button-hamburger hm-list__item-actions'>
 					<button
-						className='edit-btn'
+						className='edit-btn hm-btn hm-btn--icon hm-btn--sm'
 						onClick={handleEdit}
 						title='Editar ingrediente'
 					>
 						<FaEdit />
 					</button>
 					<button
-						className='delete-btn'
+						className='delete-btn hm-btn hm-btn--icon hm-btn--sm hm-btn--danger'
 						onClick={handleDelete}
 						title='Eliminar ingrediente'
 					>

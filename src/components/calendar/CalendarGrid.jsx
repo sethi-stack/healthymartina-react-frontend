@@ -142,14 +142,14 @@ export default function CalendarGrid({ calendar }) {
 	});
 
 	return (
-		<div className='general-calendar general-container-json' id='calendrio'>
+		<div className='general-calendar general-container-json hm-calendar' id='calendrio'>
 			{/* Header row with day names */}
-			<div className='row-th'>
-				<div className='col-part-th'></div>
+			<div className='row-th hm-calendar__header'>
+				<div className='col-part-th hm-calendar__label-col'></div>
 				{Object.entries(days).map(([dayKey, dayName]) => (
 					<div
 						key={dayKey}
-						className='col-day-th'
+						className='col-day-th hm-calendar__day-col hm-calendar__day-col--header'
 						onClick={(e) => {
 							e.preventDefault();
 							setLabelType('days');
@@ -158,10 +158,10 @@ export default function CalendarGrid({ calendar }) {
 						}}
 					>
 						<span id='labels' data-val={dayKey}></span>
-						<p className={`desk cal_label_${dayKey}`} style={{ width: '100%' }}>
+						<p className={`desk cal_label_${dayKey} hm-calendar__label hm-calendar__label--desktop hm-label hm-label--day hm-label--clickable`} style={{ width: '100%' }}>
 							{dayName}
 						</p>
-						<p className={`mobile cal_m_label_${dayKey}`}>
+						<p className={`mobile cal_m_label_${dayKey} hm-calendar__label hm-calendar__label--mobile hm-label hm-label--day hm-label--clickable`}>
 							{dayName.substring(0, 1)}
 						</p>
 					</div>
@@ -172,10 +172,10 @@ export default function CalendarGrid({ calendar }) {
 			{Object.entries(meals).map(([mealKey, mealName], mealIndex) => {
 				const mealNum = mealIndex + 1;
 				return (
-					<div key={mealKey} className={`row-td meal_${mealNum}`}>
+					<div key={mealKey} className={`row-td meal_${mealNum} hm-calendar__row`}>
 						{/* Meal label column */}
 						<div
-							className='col-part-td'
+							className='col-part-td hm-calendar__label-col'
 							onClick={(e) => {
 								e.preventDefault();
 								setLabelType('meals');
@@ -184,10 +184,10 @@ export default function CalendarGrid({ calendar }) {
 							}}
 						>
 							<span id='labels' data-val={mealKey}></span>
-							<p className={`desk cal_label_${mealKey}`} style={{ width: '100%' }}>
+							<p className={`desk cal_label_${mealKey} hm-calendar__label hm-calendar__label--vertical hm-calendar__label--desktop hm-label hm-label--meal hm-label--clickable`} style={{ width: '100%' }}>
 								{mealName}
 							</p>
-							<p className={`mobile cal_m_label_${mealKey}`}>
+							<p className={`mobile cal_m_label_${mealKey} hm-calendar__label hm-calendar__label--mobile hm-label hm-label--meal hm-label--clickable`}>
 								{mealName.substring(0, 1)}
 							</p>
 						</div>

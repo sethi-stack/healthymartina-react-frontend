@@ -9,7 +9,7 @@
 	.left,
 	.right {
 		display: flex;
-		gap: 15px;
+		gap: 10px;
 		align-items: center;
 		flex-wrap: wrap;
 	}
@@ -79,7 +79,7 @@
 		position: relative;
 		flex-shrink: 0;
 
-		button {
+		> button {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -89,15 +89,17 @@
 			cursor: pointer;
 			transition: all 0.2s;
 			min-width: auto;
-			width: 44px;
-			padding: 8px 10px;
+			width: 38px;
+			height: 38px;
+			min-height: unset;
+			padding: 0;
 
 			&:hover {
 				background: #f5f5f5;
 				border-color: #dcb244;
 			}
 
-			&.active {
+			&.hm-menu__trigger--active {
 				background-color: #dcb244;
 				border-color: #dcb244;
 				color: #fff;
@@ -120,45 +122,58 @@
 
 		.sub-menu {
 			position: absolute;
-			top: 110%;
-			right: 0;
-			width: 200px;
-			border: 1px solid #7a7a7a;
+			top: calc(100% + 5px);
+			left: 0;
+			min-width: 180px;
+			border: 1px solid #e0e0e0;
 			border-radius: 5px;
 			z-index: 1000;
-			background: #fafafa;
-			display: block;
+			background: #fff;
+			display: none;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-			a {
+			&.hm-menu__dropdown--open {
+				display: block;
+			}
+
+			a,
+			button {
 				font-family: 'Gilroy-Medium', sans-serif;
-				font-weight: bold;
+				font-weight: 500;
 				width: 100%;
-				padding: 10px;
+				height: 38px;
+				padding: 0 12px;
 				text-decoration: none;
-				color: #b7b7b7;
+				color: #7a7a7a;
 				font-size: 14px;
 				display: flex;
 				align-items: center;
-				border-top: 1px solid #7a7a7a;
-				transition: 0.3s ease;
+				gap: 8px;
+				border: none;
+				background: none;
+				cursor: pointer;
+				transition: 0.2s ease;
+				text-align: left;
 
-				&:first-child {
-					border-top: none;
+				& + button,
+				& + a {
+					border-top: 1px solid #e0e0e0;
 				}
 
 				&:hover {
+					background: #f5f5f5;
 					color: #dcb244;
 
-					i {
+					.hm-menu__icon {
 						color: #dcb244;
 					}
 				}
 
-				svg {
-					width: 15px;
-					height: 15px;
-					margin-right: 10px;
+				.hm-menu__icon {
+					width: 14px;
+					height: 14px;
 					flex-shrink: 0;
+					color: #999;
 				}
 			}
 		}
@@ -168,8 +183,12 @@
 		position: relative;
 		flex-shrink: 0;
 
-		button {
+		> button {
 			min-width: 120px;
+		}
+
+		&:has(.calendar-selector-popup) > button {
+			border-color: #dcb244;
 		}
 
 		.calendar-selector-popup {
@@ -196,6 +215,7 @@
 				h4 {
 					margin: 0;
 					font-size: 16px;
+					font-weight: 600;
 				}
 
 				.close {
@@ -205,9 +225,15 @@
 					padding: 0;
 					width: 24px;
 					height: 24px;
+					min-width: unset;
+					min-height: unset;
 					display: flex;
 					align-items: center;
 					justify-content: center;
+
+					&:hover {
+						background: none;
+					}
 
 					i {
 						color: #666;
@@ -219,22 +245,30 @@
 				padding: 10px 0;
 
 				.calendar-item {
+					display: block;
 					width: 100%;
 					padding: 12px 15px;
 					text-align: left;
 					background: none;
 					border: none;
+					border-radius: 0;
+					min-width: unset;
+					min-height: unset;
+					height: auto;
 					cursor: pointer;
-					color: #333;
-					transition: background 0.2s;
+					color: #333 !important;
+					font-size: 14px;
+					font-family: 'Gilroy-Medium', sans-serif;
+					transition: background 0.2s, color 0.2s;
 
 					&:hover {
 						background: #f5f5f5;
+						color: #333 !important;
 					}
 
 					&.active {
 						background: #dcb244;
-						color: #fff;
+						color: #fff !important;
 					}
 				}
 			}

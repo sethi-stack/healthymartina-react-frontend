@@ -15,9 +15,13 @@ export default function AddMealModal({
 	onClose,
 }) {
 	return (
-		<Modal onClose={onClose} title={`Agregar ${mealName}`} className='popupstyle1 add-meal'>
-			<p>Funcionalidad de agregar receta - En desarrollo</p>
-			<button onClick={onClose}>Cerrar</button>
+		<Modal onClose={onClose} title={`Agregar ${mealName}`} className='popupstyle1 add-meal' dataModal='add-meal'>
+			<div className='hm-form'>
+				<p className='hm-text--muted'>Funcionalidad de agregar receta - En desarrollo</p>
+				<button className='hm-btn hm-btn--outline hm-btn--block hm-mt--md' onClick={onClose}>
+					Cerrar
+				</button>
+			</div>
 		</Modal>
 	);
 }

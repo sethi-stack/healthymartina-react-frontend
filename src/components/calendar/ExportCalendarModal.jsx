@@ -45,7 +45,7 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
-			link.download = `${calendar.title || calendar.nombre || 'calendario'}.pdf`;
+			link.download = `${calendar.title || 'calendario'}.pdf`;
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
@@ -71,7 +71,7 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
-			link.download = `lista-${calendar.title || calendar.nombre || 'calendario'}.pdf`;
+			link.download = `lista-${calendar.title || 'calendario'}.pdf`;
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
@@ -93,46 +93,42 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 				<>
 					Exportar{' '}
 					<span className='export-calendar-form'>
-						{calendar?.title || calendar?.nombre}
+						{calendar?.title}
 					</span>
 				</>
 			}
 			className='popupstyle1 exportar-calendar'
 			width={820}
+			dataModal='export-calendar'
 		>
 			<div className='tabs-container'>
-				<div className='tabs typ2'>
-					<a
-						href='#tab-pdf'
-						className={`tab-link ${activeTab === 'pdf' ? 'active' : ''}`}
-						onClick={(e) => {
-							e.preventDefault();
-							setActiveTab('pdf');
-						}}
+				<div className='tabs typ2 hm-tabs__nav'>
+					<button
+						type='button'
+						className={`tab-link hm-tabs__tab ${activeTab === 'pdf' ? 'active hm-tabs__tab--active' : ''}`}
+						onClick={() => setActiveTab('pdf')}
 					>
-						<p>Descargar</p>
-					</a>
-					<a
-						href='#tab-lista'
-						className={`tab-link ${activeTab === 'lista' ? 'active' : ''}`}
-						onClick={(e) => {
-							e.preventDefault();
-							setActiveTab('lista');
-						}}
+						Descargar
+					</button>
+					<button
+						type='button'
+						className={`tab-link hm-tabs__tab ${activeTab === 'lista' ? 'active hm-tabs__tab--active' : ''}`}
+						onClick={() => setActiveTab('lista')}
 					>
-						<p>Lista</p>
-					</a>
+						Lista
+					</button>
 				</div>
 
-				<div className='tabs-content'>
+				<div className='tabs-content hm-tabs__content'>
 					{activeTab === 'pdf' ? (
-						<div className='tab-pane active' id='tab-pdf'>
+						<div className='tab-pane active hm-tabs__panel hm-tabs__panel--active' id='tab-pdf'>
 							<div className='export-options'>
 								<p>Selecciona qué incluir en la exportación:</p>
 								<div className='select-buttons'>
 									<button
-										className={`calendar-export-select ${
-											exportParams.includes(1) ? 'button--active' : ''
+										type='button'
+										className={`calendar-export-select hm-btn hm-btn--toggle ${
+											exportParams.includes(1) ? 'button--active hm-btn--toggle-active' : ''
 										}`}
 										onClick={() => handleExportParamToggle(1)}
 									>
@@ -150,8 +146,9 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 										</div>
 									</button>
 									<button
-										className={`calendar-export-select ${
-											exportParams.includes(2) ? 'button--active' : ''
+										type='button'
+										className={`calendar-export-select hm-btn hm-btn--toggle ${
+											exportParams.includes(2) ? 'button--active hm-btn--toggle-active' : ''
 										}`}
 										onClick={() => handleExportParamToggle(2)}
 									>
@@ -170,7 +167,8 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 									</button>
 								</div>
 								<button
-									className='export-btn'
+									type='submit'
+									className='export-btn hm-btn hm-btn--primary hm-btn--block'
 									onClick={handleExportPdf}
 									disabled={isExporting || exportParams.length === 0}
 								>
@@ -179,7 +177,7 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 							</div>
 						</div>
 					) : (
-						<div className='tab-pane active' id='tab-lista'>
+						<div className='tab-pane active hm-tabs__panel hm-tabs__panel--active' id='tab-lista'>
 							<CalendarListaTab
 								calendarId={calendar?.id}
 								onClose={onClose}

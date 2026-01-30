@@ -41,31 +41,31 @@ export default function CalendarCell({
 		<>
 			<div
 				id={cellId}
-				className='col-day-td'
+				className='col-day-td hm-calendar__day-col'
 				data-daynum={dayNum}
 				data-mealnum={mealNum}
 				data-mealname={mealName}
 				onClick={handleCellClick}
 			>
 				{hasRecipe ? (
-					<div className='calRecipe' draggable='true'>
+					<div className='calRecipe hm-calendar__cell' draggable='true'>
 						{mainRecipeId && (
 							<div
-								className={`calRecipeMain ${
-									mainLeftover ? 'recipeLeftover' : ''
+								className={`calRecipeMain hm-calendar__recipe ${
+									mainLeftover ? 'recipeLeftover hm-calendar__recipe--leftover' : ''
 								}`}
 							>
-								<div className='calRecpImg'>
+								<div className='calRecpImg hm-calendar__recipe-image'>
 									{mainRecipe?.imagen && (
 										<img src={mainRecipe.imagen} alt={mainRecipe.titulo} />
 									)}
 								</div>
-								<div className='calRecpInfo'>
-									<div className='calRecpName'>
+								<div className='calRecpInfo hm-calendar__recipe-info'>
+									<div className='calRecpName hm-calendar__recipe-name'>
 										<p>{mainRecipe?.titulo || `Receta ${mainRecipeId}`}</p>
 									</div>
 									{mainServing && (
-										<div className='calRecpServing'>
+										<div className='calRecpServing hm-calendar__recipe-serving'>
 											{mainServing} porciones
 										</div>
 									)}
@@ -74,23 +74,23 @@ export default function CalendarCell({
 						)}
 						{sideRecipeId && (
 							<div
-								className={`calRecipeSide ${
-									sideLeftover ? 'recipeLeftover' : ''
+								className={`calRecipeSide hm-calendar__recipe hm-calendar__recipe--side ${
+									sideLeftover ? 'recipeLeftover hm-calendar__recipe--leftover' : ''
 								}`}
 							>
-								<div className='calRecpImg'>
+								<div className='calRecpImg hm-calendar__recipe-image'>
 									{sideRecipe?.imagen && (
 										<img src={sideRecipe.imagen} alt={sideRecipe.titulo} />
 									)}
 								</div>
-								<div className='calRecpInfo'>
-									<div className='calRecpName'>
+								<div className='calRecpInfo hm-calendar__recipe-info'>
+									<div className='calRecpName hm-calendar__recipe-name'>
 										<p>
 											{sideRecipe?.titulo || `Acompañamiento ${sideRecipeId}`}
 										</p>
 									</div>
 									{sideServing && (
-										<div className='calRecpServing'>
+										<div className='calRecpServing hm-calendar__recipe-serving'>
 											{sideServing} porciones
 										</div>
 									)}
@@ -99,7 +99,7 @@ export default function CalendarCell({
 						)}
 					</div>
 				) : (
-					<div className='calRecpAdd'>+ Agregar</div>
+					<div className='calRecpAdd hm-calendar__cell-add'>+ Agregar</div>
 				)}
 			</div>
 

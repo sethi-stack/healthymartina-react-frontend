@@ -28,10 +28,8 @@ export const getCalendar = async (id) => {
 /**
  * Create a new calendar
  * @param {Object} data - Calendar data
- * @param {string} data.nombre - Calendar name
+ * @param {string} data.title - Calendar name
  * @param {number} data.semanas - Number of weeks (optional)
- * @param {Object} data.calendario - Calendar JSON (optional)
- * @param {Object} data.data_semanal - Weekly data JSON (optional)
  * @returns {Promise<Object>} - Created calendar
  */
 export const createCalendar = async (data) => {
@@ -63,11 +61,11 @@ export const deleteCalendar = async (id) => {
 /**
  * Copy calendar
  * @param {number} id - Calendar ID to copy
- * @param {string} nombre - New calendar name
+ * @param {string} title - New calendar name
  * @returns {Promise<Object>} - Copied calendar
  */
-export const copyCalendar = async (id, nombre) => {
-	const response = await apiClient.post(`/calendars/${id}/copy`, { nombre });
+export const copyCalendar = async (id, title) => {
+	const response = await apiClient.post(`/calendars/${id}/copy`, { title });
 	return response.data;
 };
 

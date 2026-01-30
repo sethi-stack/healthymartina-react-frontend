@@ -17,9 +17,13 @@ export default function UpdateMealModal({
 	onClose,
 }) {
 	return (
-		<Modal onClose={onClose} title={`Editar ${mealName}`} className='popupstyle1 update-meal'>
-			<p>Funcionalidad de editar receta - En desarrollo</p>
-			<button onClick={onClose}>Cerrar</button>
+		<Modal onClose={onClose} title={`Editar ${mealName}`} className='popupstyle1 update-meal' dataModal='update-meal'>
+			<div className='hm-form'>
+				<p className='hm-text--muted'>Funcionalidad de editar receta - En desarrollo</p>
+				<button className='hm-btn hm-btn--outline hm-btn--block hm-mt--md' onClick={onClose}>
+					Cerrar
+				</button>
+			</div>
 		</Modal>
 	);
 }

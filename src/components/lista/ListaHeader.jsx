@@ -13,7 +13,7 @@ export default function ListaHeader({ calendar, ingredientCount = 0 }) {
 	return (
 		<div className='indicador'>
 			<div className='left'>
-				<h3>{calendar.title || calendar.nombre}</h3>
+				<h3>{calendar.title}</h3>
 			</div>
 			<div className='right'>
 				<p>

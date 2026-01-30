@@ -6,7 +6,7 @@ export default function EditCalendarModal({ calendar, onClose, onSubmit, isLoadi
 
 	useEffect(() => {
 		if (calendar) {
-			setNombre(calendar.title || calendar.nombre || '');
+			setNombre(calendar.title || '');
 		}
 	}, [calendar]);
 
@@ -18,23 +18,27 @@ export default function EditCalendarModal({ calendar, onClose, onSubmit, isLoadi
 	};
 
 	return (
-		<Modal onClose={onClose} title='Editar Nombre Calendario' className='popupstyle1 edit-calendar'>
-			<form onSubmit={handleSubmit}>
-				<p>Nuevo nombre</p>
-				<input
-					type='text'
-					name='calendar_title'
-					className='calendar_title'
-					value={nombre}
-					onChange={(e) => setNombre(e.target.value)}
-					placeholder='Nombre del calendario'
-					required
-				/>
-				<input
+		<Modal onClose={onClose} title='Editar Nombre Calendario' className='popupstyle1 edit-calendar' dataModal='edit-calendar'>
+			<form onSubmit={handleSubmit} className='hm-form'>
+				<div className='hm-form__group'>
+					<label className='hm-form__label'>Nuevo nombre</label>
+					<input
+						type='text'
+						name='calendar_title'
+						className='hm-form__input'
+						value={nombre}
+						onChange={(e) => setNombre(e.target.value)}
+						placeholder='Nombre del calendario'
+						required
+					/>
+				</div>
+				<button
 					type='submit'
-					value={isLoading ? 'Guardando...' : 'Guardar nuevo nombre'}
+					className='hm-btn hm-btn--outline hm-btn--block'
 					disabled={isLoading}
-				/>
+				>
+					{isLoading ? 'Guardando...' : 'Guardar nuevo nombre'}
+				</button>
 			</form>
 		</Modal>
 	);

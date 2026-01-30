@@ -82,67 +82,62 @@ export const RecipeCard = forwardRef(
 		const imageUrl = getImageUrl(recipe.imagen_principal);
 
 		return (
-			<div className='col13' ref={ref}>
-				<div className='receta-membresia-inner'>
+			<div className='col13 hm-card' ref={ref}>
+				<div className='receta-membresia-inner hm-card__inner'>
 					<Link to={`/receta/${recipe.slug}`}>
-						<div className='imagen lozad recipe-image-container'>
-							<div className='recipe-image-background'>
+						<div className='imagen lozad recipe-image-container hm-card__image'>
+							<div className='recipe-image-background hm-card__image-placeholder'>
 								<CalendarioIcon />
 							</div>
 							{imageUrl && (
 								<img
-									className='lozad recipe-image-overlay'
+									className={`lozad recipe-image-overlay hm-card__image-overlay ${imageLoaded ? 'hm-card__image-overlay--loaded' : ''}`}
 									loading='lazy'
 									src={imageUrl}
 									alt=''
-									style={{
-										opacity: imageLoaded ? 1 : 0,
-										transition: 'opacity 0.5s ease-in-out',
-									}}
 									onLoad={() => setImageLoaded(true)}
 								/>
 							)}
 						</div>
 					</Link>
-					<div className='info'>
+					<div className='info hm-card__body'>
 						<div className='row'>
 							<div className='name-recipe'>
-								<p className='name'>{formatTitle(recipe.titulo)}</p>
+								<h3 className='name hm-card__title'>{formatTitle(recipe.titulo)}</h3>
 							</div>
 							{showMenu && (
-								<div className='button-hamburger' ref={menuRef}>
+								<div className='button-hamburger hm-menu hm-menu--dots-only hm-card__actions' ref={menuRef}>
 									<button
 										onClick={toggleMenu}
-										className={isMenuOpen ? 'active' : ''}
+										className={`hm-menu__trigger ${isMenuOpen ? 'hm-menu__trigger--active active' : ''}`}
 									>
 										<EllipsisVerticalIcon />
 									</button>
-									<div
-										className='sub-menu'
-										style={{ display: isMenuOpen ? 'block' : 'none' }}
-									>
+									<div className={`sub-menu hm-menu__dropdown ${isMenuOpen ? 'hm-menu__dropdown--open' : ''}`}>
 										<button
 											type='button'
-											className='RecpAddcal'
+											className='RecpAddcal hm-menu__item'
 											onClick={handleAddToCalendar}
 										>
-											<CalendarMenuIcon />
+											<span className='hm-menu__icon'>
+												<CalendarMenuIcon />
+											</span>
 											<span>Agregar a calendario</span>
 										</button>
 									</div>
 								</div>
 							)}
 						</div>
-						<div className='special-info'>
-							<span>
-								<i>
+						<div className='special-info hm-card__meta'>
+							<span className='hm-card__meta-item'>
+								<i className='hm-icon hm-icon--sm'>
 									<CartIcon />
 								</i>
 								{ingredientesCount}{' '}
 								{ingredientesCount === 1 ? 'ingrediente' : 'ingredientes'}
 							</span>
-							<span>
-								<i>
+							<span className='hm-card__meta-item'>
+								<i className='hm-icon hm-icon--sm'>
 									<ClockIcon />
 								</i>
 								{tiempo} minutos

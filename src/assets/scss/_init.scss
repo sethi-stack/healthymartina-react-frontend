@@ -6,8 +6,9 @@
 // =============================================================================
 
 // Design System
-@import 'tokens';  // Design tokens (colors, spacing, typography scales)
-@import 'mixins';  // Reusable style patterns
+@import 'tokens';      // Design tokens (colors, spacing, typography scales)
+@import 'mixins';      // Reusable style patterns
+@import 'components';  // BEM component classes
 
 // Legacy variables - kept for backward compatibility
 // New code should use tokens from _tokens.scss instead

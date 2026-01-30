@@ -15,6 +15,7 @@ export default function Modal({
 	className = '',
 	width = 540,
 	closeOnOverlay = true,
+	dataModal = null,
 }) {
 	if (!isOpen) return null;
 
@@ -22,21 +23,25 @@ export default function Modal({
 	const overlayHandler = closeOnOverlay ? onClose : undefined;
 
 	return (
-		<div className={`popup ${className}`.trim()} onClick={overlayHandler}>
+		<div
+			className={`popup ${className}`.trim()}
+			onClick={overlayHandler}
+			data-modal={dataModal}
+		>
 			<div
-				className='container-popup'
+				className='container-popup hm-modal__container'
 				onClick={(e) => e.stopPropagation()}
 				style={{
 					maxWidth: normalizedWidth,
 					width: `min(92vw, ${normalizedWidth})`,
 				}}
 			>
-				<button className='close' onClick={onClose} aria-label='Cerrar modal'>
+				<button className='close hm-modal__close' onClick={onClose} aria-label='Cerrar modal'>
 					<FaTimes />
 				</button>
 
-				<div className='modal-content'>
-					{title ? <h3>{title}</h3> : null}
+				<div className='modal-content hm-modal__body'>
+					{title ? <h3 className='hm-modal__title'>{title}</h3> : null}
 
 					{children}
 				</div>

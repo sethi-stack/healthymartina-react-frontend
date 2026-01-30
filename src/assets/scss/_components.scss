@@ -1,0 +1,1063 @@
+// =============================================================================
+// COMPONENT CLASSES (BEM)
+// Reusable component classes using BEM naming convention
+// Prefix: hm- (HealthyMartina) to avoid conflicts with legacy styles
+// =============================================================================
+
+@import 'tokens';
+
+// =============================================================================
+// MODAL COMPONENT
+// =============================================================================
+
+.hm-modal {
+	// Container - the actual modal box
+	&__container {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	// Header section with title
+	&__header {
+		width: 100%;
+		margin-bottom: $spacing-base;
+	}
+
+	// Title styling
+	&__title {
+		text-align: left;
+		text-transform: none;
+		font-size: 22px;
+		font-family: $font-family-medium;
+		color: $color-primary;
+		border-bottom: 1px solid $color-border;
+		padding-bottom: $spacing-sm;
+		margin: 0;
+		width: 100%;
+		display: block;
+	}
+
+	// Body/content area
+	&__body {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	// Footer with buttons
+	&__footer {
+		width: 100%;
+		margin-top: $spacing-base;
+		display: flex;
+		gap: $spacing-sm;
+	}
+
+	// Close button
+	&__close {
+		position: absolute;
+		top: -10px;
+		right: -10px;
+		width: 38px;
+		height: 38px;
+		border-radius: 50%;
+		border: 1px solid $color-border;
+		background: $color-white;
+		color: $color-border;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all $transition-base;
+		z-index: 10;
+
+		&:hover {
+			border-color: $color-primary;
+			color: $color-primary;
+		}
+	}
+
+	// Size modifiers
+	&--sm {
+		max-width: 400px;
+	}
+
+	&--md {
+		max-width: 540px;
+	}
+
+	&--lg {
+		max-width: 720px;
+	}
+
+	&--xl {
+		max-width: 800px;
+	}
+}
+
+// =============================================================================
+// FORM COMPONENTS
+// =============================================================================
+
+.hm-form {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+
+	// Form group wrapper
+	&__group {
+		margin-bottom: $spacing-base;
+		width: 100%;
+	}
+
+	// Label styling
+	&__label {
+		display: block;
+		text-align: left;
+		font-family: $font-family-medium;
+		font-size: $font-size-sm;
+		color: $color-text-muted;
+		margin-bottom: $spacing-sm;
+	}
+
+	// Text input
+	&__input {
+		width: 100%;
+		height: 2.5em;
+		padding: $input-padding-y $input-padding-x;
+		font-size: $font-size-base;
+		font-family: $font-family-medium;
+		color: $color-text;
+		background: $color-white;
+		border: $input-border-width solid $input-border-color;
+		border-radius: $input-border-radius;
+		box-sizing: border-box;
+		transition: border-color $transition-base, box-shadow $transition-base;
+
+		&::placeholder {
+			color: $color-text-light;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: $color-primary;
+			box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+		}
+	}
+
+	// Select dropdown
+	&__select {
+		@extend .hm-form__input;
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%237a7a7a' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+		background-position: right $spacing-md center;
+		background-repeat: no-repeat;
+		background-size: 1.5em;
+		padding-right: 2.5em;
+	}
+
+	// Textarea
+	&__textarea {
+		@extend .hm-form__input;
+		height: auto;
+		min-height: 8em;
+		resize: vertical;
+		line-height: $line-height-base;
+	}
+
+	// Error message
+	&__error {
+		color: $color-error;
+		font-size: $font-size-sm;
+		margin-top: $spacing-xs;
+	}
+
+	// Help text
+	&__help {
+		color: $color-text-muted;
+		font-size: $font-size-sm;
+		margin-top: $spacing-xs;
+	}
+}
+
+// =============================================================================
+// BUTTON COMPONENTS
+// =============================================================================
+
+.hm-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: $btn-padding-y $btn-padding-x;
+	font-size: $font-size-base;
+	font-family: $font-family-medium;
+	border-radius: $btn-border-radius;
+	cursor: pointer;
+	transition: all $transition-base;
+	text-decoration: none;
+	border: $btn-border-width solid transparent;
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	// Primary button - gold filled
+	&--primary {
+		background: $color-primary;
+		color: $color-white;
+		border-color: $color-primary;
+
+		&:hover:not(:disabled) {
+			background: $color-primary-hover;
+			border-color: $color-primary-hover;
+		}
+	}
+
+	// Outline button - gold border
+	&--outline {
+		background: $color-white;
+		color: $color-primary;
+		border-color: $color-primary;
+
+		&:hover:not(:disabled) {
+			background: $color-primary;
+			color: $color-white;
+		}
+	}
+
+	// Danger button - red
+	&--danger {
+		background: $color-white;
+		color: $color-error;
+		border-color: $color-error;
+
+		&:hover:not(:disabled) {
+			background: $color-error;
+			color: $color-white;
+		}
+	}
+
+	// Ghost button - text only
+	&--ghost {
+		background: transparent;
+		color: $color-primary;
+		border-color: transparent;
+
+		&:hover:not(:disabled) {
+			background: rgba($color-primary, 0.1);
+		}
+	}
+
+	// Full width modifier
+	&--block {
+		width: 100%;
+	}
+
+	// Toggle button (selectable, like export options)
+	&--toggle {
+		background: $color-white;
+		border: 2px solid $color-border;
+		color: $color-text-muted;
+		padding: $spacing-md $spacing-lg;
+		min-width: 100px;
+
+		&:hover:not(:disabled) {
+			border-color: $color-primary;
+			color: $color-primary;
+		}
+
+		&-active {
+			background: $color-primary-lightest;
+			border-color: $color-primary;
+			color: $color-primary;
+		}
+	}
+
+	// Icon-only button
+	&--icon {
+		width: 32px;
+		height: 32px;
+		padding: $spacing-xs;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		background: transparent;
+		border-radius: $radius-sm;
+		color: $color-text-muted;
+
+		&:hover:not(:disabled) {
+			background: $color-background-alt;
+			color: $color-primary;
+		}
+	}
+
+	// Small button size
+	&--sm {
+		padding: $spacing-xs $spacing-sm;
+		font-size: $font-size-xs;
+
+		&.hm-btn--icon {
+			width: 24px;
+			height: 24px;
+		}
+	}
+}
+
+// =============================================================================
+// LIST COMPONENTS
+// =============================================================================
+
+.hm-list {
+	// Scrollable container
+	&__container {
+		width: 100%;
+		border: 1px solid $color-border-light;
+		border-radius: $radius-md;
+		background: $color-white;
+		max-height: 280px;
+		min-height: 200px;
+		overflow-y: auto;
+	}
+
+	// List item
+	&__item {
+		display: block;
+		padding: $spacing-md $spacing-lg;
+		color: $color-text;
+		text-decoration: none;
+		border-bottom: 1px solid $color-border-light;
+		cursor: pointer;
+		transition: background $transition-base;
+		font-size: $font-size-sm;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&:hover {
+			background: $color-background-alt;
+		}
+
+		// Active/selected state
+		&--active {
+			background: $color-primary-light;
+			color: $color-primary;
+		}
+
+		// Create new item styling
+		&--create {
+			background: $color-primary-lightest;
+			color: $color-primary-muted;
+			font-weight: 500;
+
+			strong {
+				color: $color-primary;
+				margin-right: $spacing-xs;
+			}
+
+			&:hover {
+				background: $color-primary-light;
+			}
+		}
+
+		// Checked/taken state (for shopping list items)
+		&--checked {
+			opacity: 0.6;
+		}
+	}
+
+	// Item actions (edit/delete buttons)
+	&__item-actions {
+		display: flex;
+		gap: $spacing-xs;
+		align-items: center;
+		margin-left: auto;
+	}
+
+	// Empty state
+	&__empty {
+		padding: $spacing-lg;
+		text-align: center;
+		color: $color-text-muted;
+		font-size: $font-size-sm;
+	}
+}
+
+// =============================================================================
+// UTILITY CLASSES
+// =============================================================================
+
+.hm-text {
+	&--left {
+		text-align: left;
+	}
+	&--center {
+		text-align: center;
+	}
+	&--right {
+		text-align: right;
+	}
+	&--muted {
+		color: $color-text-muted;
+	}
+	&--primary {
+		color: $color-primary;
+	}
+	&--error {
+		color: $color-error;
+	}
+}
+
+.hm-mt {
+	&--sm {
+		margin-top: $spacing-sm;
+	}
+	&--md {
+		margin-top: $spacing-md;
+	}
+	&--lg {
+		margin-top: $spacing-lg;
+	}
+}
+
+.hm-mb {
+	&--sm {
+		margin-bottom: $spacing-sm;
+	}
+	&--md {
+		margin-bottom: $spacing-md;
+	}
+	&--lg {
+		margin-bottom: $spacing-lg;
+	}
+}
+
+// =============================================================================
+// GRID COMPONENT
+// =============================================================================
+
+.hm-grid {
+	display: grid;
+	gap: $spacing-md;
+
+	// 3-column grid (recipes, categories)
+	&--cols-3 {
+		grid-template-columns: repeat(3, 1fr);
+
+		@media (max-width: $breakpoint-lg) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@media (max-width: $breakpoint-md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	// 2-column grid
+	&--cols-2 {
+		grid-template-columns: repeat(2, 1fr);
+
+		@media (max-width: $breakpoint-md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	// 7-column grid (calendar days)
+	&--cols-7 {
+		grid-template-columns: repeat(7, 1fr);
+	}
+}
+
+// =============================================================================
+// CARD COMPONENT
+// =============================================================================
+
+.hm-card {
+	position: relative;
+
+	&__inner {
+		background: $color-white;
+		border-radius: $radius-md;
+		overflow: hidden;
+		box-shadow: $shadow-sm;
+		transition: box-shadow $transition-base;
+		height: 100%;
+
+		&:hover {
+			box-shadow: $shadow-md;
+		}
+	}
+
+	&__image {
+		position: relative;
+		height: 270px;
+		background-size: cover;
+		background-position: center;
+		overflow: hidden;
+	}
+
+	&__image-placeholder {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: $color-background-alt;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: $color-text-light;
+	}
+
+	&__image-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-size: cover;
+		background-position: center;
+		opacity: 0;
+		transition: opacity $transition-slow;
+
+		&--loaded {
+			opacity: 1;
+		}
+	}
+
+	&__body {
+		padding: $spacing-md;
+	}
+
+	&__title {
+		font-family: $font-family-semibold;
+		font-size: $font-size-base;
+		text-transform: uppercase;
+		margin: 0;
+		color: $color-text;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+
+			&:hover {
+				color: $color-primary;
+			}
+		}
+	}
+
+	&__meta {
+		display: flex;
+		gap: $spacing-md;
+		color: $color-text-muted;
+		font-size: $font-size-sm;
+		margin-top: $spacing-sm;
+	}
+
+	&__meta-item {
+		display: flex;
+		align-items: center;
+		gap: $spacing-xs;
+	}
+
+	&__actions {
+		position: absolute;
+		top: $spacing-sm;
+		right: $spacing-sm;
+		z-index: 10;
+	}
+
+	// Modifiers
+	&--leftover {
+		.hm-card__image-overlay {
+			filter: grayscale(100%);
+		}
+	}
+}
+
+// =============================================================================
+// MENU COMPONENT (Kebab/Dropdown)
+// =============================================================================
+
+.hm-menu {
+	position: relative;
+
+	&__trigger {
+		width: 44px;
+		height: 44px;
+		padding: $spacing-sm;
+		border: 1px solid $color-border;
+		border-radius: $radius-sm;
+		background: $color-white;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all $transition-base;
+
+		&:hover {
+			border-color: $color-primary;
+			background: $color-background-alt;
+		}
+
+		&--active {
+			background: $color-primary;
+			border-color: $color-primary;
+			color: $color-white;
+
+			svg {
+				fill: $color-white;
+			}
+		}
+	}
+
+	&__dropdown {
+		position: absolute;
+		top: calc(100% + #{$spacing-xs});
+		right: 0;
+		min-width: 200px;
+		background: $color-white;
+		border: 1px solid $color-border;
+		border-radius: $radius-md;
+		box-shadow: $shadow-md;
+		z-index: $z-dropdown;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(-10px);
+		transition: all $transition-base;
+
+		&--open {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+	}
+
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: $spacing-sm;
+		padding: $spacing-md $spacing-lg;
+		color: $color-text;
+		text-decoration: none;
+		border: none;
+		background: none;
+		width: 100%;
+		text-align: left;
+		border-bottom: 1px solid $color-border-light;
+		cursor: pointer;
+		transition: all $transition-base;
+		font-size: $font-size-sm;
+		font-family: $font-family-medium;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&:hover {
+			background: $color-background-alt;
+			color: $color-primary;
+		}
+
+		&--danger {
+			color: $color-error;
+
+			&:hover {
+				background: rgba($color-error, 0.1);
+				color: $color-error;
+			}
+		}
+	}
+
+	&__icon {
+		width: 20px;
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	// Dots-only variant (minimal trigger)
+	&--dots-only {
+		.hm-menu__trigger {
+			width: auto;
+			height: auto;
+			padding: $spacing-xs;
+			border: none;
+			background: transparent;
+
+			&:hover {
+				background: rgba($color-primary, 0.1);
+			}
+		}
+	}
+}
+
+// =============================================================================
+// LABEL COMPONENT
+// =============================================================================
+
+.hm-label {
+	display: inline-flex;
+	align-items: center;
+	padding: $spacing-xs $spacing-sm;
+	font-family: $font-family-medium;
+	font-size: $font-size-sm;
+	border-radius: $radius-sm;
+
+	&--clickable {
+		cursor: pointer;
+		transition: all $transition-base;
+
+		&:hover {
+			color: $color-primary;
+			background: $color-primary-lightest;
+		}
+	}
+
+	&--day {
+		text-transform: uppercase;
+		font-family: $font-family-semibold;
+	}
+
+	&--meal {
+		font-family: $font-family-gotham-bold;
+	}
+
+	&--tag {
+		background: $color-background-alt;
+		color: $color-text-muted;
+	}
+
+	&--primary {
+		background: $color-primary-light;
+		color: $color-primary;
+	}
+}
+
+// =============================================================================
+// CALENDAR COMPONENT
+// =============================================================================
+
+.hm-calendar {
+	width: 100%;
+
+	&__header {
+		display: flex;
+		height: $calendar-header-height;
+		background: $color-white;
+	}
+
+	&__row {
+		display: flex;
+		height: $calendar-cell-height;
+		border-top: 1px solid $color-border-light;
+	}
+
+	&__label-col {
+		width: $calendar-label-width;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: background $transition-base;
+
+		&:hover {
+			background: $color-background-alt;
+
+			.hm-calendar__label {
+				color: $color-primary;
+			}
+		}
+	}
+
+	&__day-col {
+		flex: 1;
+		border-left: 1px solid $color-border-light;
+
+		&--header {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			background: $color-white;
+
+			&:hover {
+				background: $color-background-alt;
+
+				.hm-calendar__label {
+					color: $color-primary;
+				}
+			}
+		}
+	}
+
+	&__label {
+		font-family: $font-family-gotham-bold;
+		font-size: $font-size-sm;
+		text-transform: uppercase;
+		transition: color $transition-base;
+
+		&--vertical {
+			transform: rotate(-90deg);
+			white-space: nowrap;
+		}
+
+		&--mobile {
+			display: none;
+
+			@media (max-width: $breakpoint-md) {
+				display: block;
+			}
+		}
+
+		&--desktop {
+			@media (max-width: $breakpoint-md) {
+				display: none;
+			}
+		}
+	}
+
+	&__cell {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__cell-add {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: $color-white;
+		border-radius: $radius-md;
+		cursor: pointer;
+		transition: all $transition-base;
+		color: $color-text-muted;
+
+		&:hover {
+			background: $color-primary;
+			color: $color-white;
+		}
+	}
+
+	&__recipe {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		border-bottom: 1px solid $color-border-light;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	&__recipe-image {
+		flex: 1;
+		background-size: cover;
+		background-position: center;
+	}
+
+	&__recipe-info {
+		padding: $spacing-xs;
+		text-align: center;
+		font-size: $font-size-xs;
+	}
+}
+
+// =============================================================================
+// TABS COMPONENT
+// =============================================================================
+
+.hm-tabs {
+	&__nav {
+		display: flex;
+		gap: $spacing-md;
+		padding: $spacing-sm $spacing-lg;
+		background: $color-background-alt;
+		border-radius: $radius-md $radius-md 0 0;
+	}
+
+	&__tab {
+		padding: $spacing-sm $spacing-md;
+		color: $color-text-muted;
+		text-decoration: none;
+		font-family: $font-family-medium;
+		transition: color $transition-base;
+		cursor: pointer;
+		background: none;
+		border: none;
+		border-bottom: 2px solid transparent;
+
+		&:hover {
+			color: $color-text;
+		}
+
+		&--active {
+			color: $color-primary;
+			border-bottom-color: $color-primary;
+		}
+	}
+
+	&__content {
+		padding: $spacing-lg;
+	}
+
+	&__panel {
+		display: none;
+
+		&--active {
+			display: block;
+		}
+	}
+}
+
+// =============================================================================
+// FILTER COMPONENT
+// =============================================================================
+
+.hm-filter {
+	&__section {
+		margin-bottom: $spacing-lg;
+	}
+
+	&__title {
+		font-family: $font-family-semibold;
+		font-size: $font-size-sm;
+		color: $color-text-muted;
+		margin-bottom: $spacing-sm;
+	}
+
+	&__row {
+		display: flex;
+		gap: $spacing-md;
+
+		> * {
+			flex: 1;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		gap: $spacing-md;
+		margin-top: $spacing-lg;
+		padding-top: $spacing-lg;
+		border-top: 1px solid $color-border-light;
+	}
+}
+
+// =============================================================================
+// CHECKBOX COMPONENT
+// =============================================================================
+
+.hm-checkbox {
+	display: flex;
+	align-items: center;
+	gap: $spacing-sm;
+	cursor: pointer;
+	position: relative;
+
+	&__input {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	&__box {
+		width: 20px;
+		height: 20px;
+		border: 2px solid $color-border;
+		border-radius: $radius-sm;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all $transition-base;
+		flex-shrink: 0;
+
+		&::after {
+			content: '\f00c'; // FA checkmark
+			font-family: 'Font Awesome 5 Free';
+			font-weight: 900;
+			font-size: 12px;
+			color: $color-white;
+			opacity: 0;
+			transition: opacity $transition-base;
+		}
+	}
+
+	&__input:checked + &__box {
+		background: $color-primary;
+		border-color: $color-primary;
+
+		&::after {
+			opacity: 1;
+		}
+	}
+
+	&__label {
+		font-size: $font-size-base;
+
+		&--strikethrough {
+			text-decoration: line-through;
+			color: $color-text-muted;
+		}
+	}
+
+	// Content wrapper (for items with quantity + name)
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: $spacing-xs;
+
+		&--strikethrough {
+			text-decoration: line-through;
+			color: $color-text-muted;
+		}
+	}
+
+	// Quantity display
+	&__quantity {
+		font-size: $font-size-sm;
+		color: $color-text-muted;
+		font-family: $font-family-medium;
+	}
+
+	&:hover &__box {
+		border-color: $color-primary;
+	}
+}
+
+// =============================================================================
+// ICON WRAPPER
+// =============================================================================
+
+.hm-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	&--sm {
+		width: 16px;
+		height: 16px;
+	}
+
+	&--md {
+		width: 20px;
+		height: 20px;
+	}
+
+	&--lg {
+		width: 24px;
+		height: 24px;
+	}
+
+	svg {
+		width: 100%;
+		height: 100%;
+	}
+}

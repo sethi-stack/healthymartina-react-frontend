@@ -88,85 +88,100 @@ export default function EditIngredientModal({
 			onClose={onClose}
 			title='Editar ingrediente'
 			width={540}
+			dataModal='edit-ingredient'
 		>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} className='hm-form'>
 				<div className='row'>
 					<div className='col12'>
-						<label htmlFor='cantidad'>Cantidad</label>
-						<input
-							id='cantidad'
-							type='number'
-							step='0.01'
-							name='cantidad'
-							placeholder='3'
-							value={formData.cantidad}
-							onChange={handleChange}
-							autoComplete='off'
-							disabled={isLoading}
-						/>
-						{errors.cantidad && (
-							<span className='error-message'>{errors.cantidad}</span>
-						)}
+						<div className='hm-form__group'>
+							<label htmlFor='cantidad' className='hm-form__label'>Cantidad</label>
+							<input
+								id='cantidad'
+								type='number'
+								step='0.01'
+								name='cantidad'
+								className='hm-form__input'
+								placeholder='3'
+								value={formData.cantidad}
+								onChange={handleChange}
+								autoComplete='off'
+								disabled={isLoading}
+							/>
+							{errors.cantidad && (
+								<span className='hm-form__error'>{errors.cantidad}</span>
+							)}
+						</div>
 					</div>
 					<div className='col12'>
-						<label htmlFor='unidad_medida'>Unidad de medida</label>
-						<input
-							id='unidad_medida'
-							type='text'
-							name='unidad_medida'
-							placeholder='tazas'
-							maxLength={50}
-							value={formData.unidad_medida}
-							onChange={handleChange}
-							autoComplete='off'
-							disabled={isLoading}
-						/>
-						{errors.unidad_medida && (
-							<span className='error-message'>{errors.unidad_medida}</span>
-						)}
+						<div className='hm-form__group'>
+							<label htmlFor='unidad_medida' className='hm-form__label'>Unidad de medida</label>
+							<input
+								id='unidad_medida'
+								type='text'
+								name='unidad_medida'
+								className='hm-form__input'
+								placeholder='tazas'
+								maxLength={50}
+								value={formData.unidad_medida}
+								onChange={handleChange}
+								autoComplete='off'
+								disabled={isLoading}
+							/>
+							{errors.unidad_medida && (
+								<span className='hm-form__error'>{errors.unidad_medida}</span>
+							)}
+						</div>
 					</div>
 				</div>
 
-				<label htmlFor='nombre'>Nombre del ingrediente</label>
-				<input
-					id='nombre'
-					type='text'
-					name='nombre'
-					placeholder='Nombre del ingrediente'
-					maxLength={50}
-					value={formData.nombre}
-					onChange={handleChange}
-					autoComplete='off'
-					disabled={isLoading}
-				/>
-				{errors.nombre && (
-					<span className='error-message'>{errors.nombre}</span>
-				)}
+				<div className='hm-form__group'>
+					<label htmlFor='nombre' className='hm-form__label'>Nombre del ingrediente</label>
+					<input
+						id='nombre'
+						type='text'
+						name='nombre'
+						className='hm-form__input'
+						placeholder='Nombre del ingrediente'
+						maxLength={50}
+						value={formData.nombre}
+						onChange={handleChange}
+						autoComplete='off'
+						disabled={isLoading}
+					/>
+					{errors.nombre && (
+						<span className='hm-form__error'>{errors.nombre}</span>
+					)}
+				</div>
 
-				<label htmlFor='categoria'>Categoría</label>
-				<select
-					id='categoria'
-					name='categoria'
-					value={formData.categoria}
-					onChange={handleChange}
+				<div className='hm-form__group'>
+					<label htmlFor='categoria' className='hm-form__label'>Categoría</label>
+					<select
+						id='categoria'
+						name='categoria'
+						className='hm-form__select'
+						value={formData.categoria}
+						onChange={handleChange}
+						disabled={isLoading}
+					>
+						<option value=''>Seleccionar categoría</option>
+						{categories.map((cat) => (
+							<option key={cat.id} value={cat.id}>
+								{cat.nombre}
+							</option>
+						))}
+					</select>
+					{errors.categoria && (
+						<span className='hm-form__error'>{errors.categoria}</span>
+					)}
+				</div>
+
+				<button
+					type='submit'
+					className='hm-btn hm-btn--outline hm-btn--block'
 					disabled={isLoading}
 				>
-					<option value=''>Seleccionar categoría</option>
-					{categories.map((cat) => (
-						<option key={cat.id} value={cat.id}>
-							{cat.nombre}
-						</option>
-					))}
-				</select>
-				{errors.categoria && (
-					<span className='error-message'>{errors.categoria}</span>
-				)}
-
-				<input
-					type='submit'
-					value={isLoading ? 'Actualizando...' : 'Editar ingrediente'}
-					disabled={isLoading}
-				/>
+					{isLoading ? 'Actualizando...' : 'Editar ingrediente'}
+				</button>
 			</form>
 		</Modal>
 	);

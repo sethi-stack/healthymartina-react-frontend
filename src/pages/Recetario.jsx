@@ -162,12 +162,13 @@ export function Recetario() {
 					</div>
 				</div>
 			</div>
-			<FiltersPopup
-				isOpen={isFiltersOpen}
-				onClose={() => setIsFiltersOpen(false)}
-				onApplyFilters={handleApplyFilters}
-				initialFilters={appliedFilters}
-			/>
+			{isFiltersOpen && (
+				<FiltersPopup
+					onClose={() => setIsFiltersOpen(false)}
+					onApplyFilters={handleApplyFilters}
+					initialFilters={appliedFilters}
+				/>
+			)}
 		</div>
 	);
 }

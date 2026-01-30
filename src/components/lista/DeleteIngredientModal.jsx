@@ -25,9 +25,10 @@ export default function DeleteIngredientModal({
 			onClose={onClose}
 			title='Eliminar Ingrediente'
 			width={540}
+			dataModal='delete-ingredient'
 		>
-			<form onSubmit={(e) => e.preventDefault()}>
-				<div className='exclamacion'>
+			<form onSubmit={(e) => e.preventDefault()} className='hm-form'>
+				<div className='exclamacion hm-text--center'>
 					<span>
 						<FaExclamation />
 					</span>
@@ -40,13 +41,14 @@ export default function DeleteIngredientModal({
 					)}
 				</div>
 
-				<input
+				<button
 					type='button'
-					className='special'
-					value={isLoading ? 'Eliminando...' : 'Eliminar Ingrediente'}
+					className='hm-btn hm-btn--danger hm-btn--block'
 					onClick={handleConfirm}
 					disabled={isLoading}
-				/>
+				>
+					{isLoading ? 'Eliminando...' : 'Eliminar Ingrediente'}
+				</button>
 			</form>
 		</Modal>
 	);

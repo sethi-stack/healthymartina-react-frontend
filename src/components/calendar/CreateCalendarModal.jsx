@@ -12,23 +12,27 @@ export default function CreateCalendarModal({ onClose, onSubmit, isLoading }) {
 	};
 
 	return (
-		<Modal onClose={onClose} title='Nuevo Calendario' className='popupstyle1 add-calendar'>
-			<form onSubmit={handleSubmit}>
-				<p>Nombre</p>
-				<input
-					type='text'
-					name='calendar_title'
-					className='calendar_title'
-					placeholder='Nombre del calendario'
-					value={nombre}
-					onChange={(e) => setNombre(e.target.value)}
-					required
-				/>
-				<input
+		<Modal onClose={onClose} title='Nuevo Calendario' className='popupstyle1 add-calendar' dataModal='create-calendar'>
+			<form onSubmit={handleSubmit} className='hm-form'>
+				<div className='hm-form__group'>
+					<label className='hm-form__label'>Nombre</label>
+					<input
+						type='text'
+						name='calendar_title'
+						className='hm-form__input'
+						placeholder='Nombre del calendario'
+						value={nombre}
+						onChange={(e) => setNombre(e.target.value)}
+						required
+					/>
+				</div>
+				<button
 					type='submit'
-					value={isLoading ? 'Creando...' : 'Crear calendario'}
+					className='hm-btn hm-btn--outline hm-btn--block'
 					disabled={isLoading}
-				/>
+				>
+					{isLoading ? 'Creando...' : 'Crear calendario'}
+				</button>
 			</form>
 		</Modal>
 	);

@@ -124,7 +124,7 @@ export default function Calendar() {
 
 	// Copy calendar mutation
 	const copyMutation = useMutation({
-		mutationFn: ({ id, nombre }) => copyCalendar(id, nombre),
+		mutationFn: ({ id, title }) => copyCalendar(id, title),
 		onSuccess: (response) => {
 			queryClient.invalidateQueries({ queryKey: ['calendars'] });
 			setSelectedCalendarId(response.calendar.id);
@@ -132,13 +132,13 @@ export default function Calendar() {
 		},
 	});
 
-	const handleCreateCalendar = (nombre) => {
-		createMutation.mutate({ nombre });
+	const handleCreateCalendar = (title) => {
+		createMutation.mutate({ title });
 	};
 
-	const handleUpdateCalendar = (nombre) => {
+	const handleUpdateCalendar = (title) => {
 		if (selectedCalendarId) {
-			updateMutation.mutate({ id: selectedCalendarId, data: { nombre } });
+			updateMutation.mutate({ id: selectedCalendarId, data: { title } });
 		}
 	};
 
@@ -148,9 +148,9 @@ export default function Calendar() {
 		}
 	};
 
-	const handleCopyCalendar = (nombre) => {
+	const handleCopyCalendar = (title) => {
 		if (selectedCalendarId) {
-			copyMutation.mutate({ id: selectedCalendarId, nombre });
+			copyMutation.mutate({ id: selectedCalendarId, title });
 		}
 	};
 
@@ -210,7 +210,7 @@ export default function Calendar() {
 				<>
 					<div className='indicador border-top'>
 						<div className='left'>
-							<h3 id='calTitle'>{calendar.title || calendar.nombre}</h3>
+							<h3 id='calTitle'>{calendar.title}</h3>
 						</div>
 						<div className='right'>
 							<p>

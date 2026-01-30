@@ -12,7 +12,6 @@ import './FiltersPopup.scss';
  * Reusable popup for filtering recipes with two tabs: Avanzado and Nutrición
  */
 export function FiltersPopup({
-	isOpen,
 	onClose,
 	onApplyFilters,
 	initialFilters = {},
@@ -32,7 +31,6 @@ export function FiltersPopup({
 	const { data: metadata, isLoading } = useQuery({
 		queryKey: ['filter-metadata'],
 		queryFn: getFilterMetadata,
-		enabled: isOpen,
 	});
 
 	// Update filters when initialFilters change
@@ -176,57 +174,53 @@ export function FiltersPopup({
 
 	return (
 		<Modal
-			isOpen={isOpen}
 			onClose={onClose}
 			className='filtros'
 			title='Filtros'
 			closeOnOverlay={false}
 			width={720}
+			dataModal='filters'
 		>
-			<div className='indicadores'>
-				<a
-					className={`i-a ${activeTab === 'avanzado' ? 'active' : ''}`}
-					href='#'
-					onClick={(e) => {
-						e.preventDefault();
-						setActiveTab('avanzado');
-					}}
+			<div className='indicadores hm-tabs__nav'>
+				<button
+					type='button'
+					className={`i-a hm-tabs__tab ${activeTab === 'avanzado' ? 'active hm-tabs__tab--active' : ''}`}
+					onClick={() => setActiveTab('avanzado')}
 				>
 					Avanzado
-				</a>
-				<a
-					className={`i-n ${activeTab === 'nutricion' ? 'active' : ''}`}
-					href='#'
-					onClick={(e) => {
-						e.preventDefault();
-						setActiveTab('nutricion');
-					}}
+				</button>
+				<button
+					type='button'
+					className={`i-n hm-tabs__tab ${activeTab === 'nutricion' ? 'active hm-tabs__tab--active' : ''}`}
+					onClick={() => setActiveTab('nutricion')}
 				>
 					Nutrición
-				</a>
+				</button>
 			</div>
-			<form id='form-filters' onSubmit={handleSubmit}>
+			<form id='form-filters' className='hm-form' onSubmit={handleSubmit}>
 				{/* Avanzado Tab */}
 				<div
-					className={`slide-indicadores ${
-						activeTab === 'avanzado' ? 'slide-active' : ''
+					className={`slide-indicadores hm-tabs__panel ${
+						activeTab === 'avanzado' ? 'slide-active hm-tabs__panel--active' : ''
 					} s-a`}
 				>
 					{isLoading ? (
 						<p>Cargando filtros...</p>
 					) : (
 						<>
-							<p>
-								Etiquetas
-								<a
-									style={{ position: 'relative' }}
-									href='https://healthy-martina.helpscoutdocs.com/article/36-con-que-criterios-etiquetan-sus-recetas'
-									target='_blank'
-									rel='noopener noreferrer'
-								>
-									<FaInfoCircle />
-								</a>
-							</p>
+							<div className='hm-filter__section'>
+								<label className='hm-form__label hm-filter__title'>
+									Etiquetas
+									<a
+										style={{ position: 'relative', marginLeft: '8px' }}
+										href='https://healthy-martina.helpscoutdocs.com/article/36-con-que-criterios-etiquetan-sus-recetas'
+										target='_blank'
+										rel='noopener noreferrer'
+									>
+										<FaInfoCircle />
+									</a>
+								</label>
+							</div>
 							<Select
 								id='filtros-tags'
 								isMulti
@@ -253,9 +247,10 @@ export function FiltersPopup({
 								}}
 							/>
 
-							<p>Incluír ingredientes</p>
+							<div className='hm-filter__section'>
+								<label className='hm-form__label hm-filter__title'>Incluír ingredientes</label>
+							</div>
 							<Select
-								className='filtros-ingredientes'
 								isMulti
 								options={metadata?.ingredientes?.map((ingrediente) => ({
 									value: ingrediente.id,
@@ -273,7 +268,7 @@ export function FiltersPopup({
 									}));
 								}}
 								placeholder='Seleccionar ingredientes...'
-								className='filtros-select'
+								className='filtros-select filtros-ingredientes'
 								classNamePrefix='filtros-select'
 								isSearchable
 								menuPortalTarget={document.body}
@@ -282,9 +277,10 @@ export function FiltersPopup({
 								}}
 							/>
 
-							<p>Excluir ingredientes</p>
+							<div className='hm-filter__section'>
+								<label className='hm-form__label hm-filter__title'>Excluir ingredientes</label>
+							</div>
 							<Select
-								className='filtros-ingredientes'
 								isMulti
 								options={metadata?.ingredientes?.map((ingrediente) => ({
 									value: ingrediente.id,
@@ -302,7 +298,7 @@ export function FiltersPopup({
 									}));
 								}}
 								placeholder='Seleccionar ingredientes...'
-								className='filtros-select'
+								className='filtros-select filtros-ingredientes'
 								classNamePrefix='filtros-select'
 								isSearchable
 								menuPortalTarget={document.body}
@@ -339,25 +335,26 @@ export function FiltersPopup({
 								/>
 							</div>
 
-							<input className='new_filter' type='submit' value='Guardar' />
-							<a
-								className='new'
-								href='#'
-								onClick={(e) => {
-									e.preventDefault();
-									handleReset();
-								}}
-							>
-								Borrar
-							</a>
+							<div className='hm-filter__actions'>
+								<button type='submit' className='hm-btn hm-btn--primary'>
+									Guardar
+								</button>
+								<button
+									type='button'
+									className='hm-btn hm-btn--ghost'
+									onClick={handleReset}
+								>
+									Borrar
+								</button>
+							</div>
 						</>
 					)}
 				</div>
 
 				{/* Nutrición Tab */}
 				<div
-					className={`slide-indicadores ${
-						activeTab === 'nutricion' ? 'slide-active' : ''
+					className={`slide-indicadores hm-tabs__panel ${
+						activeTab === 'nutricion' ? 'slide-active hm-tabs__panel--active' : ''
 					} s-n`}
 				>
 					{isLoading ? (
@@ -463,17 +460,18 @@ export function FiltersPopup({
 								</div>
 							))}
 
-							<input type='submit' value='Guardar' />
-							<a
-								className='new'
-								href='#'
-								onClick={(e) => {
-									e.preventDefault();
-									handleReset();
-								}}
-							>
-								Borrar
-							</a>
+							<div className='hm-filter__actions'>
+								<button type='submit' className='hm-btn hm-btn--primary'>
+									Guardar
+								</button>
+								<button
+									type='button'
+									className='hm-btn hm-btn--ghost'
+									onClick={handleReset}
+								>
+									Borrar
+								</button>
+							</div>
 						</>
 					)}
 				</div>

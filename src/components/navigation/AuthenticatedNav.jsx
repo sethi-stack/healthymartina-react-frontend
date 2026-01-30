@@ -7,6 +7,7 @@ import {
 	PlanesIcon,
 	SearchIcon,
 } from '../icons';
+import Modal from '../calendar/Modal';
 import './AuthenticatedNav.scss';
 
 /**
@@ -35,16 +36,10 @@ export function AuthenticatedNav({
 	const toggleSearch = (e) => {
 		e.preventDefault();
 		setSearchOpen(!searchOpen);
-		if (!searchOpen) {
-			document.body.style.overflowY = 'hidden';
-		} else {
-			document.body.style.overflowY = 'auto';
-		}
 	};
 
 	const handleCloseSearch = () => {
 		setSearchOpen(false);
-		document.body.style.overflowY = 'auto';
 	};
 
 	const handleSearchSelect = (e) => {
@@ -139,64 +134,60 @@ export function AuthenticatedNav({
 
 			{/* Search Popup */}
 			{searchOpen && (
-				<div
-					className='popup buscador search-popup-buscadr'
-					style={{ display: 'flex' }}
+				<Modal
+					onClose={handleCloseSearch}
+					title='Buscador'
+					className='buscador search-popup-buscadr'
+					dataModal='search'
 				>
-					<div className='container-popup'>
-						<button className='close' onClick={handleCloseSearch}>
-							<i className='fas fa-times'></i>
-						</button>
-						<h3 className='no-uppercase underline'>Buscador</h3>
-						<form
-							className='search-popup__form'
-							onSubmit={(e) => e.preventDefault()}
+					<form
+						className='search-popup__form hm-form'
+						onSubmit={(e) => e.preventDefault()}
+					>
+						<div
+							className='slide-indicadores slide-active s-a bigdrop'
+							id='bigdrop'
 						>
-							<div
-								className='slide-indicadores slide-active s-a bigdrop'
-								id='bigdrop'
+							<select
+								className='search-select search-popup__select'
+								multiple={false}
+								onChange={handleSearchSelect}
+								size={10}
 							>
-								<select
-									className='search-select search-popup__select'
-									multiple={false} // Changed to false for single selection behavior like standard select
-									onChange={handleSearchSelect}
-									size={10} // Show multiple options
-								>
-									{searchData.recipes?.map((recipe) => (
-										<option
-											key={`recipe-${recipe.slug}`}
-											className='recipe-search'
-											data-type='recipe'
-											value={recipe.slug}
-										>
-											{recipe.titulo}
-										</option>
-									))}
-									{searchData.ingredients?.map((ingredient) => (
-										<option
-											key={`ingredient-${ingredient.id}`}
-											className='ingredient-search'
-											data-type='ingredient'
-											value={ingredient.id}
-										>
-											{ingredient.nombre}
-										</option>
-									))}
-									{searchData.calendars?.map((calendar) => (
-										<option
-											key={`calendar-${calendar.id}`}
-											className='calendar-search'
-											data-type='calendar'
-											value={calendar.id}
-										>
-											{calendar.title}
-										</option>
-									))}
-								</select>
-							</div>
-						</form>
-					</div>
-				</div>
+								{searchData.recipes?.map((recipe) => (
+									<option
+										key={`recipe-${recipe.slug}`}
+										className='recipe-search'
+										data-type='recipe'
+										value={recipe.slug}
+									>
+										{recipe.titulo}
+									</option>
+								))}
+								{searchData.ingredients?.map((ingredient) => (
+									<option
+										key={`ingredient-${ingredient.id}`}
+										className='ingredient-search'
+										data-type='ingredient'
+										value={ingredient.id}
+									>
+										{ingredient.nombre}
+									</option>
+								))}
+								{searchData.calendars?.map((calendar) => (
+									<option
+										key={`calendar-${calendar.id}`}
+										className='calendar-search'
+										data-type='calendar'
+										value={calendar.id}
+									>
+										{calendar.title}
+									</option>
+								))}
+							</select>
+						</div>
+					</form>
+				</Modal>
 			)}
 		</>
 	);
