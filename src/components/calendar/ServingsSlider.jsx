@@ -22,7 +22,7 @@ export default function ServingsSlider({ value, onChange, isLeftover, onLeftover
 						{value === 1 ? servingSingular : servingLabel}
 					</span>
 					<span className='porcion-separator'>|</span>
-					<span className='porcion-cantidad porcionNumero'>{value}</span>{' '}
+					<span className='racionTexto porcion-cantidad porcionNumero'>{value}</span>{' '}
 					<span className='racionTexto'>{racionLabel}</span>
 				</div>
 				{showLeftover && <LeftoverToggle checked={isLeftover} onChange={onLeftoverChange} />}
