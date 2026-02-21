@@ -17,13 +17,13 @@ export default function ServingsSlider({ value, onChange, isLeftover, onLeftover
 		<div className={`form-group rango typ2 porcionRango ${isDisabled ? 'field-disabled' : ''}`}>
 			<div className='porcion-racion-row'>
 				<div className='porcion-text'>
-					<span className='porcion-cantidad porcionNumero'>{value}</span>{' '}
-					<span className='porcionTexto' data-nombre={servingSingular} data-nombre_plural={servingLabel}>
+					<span>{value}</span>{' '}
+					<span data-nombre={servingSingular} data-nombre_plural={servingLabel}>
 						{value === 1 ? servingSingular : servingLabel}
 					</span>
-					<span className='porcion-separator'>|</span>
-					<span className='racionTexto porcion-cantidad porcionNumero'>{value}</span>{' '}
-					<span className='racionTexto'>{racionLabel}</span>
+					<span className='separator'>|</span>
+					<span>{value}</span>{' '}
+					<span>{racionLabel}</span>
 				</div>
 				{showLeftover && <LeftoverToggle checked={isLeftover} onChange={onLeftoverChange} />}
 			</div>

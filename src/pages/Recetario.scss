@@ -2,7 +2,7 @@
 
 /* Recetario Page specific styles override or additions if needed */
 
-.recetario-page {
+#application #menu-vue .recetario-page.general-container {
 	.indicador {
 		display: flex;
 		justify-content: space-between;
@@ -86,21 +86,20 @@
 		.sub-container {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 0;
-
-			.col13 {
+			margin: 0 -15px; // Offset the padding on the outer cards
+			
+			.col13, .hm-card {
 				width: calc(100% / 3);
 				max-width: calc(100% / 3);
 				flex: 0 0 calc(100% / 3);
 				box-sizing: border-box;
-				padding: 10px;
+				padding: 15px; // Adds gap between the visual hm-card__inner elements
 
 				/* Mobile: Full width */
 				@media (max-width: 768px) {
 					width: 100%;
 					max-width: 100%;
 					flex: 0 0 100%;
-					padding: 10px 8px;
 				}
 
 				.receta-membresia-inner {

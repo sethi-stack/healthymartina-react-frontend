@@ -102,8 +102,8 @@ export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, meal
 							<p>Receta</p>
 							<div className='receta-field'>
 								<FaCheck className='fas fa-check' />
-								<div className='recetaname'>{selectedRecipe.titulo}</div>
-								<span className='delValue' onClick={handleRecipeDeselect} style={{ cursor: 'pointer' }}>
+								<div>{selectedRecipe.titulo}</div>
+								<span onClick={handleRecipeDeselect}>
 									X
 								</span>
 								<input type='hidden' name='recetaid' className='recetaid' value={selectedRecipe.id} />

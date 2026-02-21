@@ -192,8 +192,8 @@ export default function UpdateMealModal({
 											<p>Receta</p>
 											<div className='receta-field'>
 												<FaCheck className='fas fa-check' />
-												<div className='recetaname'>{mainRecipe.titulo}</div>
-												<span className='editDelValue' onClick={handleMainRecipeDeselect} style={{ cursor: 'pointer' }}>
+												<div>{mainRecipe.titulo}</div>
+												<span onClick={handleMainRecipeDeselect}>
 													X
 												</span>
 												<input type='hidden' name='recetaid' className='recetaid' value={mainRecipe.id} />
@@ -275,8 +275,8 @@ export default function UpdateMealModal({
 											<p>Receta</p>
 											<div className='receta-field'>
 												<FaCheck className='fas fa-check' />
-												<div className='recetaname'>{sideRecipe.titulo}</div>
-												<span className='editDelValue' onClick={handleSideRecipeDeselect} style={{ cursor: 'pointer' }}>
+												<div>{sideRecipe.titulo}</div>
+												<span onClick={handleSideRecipeDeselect}>
 													X
 												</span>
 												<input type='hidden' name='recetaid' className='recetaid' value={sideRecipe.id} />

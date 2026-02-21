@@ -46,13 +46,13 @@ export function RecipeIngredients({ ingredients, portions }) {
 	return (
 		<div className='slide active'>
 			<form className='rango porcionRango'>
-				<p className='porcion-cantidad porcionNumero'>
+				<p>
 					{formatPortionDisplay(currentPortion)}
 				</p>
 				<span
-					className={`porcionTexto ${
+					className={
 						portions?.tipo_medida_id === 1 ? 'receta-porcion' : ''
-					}`}
+					}
 					data-medida_english={portions?.nombre_english}
 					data-tipo_medida_id={portions?.tipo_medida_id}
 					data-nombre={portions?.nombre}
@@ -134,17 +134,15 @@ export function RecipeIngredients({ ingredients, portions }) {
 							className={`ingrediente ${ingrediente.type || ''}`}
 						>
 							<p
-								className='nombre'
 								data-nombre_english={ingrediente.nombre_english}
 								data-action={ingrediente['sub-url'] || '#'}
 							>
 								{renderIngredientName(ingrediente)}
 							</p>
 							{ingrediente.nota && ingrediente.nota !== '' && (
-								<p className='notaTiempo'>{ingrediente.nota}</p>
+								<p>{ingrediente.nota}</p>
 							)}
 							<p
-								className='cantidad'
 								data-ingred_uid={ingrediente.ingred_uid}
 								data-cantidad={ingrediente.cantidad}
 								data-medida={ingrediente.medida}

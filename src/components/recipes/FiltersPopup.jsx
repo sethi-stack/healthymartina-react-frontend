@@ -181,28 +181,37 @@ export function FiltersPopup({
 			width={720}
 			dataModal='filters'
 		>
-			<div className='indicadores hm-tabs__nav'>
-				<button
-					type='button'
-					className={`i-a hm-tabs__tab ${activeTab === 'avanzado' ? 'active hm-tabs__tab--active' : ''}`}
-					onClick={() => setActiveTab('avanzado')}
-				>
-					Avanzado
-				</button>
-				<button
-					type='button'
-					className={`i-n hm-tabs__tab ${activeTab === 'nutricion' ? 'active hm-tabs__tab--active' : ''}`}
-					onClick={() => setActiveTab('nutricion')}
-				>
-					Nutrición
-				</button>
+			<div className='tabs-container'>
+				<div className='tabs typ2'>
+					<a
+						href='#tab-avanzado'
+						className={`tab-avanzado ${activeTab === 'avanzado' ? 'active' : ''}`}
+						onClick={(e) => {
+							e.preventDefault();
+							setActiveTab('avanzado');
+						}}
+					>
+						<p>Avanzado</p>
+					</a>
+					<a
+						href='#tab-nutricion'
+						className={`tab-nutricion ${activeTab === 'nutricion' ? 'active' : ''}`}
+						onClick={(e) => {
+							e.preventDefault();
+							setActiveTab('nutricion');
+						}}
+					>
+						<p>Nutrición</p>
+					</a>
+				</div>
 			</div>
+			<div className='tabs-content'>
 			<form id='form-filters' className='hm-form' onSubmit={handleSubmit}>
 				{/* Avanzado Tab */}
 				<div
-					className={`slide-indicadores hm-tabs__panel ${
-						activeTab === 'avanzado' ? 'slide-active hm-tabs__panel--active' : ''
-					} s-a`}
+					className={`tab-pane ${
+						activeTab === 'avanzado' ? 'active' : ''
+					}`}
 				>
 					{isLoading ? (
 						<p>Cargando filtros...</p>
@@ -353,9 +362,9 @@ export function FiltersPopup({
 
 				{/* Nutrición Tab */}
 				<div
-					className={`slide-indicadores hm-tabs__panel ${
-						activeTab === 'nutricion' ? 'slide-active hm-tabs__panel--active' : ''
-					} s-n`}
+					className={`tab-pane ${
+						activeTab === 'nutricion' ? 'active' : ''
+					}`}
 				>
 					{isLoading ? (
 						<p>Cargando filtros...</p>
@@ -476,6 +485,7 @@ export function FiltersPopup({
 					)}
 				</div>
 			</form>
-		</Modal>
+		</div>
+	</Modal>
 	);
 }

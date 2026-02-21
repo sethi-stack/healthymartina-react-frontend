@@ -56,47 +56,50 @@ export function RangeSlider({
 		return Math.round(value);
 	};
 
+	const getPercent = (value) => ((value - min) / (max - min)) * 100;
+	const left = getPercent(Math.min(minValue, maxValue));
+	const width = Math.abs(getPercent(maxValue) - getPercent(minValue));
+
 	return (
-		<div
-			className='wrap'
-			role='group'
-			aria-labelledby='multi-lbl'
-			ref={wrapRef}
-		>
-			<label className='sr-only' htmlFor='range-min'>
-				Value A:
-			</label>
-			<input
-				id='range-min'
-				name='range-min'
-				data-target='a'
-				type='range'
-				min={min}
-				max={max}
-				value={minValue}
-				onChange={handleMinChange}
-				step={decimal > 0 ? Math.pow(10, -decimal) : 1}
-			/>
-			<output htmlFor={` ${label}`} style={{ '--c': minValue }}></output>
-			<label className='sr-only' htmlFor='range-max'>
-				Value B:
-			</label>
-			<input
-				id='range-max'
-				name='range-max'
-				data-target='b'
-				type='range'
-				min={min}
-				max={max}
-				value={maxValue}
-				onChange={handleMaxChange}
-				step={decimal > 0 ? Math.pow(10, -decimal) : 1}
-			/>
-			<output
-				className='label-plus'
-				htmlFor={`+ ${label}`}
-				style={{ '--c': maxValue }}
-			></output>
+		<div className='hm-range-slider'>
+			<div className='hm-range-slider__labels'>
+				<span>
+					{formatValue(minValue)} {label}
+				</span>
+				<span>
+					{formatValue(maxValue)} {label}
+				</span>
+			</div>
+
+			<div className='hm-range-slider__container'>
+				<div className='hm-range-slider__track'></div>
+				<div
+					className='hm-range-slider__highlight'
+					style={{
+						left: `${left}%`,
+						width: `${width}%`,
+					}}
+				></div>
+
+				<input
+					type='range'
+					min={min}
+					max={max}
+					value={minValue}
+					onChange={handleMinChange}
+					step={decimal > 0 ? Math.pow(10, -decimal) : 1}
+					className='hm-range-slider__input hm-range-slider__input--min'
+				/>
+				<input
+					type='range'
+					min={min}
+					max={max}
+					value={maxValue}
+					onChange={handleMaxChange}
+					step={decimal > 0 ? Math.pow(10, -decimal) : 1}
+					className='hm-range-slider__input hm-range-slider__input--max'
+				/>
+			</div>
 		</div>
 	);
 }

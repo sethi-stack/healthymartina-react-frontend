@@ -438,6 +438,13 @@
 // =============================================================================
 // GRID COMPONENT
 // =============================================================================
+// Container for multiple cards
+.hm-card-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: $spacing-lg; // Adds padding between cards
+	width: 100%;
+}
 
 .hm-grid {
 	display: grid;
@@ -459,6 +466,7 @@
 	// 2-column grid
 	&--cols-2 {
 		grid-template-columns: repeat(2, 1fr);
+		gap: $spacing-md;
 
 		@media (max-width: $breakpoint-md) {
 			grid-template-columns: 1fr;
@@ -477,14 +485,29 @@
 
 .hm-card {
 	position: relative;
+	width: calc(100% / 3);
+	height: 100%;
+	box-sizing: border-box;
+
+	@media (max-width: $breakpoint-lg) {
+		width: 50%;
+	}
+
+	@media (max-width: $breakpoint-md) {
+		width: 100%;
+	}
 
 	&__inner {
 		background: $color-white;
 		border-radius: $radius-md;
-		overflow: hidden;
+		// Removed overflow: hidden here so absolutely-positioned action dropdowns aren't clipped by the card boundary
 		box-shadow: $shadow-sm;
-		transition: box-shadow $transition-base;
+		transition: transform $transition-base, box-shadow $transition-base;
 		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: stretch;
 
 		&:hover {
 			box-shadow: $shadow-md;
@@ -496,7 +519,9 @@
 		height: 270px;
 		background-size: cover;
 		background-position: center;
-		overflow: hidden;
+		overflow: hidden; // Keep overflow: hidden here for image rounded corners
+		border-top-left-radius: $radius-md;
+		border-top-right-radius: $radius-md;
 	}
 
 	&__image-placeholder {
@@ -530,44 +555,63 @@
 
 	&__body {
 		padding: $spacing-md;
+		position: relative; // Needed for absolute actions/menu
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		height: 100%; // Ensure body fills inner
+	}
+
+	&__content-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		width: 100%;
+	}
+
+	&__title-container {
+		flex: 1;
+		margin-right: $spacing-sm;
 	}
 
 	&__title {
-		font-family: $font-family-semibold;
-		font-size: $font-size-base;
-		text-transform: uppercase;
+		font-family: $font-family-bold;
+		font-size: 20px;
+		line-height: 1.2;
 		margin: 0;
 		color: $color-text;
-
-		a {
-			color: inherit;
-			text-decoration: none;
-
-			&:hover {
-				color: $color-primary;
-			}
-		}
+		white-space: nowrap; // Single row
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding-right: 36px; // Space for the absolute menu
 	}
 
 	&__meta {
 		display: flex;
+		justify-content: flex-start;
 		gap: $spacing-md;
-		color: $color-text-muted;
+		color: $color-text; // Darker color
 		font-size: $font-size-sm;
-		margin-top: $spacing-sm;
+		margin-top: $spacing-md; // Consistent margin
+		font-family: $font-family-medium;
 	}
 
 	&__meta-item {
 		display: flex;
 		align-items: center;
 		gap: $spacing-xs;
+		margin: 0; // Removed hardcoded 15px margins
 	}
 
 	&__actions {
 		position: absolute;
-		top: $spacing-sm;
-		right: $spacing-sm;
+		top: $spacing-md;
+		right: $spacing-md;
 		z-index: 10;
+
+		&--active {
+			z-index: 101;
+		}
 	}
 
 	// Modifiers
@@ -586,9 +630,9 @@
 	position: relative;
 
 	&__trigger {
-		width: 44px;
-		height: 44px;
-		padding: $spacing-sm;
+		width: 32px; // More compact for card
+		height: 32px;
+		padding: 6px;
 		border: 1px solid $color-border;
 		border-radius: $radius-sm;
 		background: $color-white;
@@ -597,19 +641,37 @@
 		align-items: center;
 		justify-content: center;
 		transition: all $transition-base;
+		color: #b7b7b7; // Legacy dot color
+
+		svg {
+			height: 16px;
+			fill: currentColor;
+		}
 
 		&:hover {
 			border-color: $color-primary;
 			background: $color-background-alt;
+			color: $color-primary;
 		}
 
-		&--active {
-			background: $color-primary;
-			border-color: $color-primary;
-			color: $color-white;
+		&--active,
+		&.active {
+			background: $color-primary !important;
+			border-color: $color-primary !important;
+			color: $color-white !important;
 
 			svg {
-				fill: $color-white;
+				fill: $color-white !important;
+			}
+		}
+
+		&--sm {
+			width: 24px;
+			height: 24px;
+			padding: 4px;
+
+			svg {
+				height: 14px;
 			}
 		}
 	}
@@ -618,48 +680,62 @@
 		position: absolute;
 		top: calc(100% + #{$spacing-xs});
 		right: 0;
-		min-width: 200px;
+		min-width: 140px; // Tightened width for calendar
+		width: max-content;
 		background: $color-white;
-		border: 1px solid $color-border;
+		border: 1px solid $color-border; // Darkened from #ededed
 		border-radius: $radius-md;
-		box-shadow: $shadow-md;
-		z-index: $z-dropdown;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); // Extremely subtle shadow
+		z-index: 999;
+		display: block; // Defuse legacy display: none
 		opacity: 0;
 		visibility: hidden;
 		transform: translateY(-10px);
 		transition: all $transition-base;
+		pointer-events: none; // Prevent ghost clicks when closed
 
 		&--open {
-			opacity: 1;
-			visibility: visible;
-			transform: translateY(0);
+			opacity: 1 !important;
+			visibility: visible !important;
+			transform: translateY(0) !important;
+			pointer-events: auto !important;
 		}
 	}
 
 	&__item {
 		display: flex;
 		align-items: center;
-		gap: $spacing-sm;
-		padding: $spacing-md $spacing-lg;
-		color: $color-text;
+		gap: 10px;
+		padding: 10px;
+		color: $color-text; // Darkened from #b7b7b7
+		white-space: nowrap; // Ensure single-row layout
 		text-decoration: none;
 		border: none;
 		background: none;
 		width: 100%;
 		text-align: left;
-		border-bottom: 1px solid $color-border-light;
+		border-top: 1px solid $color-border; // Consistent darker border
 		cursor: pointer;
 		transition: all $transition-base;
-		font-size: $font-size-sm;
+		font-size: 12px; // Reduced font size so it's not larger than calendar cell
 		font-family: $font-family-medium;
 
-		&:last-child {
-			border-bottom: none;
+		svg .cls-1, svg path {
+			fill: $color-text;
+			transition: fill $transition-base;
+		}
+
+		&:first-child {
+			border-top: none;
 		}
 
 		&:hover {
 			background: $color-background-alt;
 			color: $color-primary;
+
+			svg .cls-1, svg path {
+				fill: $color-primary !important;
+			}
 		}
 
 		&--danger {
@@ -827,6 +903,7 @@
 		flex-direction: column;
 	}
 
+
 	&__cell-add {
 		width: 100%;
 		height: 100%;
@@ -943,10 +1020,16 @@
 
 	&__actions {
 		display: flex;
+		flex-direction: column;
+		align-items: center;
 		gap: $spacing-md;
 		margin-top: $spacing-lg;
 		padding-top: $spacing-lg;
 		border-top: 1px solid $color-border-light;
+
+		.hm-btn--primary {
+			width: 100%;
+		}
 	}
 }
 

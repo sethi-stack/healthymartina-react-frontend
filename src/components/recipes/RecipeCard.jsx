@@ -7,48 +7,32 @@ import {
 	CalendarMenuIcon,
 } from '../icons';
 import { Link } from 'react-router-dom';
+import { RecipeActionMenu } from '../shared/RecipeActionMenu';
 
 export const RecipeCard = forwardRef(
-	({ recipe, onAddToCalendar, showMenu = true }, ref) => {
-		const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+	(
+		{
+			recipe,
+			onAddToCalendar,
+			showMenu = true,
+			variant = 'catalog',
+			hideLink = false,
+			hideMeta = false,
+			customMenu = null,
+			customClass = '',
+			isLeftover = false,
+			children,
+		},
+		ref
+	) => {
 		const [imageLoaded, setImageLoaded] = React.useState(false);
-		const menuRef = useRef(null);
 
-		// Close menu when clicking outside
-		useEffect(() => {
-			const handleClickOutside = (event) => {
-				if (
-					menuRef.current &&
-					!menuRef.current.contains(event.target) &&
-					isMenuOpen
-				) {
-					setIsMenuOpen(false);
-				}
-			};
-
-			if (isMenuOpen) {
-				document.addEventListener('mousedown', handleClickOutside);
-			}
-
-			return () => {
-				document.removeEventListener('mousedown', handleClickOutside);
-			};
-		}, [isMenuOpen]);
-
-		const toggleMenu = (e) => {
-			e.preventDefault();
-			e.stopPropagation();
-			setIsMenuOpen(!isMenuOpen);
-		};
-
-		const handleAddToCalendar = (e) => {
-			e.preventDefault();
-			e.stopPropagation();
+		const handleAddToCalendar = () => {
 			if (onAddToCalendar) {
 				onAddToCalendar(recipe);
 			}
-			setIsMenuOpen(false);
 		};
+
 
 		// Format title to be capitalized
 		const formatTitle = (title) => {
@@ -79,56 +63,66 @@ export const RecipeCard = forwardRef(
 			return `${baseUrl}${path}`;
 		};
 
-		const imageUrl = getImageUrl(recipe.imagen_principal);
+		const imageUrl = getImageUrl(recipe.imagen_principal || recipe.imagen);
 
-		return (
-			<div className='col13 hm-card' ref={ref}>
-				<div className='receta-membresia-inner hm-card__inner'>
-					<Link to={`/receta/${recipe.slug}`}>
-						<div className='imagen lozad recipe-image-container hm-card__image'>
-							<div className='recipe-image-background hm-card__image-placeholder'>
-								<CalendarioIcon />
-							</div>
-							{imageUrl && (
-								<img
-									className={`lozad recipe-image-overlay hm-card__image-overlay ${imageLoaded ? 'hm-card__image-overlay--loaded' : ''}`}
-									loading='lazy'
-									src={imageUrl}
-									alt=''
-									onLoad={() => setImageLoaded(true)}
-								/>
-							)}
-						</div>
-					</Link>
-					<div className='info hm-card__body'>
+		// Dynamic classes based on variant
+		const isCalendar = variant === 'calendar';
+		const baseClass = isCalendar ? 'hm-calendar__recipe' : 'hm-card';
+		const innerClass = isCalendar ? '' : 'hm-card__inner';
+		const imageClass = isCalendar ? 'calRecpImg hm-calendar__recipe-image' : 'hm-card__image';
+		const titleContainerClass = isCalendar ? 'calRecpInfo hm-calendar__recipe-info' : 'hm-card__body';
+		const titleClass = isCalendar ? 'calRecpName hm-calendar__recipe-name' : 'hm-card__title';
+
+		const leftoverClass = isLeftover && isCalendar ? 'recipeLeftover hm-calendar__recipe--leftover' : (isLeftover ? 'hm-card--leftover' : '');
+
+		const renderImage = () => (
+			<div className={imageClass}>
+				<div className={isCalendar ? 'recipe-image-background hm-card__image-placeholder' : 'hm-card__image-placeholder'}>
+					<CalendarioIcon />
+				</div>
+				{imageUrl && (
+					<img
+						className={`${isCalendar ? 'lozad recipe-image-overlay' : ''} hm-card__image-overlay ${imageLoaded ? 'hm-card__image-overlay--loaded' : ''}`}
+						loading='lazy'
+						src={imageUrl}
+						alt={recipe.titulo}
+						onLoad={() => setImageLoaded(true)}
+					/>
+				)}
+			</div>
+		);
+
+		const content = (
+			<>
+				{hideLink ? (
+					renderImage()
+				) : (
+					<Link to={`/receta/${recipe.slug}`}>{renderImage()}</Link>
+				)}
+				<div className={titleContainerClass}>
+					{isCalendar ? (
 						<div className='row'>
-							<div className='name-recipe'>
-								<h3 className='name hm-card__title'>{formatTitle(recipe.titulo)}</h3>
+							<div className={titleClass}>
+								<p>{formatTitle(recipe.titulo)}</p>
 							</div>
-							{showMenu && (
-								<div className='button-hamburger hm-menu hm-menu--dots-only hm-card__actions' ref={menuRef}>
-									<button
-										onClick={toggleMenu}
-										className={`hm-menu__trigger ${isMenuOpen ? 'hm-menu__trigger--active active' : ''}`}
-									>
-										<EllipsisVerticalIcon />
-									</button>
-									<div className={`sub-menu hm-menu__dropdown ${isMenuOpen ? 'hm-menu__dropdown--open' : ''}`}>
-										<button
-											type='button'
-											className='RecpAddcal hm-menu__item'
-											onClick={handleAddToCalendar}
-										>
-											<span className='hm-menu__icon'>
-												<CalendarMenuIcon />
-											</span>
-											<span>Agregar a calendario</span>
-										</button>
-									</div>
-								</div>
-							)}
+							{customMenu}
 						</div>
-						<div className='special-info hm-card__meta'>
+					) : (
+						<h3 className={titleClass}>{formatTitle(recipe.titulo)}</h3>
+					)}
+
+					{/* Catalog variants only */}
+					{!isCalendar && showMenu && !customMenu && (
+						<RecipeActionMenu
+							onAddToCalendar={handleAddToCalendar}
+							menuPosition='absolute'
+							customClasses='hm-card__actions'
+						/>
+					)}
+					{!isCalendar && customMenu && customMenu}
+
+					{!hideMeta && (
+						<div className='hm-card__meta'>
 							<span className='hm-card__meta-item'>
 								<i className='hm-icon hm-icon--sm'>
 									<CartIcon />
@@ -140,11 +134,18 @@ export const RecipeCard = forwardRef(
 								<i className='hm-icon hm-icon--sm'>
 									<ClockIcon />
 								</i>
-								{tiempo} minutos
+								{recipe.tiempo_elaboracion} minutos
 							</span>
 						</div>
-					</div>
+					)}
+					{children}
 				</div>
+			</>
+		);
+
+		return (
+			<div className={`${baseClass} ${leftoverClass} ${customClass}`.trim()} ref={ref}>
+				{isCalendar ? content : <div className={innerClass}>{content}</div>}
 			</div>
 		);
 	}

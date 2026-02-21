@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FaEye, FaUndo, FaTrashAlt } from 'react-icons/fa';
-import { EllipsisVerticalIcon, CalendarioIcon } from '../icons';
 import { removeRecipeFromCalendar } from '../../lib/api/calendars';
+import { RecipeActionMenu } from '../shared/RecipeActionMenu';
+import { RecipeCard } from '../recipes/RecipeCard';
 import AddMealModal from './AddMealModal';
 import UpdateMealModal from './UpdateMealModal';
 import './CalendarCell.scss';
@@ -36,10 +37,6 @@ export default function CalendarCell({
 }) {
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
-	const [mainMenuOpen, setMainMenuOpen] = useState(false);
-	const [sideMenuOpen, setSideMenuOpen] = useState(false);
-	const mainMenuRef = useRef(null);
-	const sideMenuRef = useRef(null);
 	const queryClient = useQueryClient();
 
 	// Get image base URL from environment variable
@@ -63,6 +60,10 @@ export default function CalendarCell({
 	};
 
 	// Close menus when clicking outside
+	// The RecipeActionMenu component now handles its own open/close state internally.
+	// This useEffect is no longer needed for managing external menu state.
+	// Keeping it commented out for now in case of future need for global click handling.
+	/*
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
@@ -89,6 +90,7 @@ export default function CalendarCell({
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, [mainMenuOpen, sideMenuOpen]);
+	*/
 
 	// Delete mutation
 	const deleteMutation = useMutation({
@@ -157,156 +159,54 @@ export default function CalendarCell({
 				{hasRecipe ? (
 					<div className='calRecipe hm-calendar__cell' draggable='true'>
 						{mainRecipeId && (
-							<div
-								className={`calRecipeMain hm-calendar__recipe ${
-									mainLeftover ? 'recipeLeftover hm-calendar__recipe--leftover' : ''
-								}`}
+							<RecipeCard
+								recipe={mainRecipe || { id: mainRecipeId, titulo: `RECETA ${mainRecipeId}` }}
+								variant='calendar'
+								hideLink={true}
+								hideMeta={true}
+								isLeftover={mainLeftover}
+								customClass='calRecipeMain'
+								customMenu={
+									<RecipeActionMenu
+										onViewRecipe={(e) => handleViewRecipe(mainRecipe, e)}
+										onToggleLeftover={(e) => handleToggleLeftover('main', e)}
+										onDeleteRecipe={(e) => handleDeleteRecipe('main', e)}
+										isLeftover={mainLeftover}
+										triggerSize='sm'
+									/>
+								}
 							>
-								{/* Recipe Image */}
-								<div className='calRecpImg hm-calendar__recipe-image'>
-									<div className='recipe-image-background hm-card__image-placeholder'>
-										<CalendarioIcon />
+								{/* {mainServing && (
+									<div className='calRecpServing hm-calendar__recipe-serving'>
+										{mainServing} porciones
 									</div>
-									{mainRecipe?.imagen && (
-										<img
-											className='lozad recipe-image-overlay hm-card__image-overlay hm-card__image-overlay--loaded'
-											src={getImageUrl(mainRecipe.imagen)}
-											alt={mainRecipe.titulo}
-											loading='lazy'
-										/>
-									)}
-								</div>
-
-								{/* Recipe Info */}
-								<div className='calRecpInfo hm-calendar__recipe-info'>
-									<div className='row'>
-										<div className='calRecpName hm-calendar__recipe-name'>
-											<p>{formatTitle(mainRecipe?.titulo) || `RECETA ${mainRecipeId}`}</p>
-										</div>
-
-										{/* Menu Button */}
-										<div className='button-hamburger hm-menu hm-menu--dots-only' ref={mainMenuRef}>
-											<button
-												onClick={(e) => {
-													e.stopPropagation();
-													setMainMenuOpen(!mainMenuOpen);
-												}}
-												className={`hm-menu__trigger ${mainMenuOpen ? 'hm-menu__trigger--active active' : ''}`}
-											>
-												<EllipsisVerticalIcon />
-											</button>
-											<div className={`sub-menu hm-menu__dropdown ${mainMenuOpen ? 'hm-menu__dropdown--open' : ''}`}>
-												<button
-													type='button'
-													className='hm-menu__item'
-													onClick={(e) => handleViewRecipe(mainRecipe, e)}
-												>
-													<FaEye className='hm-menu__icon' />
-													<span>Ver receta</span>
-												</button>
-												<button
-													type='button'
-													className='hm-menu__item'
-													onClick={(e) => handleToggleLeftover('main', e)}
-												>
-													<FaUndo className='hm-menu__icon' />
-													<span>Recalentado</span>
-												</button>
-												<button
-													type='button'
-													className='hm-menu__item'
-													onClick={(e) => handleDeleteRecipe('main', e)}
-												>
-													<FaTrashAlt className='hm-menu__icon' />
-													<span>Eliminar</span>
-												</button>
-											</div>
-										</div>
-									</div>
-
-									{mainServing && (
-										<div className='calRecpServing hm-calendar__recipe-serving'>
-											{mainServing} porciones
-										</div>
-									)}
-								</div>
-							</div>
+								)} */}
+							</RecipeCard>
 						)}
 						{sideRecipeId && (
-							<div
-								className={`calRecipeSide hm-calendar__recipe hm-calendar__recipe--side ${
-									sideLeftover ? 'recipeLeftover hm-calendar__recipe--leftover' : ''
-								}`}
+							<RecipeCard
+								recipe={sideRecipe || { id: sideRecipeId, titulo: `ACOMPAÑAMIENTO ${sideRecipeId}` }}
+								variant='calendar'
+								hideLink={true}
+								hideMeta={true}
+								isLeftover={sideLeftover}
+								customClass='calRecipeSide hm-calendar__recipe--side'
+								customMenu={
+									<RecipeActionMenu
+										onViewRecipe={(e) => handleViewRecipe(sideRecipe, e)}
+										onToggleLeftover={(e) => handleToggleLeftover('side', e)}
+										onDeleteRecipe={(e) => handleDeleteRecipe('side', e)}
+										isLeftover={sideLeftover}
+										triggerSize='sm'
+									/>
+								}
 							>
-								{/* Recipe Image */}
-								<div className='calRecpImg hm-calendar__recipe-image'>
-									<div className='recipe-image-background hm-card__image-placeholder'>
-										<CalendarioIcon />
+								{/* {sideServing && (
+									<div className='calRecpServing hm-calendar__recipe-serving'>
+										{sideServing} porciones
 									</div>
-									{sideRecipe?.imagen && (
-										<img
-											className='lozad recipe-image-overlay hm-card__image-overlay hm-card__image-overlay--loaded'
-											src={getImageUrl(sideRecipe.imagen)}
-											alt={sideRecipe.titulo}
-											loading='lazy'
-										/>
-									)}
-								</div>
-
-								{/* Recipe Info */}
-								<div className='calRecpInfo hm-calendar__recipe-info'>
-									<div className='row'>
-										<div className='calRecpName hm-calendar__recipe-name'>
-											<p>{formatTitle(sideRecipe?.titulo) || `ACOMPAÑAMIENTO ${sideRecipeId}`}</p>
-										</div>
-
-										{/* Menu Button */}
-										<div className='button-hamburger hm-menu hm-menu--dots-only' ref={sideMenuRef}>
-											<button
-												onClick={(e) => {
-													e.stopPropagation();
-													setSideMenuOpen(!sideMenuOpen);
-												}}
-												className={`hm-menu__trigger ${sideMenuOpen ? 'hm-menu__trigger--active active' : ''}`}
-											>
-												<EllipsisVerticalIcon />
-											</button>
-											<div className={`sub-menu hm-menu__dropdown ${sideMenuOpen ? 'hm-menu__dropdown--open' : ''}`}>
-												<button
-													type='button'
-													className='hm-menu__item'
-													onClick={(e) => handleViewRecipe(sideRecipe, e)}
-												>
-													<FaEye className='hm-menu__icon' />
-													<span>Ver receta</span>
-												</button>
-												<button
-													type='button'
-													className='hm-menu__item'
-													onClick={(e) => handleToggleLeftover('side', e)}
-												>
-													<FaUndo className='hm-menu__icon' />
-													<span>Recalentado</span>
-												</button>
-												<button
-													type='button'
-													className='hm-menu__item'
-													onClick={(e) => handleDeleteRecipe('side', e)}
-												>
-													<FaTrashAlt className='hm-menu__icon' />
-													<span>Eliminar</span>
-												</button>
-											</div>
-										</div>
-									</div>
-
-									{sideServing && (
-										<div className='calRecpServing hm-calendar__recipe-serving'>
-											{sideServing} porciones
-										</div>
-									)}
-								</div>
-							</div>
+								)} */}
+							</RecipeCard>
 						)}
 					</div>
 				) : (

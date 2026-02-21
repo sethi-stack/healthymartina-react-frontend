@@ -4,36 +4,16 @@
 	display: flex !important; // Override default display: none when open
 
 	.container-popup {
-		.indicadores {
-			width: 100%;
-			background: #f6f6f6;
-			padding: 7px 5%;
-			display: flex;
-			align-items: center;
-			margin-bottom: 20px;
+	.tabs-container {
+		margin-bottom: 20px;
+	}
 
-			a {
-				color: #b8b8b8;
-				margin-right: 15px;
-				text-decoration: none;
-				letter-spacing: 1px;
-				@include font-gilroy-medium;
-				transition: all 0.3s ease;
-
-				&.active {
-					color: $individual;
-				}
-
-				&:hover {
-					color: $individual;
-				}
-			}
-		}
-
-		.slide-indicadores {
+	.tabs-content {
+		.tab-pane {
 			display: none;
+			padding: 0; // Padding handled by Modal or internal sections
 
-			&.slide-active {
+			&.active {
 				display: block;
 			}
 
@@ -50,21 +30,6 @@
 					&:hover {
 						text-decoration: underline;
 					}
-				}
-			}
-
-			select {
-				width: 100%;
-				padding: 10px;
-				border: 1px solid $gris-oscuro;
-				border-radius: 5px;
-				margin-bottom: 15px;
-				@include font-gilroy-medium;
-				color: $gris-oscuro;
-				background: white;
-
-				&[multiple] {
-					min-height: 120px;
 				}
 			}
 
@@ -145,7 +110,7 @@
 			}
 
 			.rango {
-				margin: 20px 0;
+				margin: 10px 0;
 			}
 
 			.row-rango {
@@ -180,5 +145,6 @@
 				}
 			}
 		}
+	}
 	}
 }
