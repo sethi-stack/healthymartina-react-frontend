@@ -1,0 +1,336 @@
+// Meal modal styles (AddMealModal + UpdateMealModal)
+
+@import '../../assets/scss/init';
+@import '../../assets/scss/componentes/tabs';
+
+// -----------------------------------------------------------------------------
+// Modal title - orange, left-aligned
+// -----------------------------------------------------------------------------
+.popup.add-meal .modal-content h3,
+.popup.update-meal .modal-content h3 {
+	font-size: $font-size-2xl;
+	font-family: $font-family-medium;
+	color: $individual;
+	font-weight: 600;
+	text-align: left;
+	text-transform: none;
+	letter-spacing: $letter-spacing-base;
+}
+
+// -----------------------------------------------------------------------------
+// Close button
+// -----------------------------------------------------------------------------
+.popup.add-meal .close,
+.popup.update-meal .close {
+	background: $individual !important;
+	border-color: $individual !important;
+	color: $color-white !important;
+	&:hover {
+		background: $color-primary-hover !important;
+		border-color: $color-primary-hover !important;
+		color: $color-white !important;
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Form groups & section labels
+// Override popup global: .container-popup p { display:flex; width:100% }
+// -----------------------------------------------------------------------------
+.popup.add-meal .form-group,
+.popup.update-meal .form-group {
+	text-align: left;
+	margin: $spacing-sm 0;
+}
+
+.popup.add-meal .form-group > p,
+.popup.update-meal .form-group > p {
+	font-size: $font-size-sm;
+	font-family: $font-family-medium;
+	color: $color-text-muted;
+	font-weight: 400;
+	margin: 0 0 $spacing-xs;
+	padding: 0;
+	width: 100%;
+	display: block !important;
+}
+
+// -----------------------------------------------------------------------------
+// Receta field
+// -----------------------------------------------------------------------------
+.popup.add-meal .receta-field,
+.popup.update-meal .receta-field {
+	width: 100%;
+	text-align: left;
+	.recetaname {
+		text-align: left;
+	}
+}
+
+// Tick mark — smaller (20px), works with FaCheck SVG
+.popup.add-meal .receta-field .fa-check,
+.popup.update-meal .receta-field .fa-check,
+.popup.add-meal .receta-field .fas.fa-check,
+.popup.update-meal .receta-field .fas.fa-check {
+	width: 20px !important;
+	height: 20px !important;
+	min-width: 20px;
+	border-radius: 50%;
+	background-color: $individual;
+	color: #fff;
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 14px;
+	left: 10px;
+	z-index: 1;
+	padding: 4px;
+	font-size: 0.65em;
+}
+
+// Ver detalles - more space above/below
+.popup.add-meal .recetalink,
+.popup.update-meal .recetalink {
+	display: inline-block;
+	margin-top: $spacing-sm;
+	margin-bottom: $spacing-sm;
+	text-align: left;
+}
+
+// -----------------------------------------------------------------------------
+// Tiempos — horizontal bordered tab buttons with vertical padding
+// `.display-flex` utility class doesn't exist; must force flex here
+// -----------------------------------------------------------------------------
+.popup.add-meal .radio-box-sec,
+.popup.update-meal .radio-box-sec {
+	display: flex !important;
+	flex-direction: row !important;
+	flex-wrap: nowrap;
+	width: 100%;
+	border: 1px solid #c8c8c8;
+	border-radius: 7px;
+	overflow: hidden;
+	margin: $spacing-xs 0 $spacing-md;   // extra vertical gap above slider
+
+	label.radiobox-label {
+		flex: 1;
+		display: flex !important;
+		justify-content: center;
+		align-items: center;
+		border-right: 1px solid #c8c8c8;
+		cursor: pointer;
+		margin: 0 !important;
+		padding: 0;
+		height: auto;
+		transition: background-color 0.15s;
+
+		&:last-child {
+			border-right: none;
+		}
+
+		input[type='radio'] {
+			width: 0;
+			height: 0;
+			opacity: 0;
+			margin: 0;
+			visibility: hidden;
+			position: absolute;
+		}
+
+		.radiolabel {
+			padding: 11px 10px;        // good vertical height matching legacy
+			font-size: 0.875rem;
+			text-align: center;
+			width: 100%;
+			color: #999;
+			transition: background-color 0.15s, color 0.15s;
+		}
+
+		&:hover .radiolabel {
+			background-color: rgba($individual, 0.08);
+			color: $individual;
+		}
+
+		input:checked ~ .radiolabel {
+			background-color: $individual;
+			color: #fff;
+			font-weight: 500;
+		}
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Porciones + Raciones row — CSS GRID
+// Left: .porcion-text div (wraps all spans) | Right: toggle + Recalentado
+// -----------------------------------------------------------------------------
+.popup.add-meal .porcionRango .porcion-racion-row,
+.popup.update-meal .porcionRango .porcion-racion-row {
+	display: grid !important;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+	width: 100%;
+	column-gap: $spacing-md;
+
+	// Left column — wraps all the text spans in one line
+	.porcion-text {
+		display: inline;
+		grid-column: 1;
+
+		.porcion-cantidad {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #333; // Darker
+		}
+
+		.porcionTexto {
+			font-size: 1rem;
+			color: #333; // Darker
+			margin-left: 2px;
+		}
+
+		.porcion-separator {
+			margin: 0 5px;
+			color: #666; // Slightly darker
+			font-size: 1rem;
+		}
+
+		.racionTexto {
+			color: $individual;
+			font-size: 1rem;
+			font-weight: 600;
+			margin-left: 2px;
+		}
+	}
+
+	// Right column: the leftover toggle
+	.leftover-field {
+		grid-column: 2;
+		float: none !important;
+		margin: 0 !important;
+		display: flex !important; // Change to flex for better centering
+		align-items: center !important;
+		gap: 6px;
+		color: #bdbdbd;
+		font-size: 0.875rem;
+		white-space: nowrap;
+		line-height: normal; // Reset line-height to avoid offset
+
+		// Reinforce switch label visibility
+		label.switch {
+			display: block !important; // Block inside flex
+			visibility: visible !important;
+			opacity: 1 !important;
+			position: relative !important;
+			width: 32px !important;
+			height: 18px !important;
+			flex-shrink: 0;
+			margin: 0 !important; // Ensure no margins toggle alignment off
+
+			input {
+				opacity: 0;
+				width: 0;
+				height: 0;
+				position: absolute;
+			}
+
+			.slider {
+				position: absolute;
+				cursor: pointer;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: #ccc;
+				transition: .4s;
+				border-radius: 34px;
+
+				&:before {
+					position: absolute;
+					content: "";
+					height: 12px;
+					width: 12px;
+					left: 3px;
+					bottom: 3px;
+					background-color: white;
+					transition: .4s;
+					border-radius: 50%;
+				}
+			}
+
+			input:checked + .slider {
+				background-color: $individual;
+			}
+
+			input:checked + .slider:before {
+				transform: translateX(14px);
+			}
+		}
+	}
+}
+
+.popup.add-meal .porcionRango,
+.popup.update-meal .porcionRango {
+	margin: $spacing-xs 0;
+}
+
+// Override popup's .rango.typ2 p rule (not needed since we use div now)
+.popup.add-meal .rango.typ2 .porcion-racion-row,
+.popup.update-meal .rango.typ2 .porcion-racion-row {
+	display: grid !important;
+}
+
+// field-disabled state
+.popup.add-meal .porcionRango.field-disabled .porcion-racion-row,
+.popup.update-meal .porcionRango.field-disabled .porcion-racion-row {
+	.porcion-cantidad,
+	.porcionTexto,
+	.porcion-separator,
+	.racionTexto {
+		color: #e4e4e4 !important;
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Days checkboxes — horizontal, larger text, tighter gap between items,
+// and reduced gap between checkbox box and label text
+// Override: .afterSelReceta .recpday-tabs { display:inline-block }
+// Override: .afterSelReceta label.checkbox-label { display:inline-block; padding:0 0 0 20px }
+// Override: label.checkbox-label { height:16px; font-size:14px; padding:0 0 0 16px }
+// -----------------------------------------------------------------------------
+.popup.add-meal .afterSelReceta .recpday-tabs,
+.popup.update-meal .afterSelReceta .recpday-tabs {
+	display: flex !important;
+	flex-direction: row !important;
+	flex-wrap: wrap !important;
+	gap: 4px 10px !important;
+	width: 100% !important;
+	margin-top: $spacing-xs;
+}
+
+.popup.add-meal .afterSelReceta label.checkbox-label,
+.popup.update-meal .afterSelReceta label.checkbox-label {
+	display: inline-flex !important;
+	align-items: center;
+	margin: 0 !important;
+	padding: 0 0 0 20px !important;     // 20px = checkmark(16px) + 4px gap
+	width: auto !important;
+	height: 20px !important;
+	font-size: 0.925rem !important;      // larger
+	color: $color-text-muted !important; // grey, not black
+	cursor: pointer;
+
+	// The checkmark box
+	.checkmark {
+		width: 16px !important;
+		height: 16px !important;
+		left: 0;
+		top: 2px;
+	}
+}
+
+// Disabled day — greyed out
+.popup.add-meal .afterSelReceta .recpdaynum-disabled,
+.popup.update-meal .afterSelReceta .recpdaynum-disabled {
+	opacity: 0.45;
+	cursor: default !important;
+}

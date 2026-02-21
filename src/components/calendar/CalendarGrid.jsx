@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useQueries } from '@tanstack/react-query';
+import { getRecipe } from '../../lib/api/recipes';
 import CalendarCell from './CalendarCell';
 import CalendarNutritionRow from './CalendarNutritionRow';
 import EditLabelsModal from './EditLabelsModal';
@@ -141,6 +143,24 @@ export default function CalendarGrid({ calendar }) {
 		});
 	});
 
+	// Fetch all recipe details
+	const recipeQueries = useQueries({
+		queries: Array.from(allRecipeIds).map((recipeId) => ({
+			queryKey: ['recipe', recipeId],
+			queryFn: () => getRecipe(recipeId),
+			staleTime: 5 * 60 * 1000, // 5 minutes
+			enabled: !!recipeId,
+		})),
+	});
+
+	// Create a map of recipe ID to recipe data
+	const recipesMap = {};
+	recipeQueries.forEach((query) => {
+		if (query.data?.data) {
+			recipesMap[query.data.data.id] = query.data.data;
+		}
+	});
+
 	return (
 		<div className='general-calendar general-container-json hm-calendar' id='calendrio'>
 			{/* Header row with day names */}
@@ -226,6 +246,12 @@ export default function CalendarGrid({ calendar }) {
 									mainLeftover={mainLeftover}
 									sideLeftover={sideLeftover}
 									hasRecipe={!!mainRecipeId}
+									mainRecipe={mainRecipeId ? recipesMap[mainRecipeId] : null}
+									sideRecipe={sideRecipeId ? recipesMap[sideRecipeId] : null}
+									dayLabels={days}
+									mealLabels={meals}
+									mainSchedule={mainSchedule}
+									sidesSchedule={sidesSchedule}
 								/>
 							);
 						})}

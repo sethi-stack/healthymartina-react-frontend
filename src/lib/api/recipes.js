@@ -11,6 +11,16 @@ export const getRecipes = async (params = {}) => {
 };
 
 /**
+ * Get single recipe by ID
+ * @param {number} id - Recipe ID
+ * @returns {Promise<Object>} - Recipe data
+ */
+export const getRecipe = async (id) => {
+	const response = await apiClient.get(`/recipes/id/${id}`);
+	return response.data;
+};
+
+/**
  * Get single recipe by slug
  * @param {string} slug - Recipe slug
  * @returns {Promise<Object>} - Recipe data
@@ -41,9 +51,7 @@ export const addRecipeReaction = async (recipeId, isLike) => {
 export const removeRecipeReaction = async (recipeId) => {
 	const response = await apiClient.delete(`/recipes/${recipeId}/react`);
 	return response.data;
-};
-
-/**
+};/**
  * Get comments for a recipe
  * @param {number} recipeId - Recipe ID
  * @returns {Promise<Object>} - Response with comments array
