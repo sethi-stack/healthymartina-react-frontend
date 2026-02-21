@@ -217,7 +217,7 @@ header.movil {
 	left: 0;
 	background: rgba(0, 0, 0, 0.5);
 	display: none;
-	z-index: 2;
+	z-index: 90;
 }
 .header-app {
 	position: fixed;
@@ -228,7 +228,7 @@ header.movil {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	z-index: 3;
+	z-index: 101;
 	img {
 		max-width: 100%;
 		min-width: -webkit-fill-available;
@@ -338,7 +338,7 @@ nav.sub-menu-header {
 	padding: 0 calc((100vw - 1280px) / 2);
 	position: fixed;
 	top: 80px;
-	z-index: 2;
+	z-index: 100;
 	ul {
 		display: flex;
 		align-items: center;

@@ -134,7 +134,7 @@ export const RecipeCard = forwardRef(
 								<i className='hm-icon hm-icon--sm'>
 									<ClockIcon />
 								</i>
-								{recipe.tiempo_elaboracion} minutos
+								{recipe.tiempo_elaboracion || tiempo} minutos
 							</span>
 						</div>
 					)}

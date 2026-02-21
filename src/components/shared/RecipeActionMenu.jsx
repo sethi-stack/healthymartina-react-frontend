@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-	EllipsisVerticalIcon,
-	CalendarMenuIcon,
-} from '../icons';
+import { EllipsisVerticalIcon, CalendarMenuIcon } from '../icons';
 import { FaEye, FaUndo, FaTrashAlt } from 'react-icons/fa';
 
 export const RecipeActionMenu = ({
@@ -53,7 +50,7 @@ export const RecipeActionMenu = ({
 		<div
 			className={`${customClasses} hm-menu`.trim()}
 			ref={menuRef}
-			style={{ position: menuPosition, zIndex: isOpen ? 101 : 10 }}
+			style={{ position: menuPosition, zIndex: isOpen ? 20 : 10 }}
 		>
 			<button
 				type='button'
@@ -62,7 +59,9 @@ export const RecipeActionMenu = ({
 			>
 				<EllipsisVerticalIcon />
 			</button>
-			<div className={`hm-menu__dropdown ${isOpen ? 'hm-menu__dropdown--open' : ''}`}>
+			<div
+				className={`hm-menu__dropdown ${isOpen ? 'hm-menu__dropdown--open' : ''}`}
+			>
 				{onViewRecipe && (
 					<button
 						type='button'
