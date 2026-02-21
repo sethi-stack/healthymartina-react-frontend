@@ -215,14 +215,12 @@
 	.table__nutrition-container
 	.table__nutrition-wrap
 	.table__nutrition-item
-	div::before {
-	content: '';
+	.table__nutrition-item-dot {
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;
 	margin-right: 5px;
 	display: inline-block;
-	background-color: var(--nutrient-color, #42bd41);
 }
 
 .nutrition
@@ -244,21 +242,8 @@
 	.table__nutrition-container
 	.table__nutrition-wrap
 	.table__nutrition-item
-	div
-	span {
+	.table__nutrition-item-label {
 	margin-right: 5px;
-}
-
-.nutrition
-	.table__row.table__row--nutrition
-	[class^='col-']
-	.table__column
-	.table__nutrition-container
-	.table__nutrition-wrap
-	.table__nutrition-item
-	div
-	span::before {
-	content: attr(data-desktop);
 }
 
 .nutrition
@@ -296,4 +281,12 @@
 .nutritients-porcent {
 	// Styles for percentage view (macros) - hidden by default
 	display: none;
+}
+
+.table__nutrition-empty {
+	padding: 20px 10px;
+	text-align: center;
+	color: #9e9e9e;
+	font-size: 12px;
+	font-style: italic;
 }

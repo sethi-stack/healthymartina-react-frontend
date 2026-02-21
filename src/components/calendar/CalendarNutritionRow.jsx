@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getCalendarNutrition } from '../../lib/api/calendars';
 import './CalendarNutritionRow.scss';
@@ -10,56 +10,6 @@ import './CalendarNutritionRow.scss';
 export default function CalendarNutritionRow({ calendar, days }) {
 	const [activeView, setActiveView] = useState('statistics'); // 'statistics' or 'macros'
 	const [selectedDay, setSelectedDay] = useState(null);
-
-	// Default nutrition items from constants.php - matching the structure from nutrient_bottom.blade.php
-	// Structure matches: [id, nombre, unidad_medida, cantidad, porcentaje, main_color]
-	// IDs from constants.php: 1008->94 (Calorías), 1005->99 (Carbohidratos), 1003->96 (Proteína), 1004->97 (Grasa), 1079->213 (Fibra)
-	const defaultNutritionItems = useMemo(() => {
-		// Get default nutrients from constants structure
-		const defaultNutrients = [
-			{
-				id: 94, // Calorías (1008 in constants key, but id is 94)
-				nombre: 'Calorías',
-				unidad_medida: 'kcal',
-				cantidad: 0,
-				porcentaje: 0,
-				main_color: '#40deb',
-			},
-			{
-				id: 99, // Carbohidratos (1005 in constants key, but id is 99)
-				nombre: 'Carbohidratos',
-				unidad_medida: 'g',
-				cantidad: 0,
-				porcentaje: 0,
-				main_color: '#b279eb',
-			},
-			{
-				id: 96, // Proteína (1003 in constants key, but id is 96)
-				nombre: 'Proteína',
-				unidad_medida: 'g',
-				cantidad: 0,
-				porcentaje: 0,
-				main_color: '#3afe72',
-			},
-			{
-				id: 97, // Grasa total (1004 in constants key, but id is 97)
-				nombre: 'Grasa total',
-				unidad_medida: 'g',
-				cantidad: 0,
-				porcentaje: 0,
-				main_color: '#e79ccd',
-			},
-			{
-				id: 213, // Fibra (1079 in constants key, but id is 213)
-				nombre: 'Fibra',
-				unidad_medida: 'g',
-				cantidad: 0,
-				porcentaje: 0,
-				main_color: '#622817',
-			},
-		];
-		return defaultNutrients;
-	}, []);
 
 	const handleDayClick = (dayKey) => {
 		if (selectedDay === dayKey) {
@@ -129,7 +79,6 @@ export default function CalendarNutritionRow({ calendar, days }) {
 								dayKey={dayKey}
 								dayName={dayName}
 								calendarId={calendar?.id}
-								defaultItems={defaultNutritionItems}
 								activeView={activeView}
 								onClick={() => handleDayClick(dayKey)}
 							/>
@@ -149,7 +98,6 @@ function NutritionDayColumn({
 	dayKey,
 	dayName,
 	calendarId,
-	defaultItems,
 	activeView,
 	onClick,
 }) {
@@ -166,26 +114,54 @@ function NutritionDayColumn({
 	});
 
 	// Parse nutrition data - handle both array format and object format
-	let nutritionItems = defaultItems;
+	// Don't show default items if there's no nutrition data
+	let nutritionItems = null;
 
-	if (nutritionData?.nutrition && Array.isArray(nutritionData.nutrition)) {
-		// Data comes as array: [id, nombre, unidad_medida, cantidad, porcentaje, main_color]
-		nutritionItems = nutritionData.nutrition.map((item) => {
-			if (Array.isArray(item)) {
-				return {
-					id: item[0],
-					nombre: item[1],
-					unidad_medida: item[2],
-					cantidad: item[3] || 0,
-					porcentaje: item[4] || 0,
-					main_color: item[5] || '#42bd41',
-				};
+	if (nutritionData?.nutrition) {
+		// Check if nutrition is an object (keys: "94", "99", etc.) or an array
+		if (typeof nutritionData.nutrition === 'object' && !Array.isArray(nutritionData.nutrition)) {
+			// Data comes as object with nutrient IDs as keys
+			// Convert object to array: { "94": [94, "Calorías", ...], ... } => [{id: 94, ...}, ...]
+			const items = Object.values(nutritionData.nutrition).map((item) => {
+				if (Array.isArray(item)) {
+					return {
+						id: item[0],
+						nombre: item[1],
+						unidad_medida: item[2],
+						cantidad: item[3] || 0,
+						porcentaje: item[4] || 0,
+						main_color: item[5] || '#42bd41',
+					};
+				}
+				return item;
+			});
+			// Only set nutritionItems if there's actual data (not all zeros)
+			if (items.length > 0 && items.some(item => item.cantidad > 0)) {
+				nutritionItems = items;
 			}
-			return item;
-		});
+		} else if (Array.isArray(nutritionData.nutrition)) {
+			// Data comes as array: [id, nombre, unidad_medida, cantidad, porcentaje, main_color]
+			const items = nutritionData.nutrition.map((item) => {
+				if (Array.isArray(item)) {
+					return {
+						id: item[0],
+						nombre: item[1],
+						unidad_medida: item[2],
+						cantidad: item[3] || 0,
+						porcentaje: item[4] || 0,
+						main_color: item[5] || '#42bd41',
+					};
+				}
+				return item;
+			});
+			// Only set nutritionItems if there's actual data (not all zeros)
+			if (items.length > 0 && items.some(item => item.cantidad > 0)) {
+				nutritionItems = items;
+			}
+		}
 	} else if (nutritionData?.data && Array.isArray(nutritionData.data)) {
 		// Data comes as object array
-		nutritionItems = nutritionData.data.map((item) => ({
+		const items = nutritionData.data.map((item) => ({
 			id: item.id,
 			nombre: item.nombre || item.name,
 			unidad_medida: item.unidad_medida || item.unit,
@@ -193,6 +169,10 @@ function NutritionDayColumn({
 			porcentaje: item.porcentaje || item.percentage || 0,
 			main_color: item.main_color || item.color || '#42bd41',
 		}));
+		// Only set nutritionItems if there's actual data (not all zeros)
+		if (items.length > 0 && items.some(item => item.cantidad > 0)) {
+			nutritionItems = items;
+		}
 	}
 
 	// Format amount for display
@@ -216,7 +196,7 @@ function NutritionDayColumn({
 									style={{ width: '150px' }}
 								/>
 							</div>
-						) : (
+						) : nutritionItems ? (
 							nutritionItems.map((item) => {
 								// Show statistics view (amounts) by default
 								const showItem =
@@ -240,11 +220,14 @@ function NutritionDayColumn({
 										key={item.id}
 										className={`table__nutrition-item nutritients-list flex-center__y`}
 										id={`l_nut_${item.id}`}
-										style={{
-											'--nutrient-color': item.main_color || '#42bd41',
-										}}
 									>
 										<div>
+											<span
+												className='table__nutrition-item-dot'
+												style={{
+													backgroundColor: item.main_color || '#42bd41',
+												}}
+											></span>
 											<span
 												className='table__nutrition-item-label'
 												title={item.nombre}
@@ -262,6 +245,10 @@ function NutritionDayColumn({
 									</div>
 								);
 							})
+						) : (
+							<div className='table__nutrition-empty'>
+								<span>No hay datos nutricionales</span>
+							</div>
 						)}
 					</div>
 				</div>

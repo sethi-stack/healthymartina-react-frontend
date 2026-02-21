@@ -218,26 +218,9 @@
     text-overflow: ellipsis;
 }
 
-.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item div::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 5px;
-    display: inline-block;
-    background-color: #42bd41;
-}
-
 .nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item .table__nutrition-item-label {
     font-weight: 500;
-}
-
-.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item div span {
     margin-right: 5px;
-}
-
-.nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item div span::before {
-    content: attr(data-desktop);
 }
 
 .nutrition .table__row.table__row--nutrition [class^="col-"] .table__column .table__nutrition-container .table__nutrition-wrap .table__nutrition-item .table__nutrition-item-amount {
