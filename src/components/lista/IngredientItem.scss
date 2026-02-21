@@ -1,16 +1,13 @@
-// IngredientItem - Matching Blade Template Design
-$individual: #dcb244;
+@import '../../assets/scss/tokens';
 
 .ingredient-item {
-	width: 100%;
-	padding: 3px 20px 2px 15px;
-	position: relative;
 	display: flex;
-	align-items: flex-start;
-	transition: background 0.2s;
+	align-items: center;
+	padding: 8px 0;
+	position: relative;
 
 	&:hover {
-		background: rgba(220, 178, 68, 0.05);
+		background: rgba($color-primary, 0.05);
 
 		.ingredient-actions {
 			opacity: 1;
@@ -18,166 +15,144 @@ $individual: #dcb244;
 	}
 
 	&.taken {
+		opacity: 0.6;
+
+		.ingredient-quantity,
 		.ingredient-name {
 			text-decoration: line-through;
-			color: #999;
-		}
-
-		opacity: 0.6;
-	}
-
-	.ingredient-checkbox {
-		display: flex;
-		align-items: flex-start;
-		width: 100%;
-		cursor: pointer;
-		user-select: none;
-		position: relative;
-		padding-left: 25px;
-
-		.checkbox-input {
-			width: 0;
-			position: absolute;
-			opacity: 0;
-			height: 0;
-		}
-
-		.checkbox {
-			position: absolute;
-			top: 2px;
-			left: 0;
-			height: 16px;
-			width: 16px;
-			border-radius: 3px;
-			border: 1px solid $individual;
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			align-items: center;
-			padding: 0;
-			cursor: pointer;
-
-			&:after {
-				font-family: 'Font Awesome 5 Free';
-				content: '\F00C';
-				font-weight: 900;
-				color: #fff;
-				position: absolute;
-				display: block;
-				font-size: 11px;
-			}
-		}
-
-		.checkbox-input:checked ~ .checkbox {
-			&:after {
-				color: #fff;
-				background-color: $individual;
-				height: 100%;
-				width: 100%;
-				text-align: center;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-		}
-
-		.ingredient-content {
-			display: flex;
-			width: 100%;
-			align-items: flex-start;
-		}
-
-		.ingredient-quantity {
-			min-width: 100px;
-			max-width: 100px;
-			margin: -3px 0 0;
-			font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-				sans-serif;
-			font-size: 15px;
-			padding: 0 5px 0 10px;
-			flex-shrink: 0;
-
-			span {
-				margin: 0 5px 0 2px;
-				display: inline-block;
-			}
-		}
-
-		.ingredient-name {
-			width: calc(100% - 100px);
-			font-family: 'Gilroy-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-				sans-serif;
-			font-size: 15px;
-			padding-left: 5px;
-			transition: all 0.2s;
-			line-height: 1.4;
-		}
-	}
-
-	.ingredient-actions {
-		position: absolute;
-		right: 0;
-		top: 0;
-		display: flex;
-		gap: 4px;
-		opacity: 0;
-		transition: opacity 0.2s;
-		padding: 2px;
-	}
-
-	.edit-btn,
-	.delete-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 24px;
-		height: 24px;
-		border: none;
-		border-radius: 3px;
-		cursor: pointer;
-		transition: all 0.2s;
-		background: transparent;
-		padding: 0;
-
-		svg {
-			font-size: 11px;
-		}
-	}
-
-	.edit-btn {
-		color: $individual;
-
-		&:hover {
-			background: $individual;
-			color: #fff;
-		}
-	}
-
-	.delete-btn {
-		color: #e74c3c;
-
-		&:hover {
-			background: #e74c3c;
-			color: #fff;
+			color: $color-text-muted;
 		}
 	}
 }
 
-@media (max-width: 768px) {
-	.ingredient-item {
-		.ingredient-actions {
+.ingredient-checkbox {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	cursor: pointer;
+	user-select: none;
+	position: relative;
+	padding-left: 30px;
+
+	.checkbox-input {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	.checkbox {
+		position: absolute;
+		left: 0;
+		width: 20px;
+		height: 20px;
+		border: 1px solid $color-primary;
+		border-radius: 3px;
+		flex-shrink: 0;
+
+		&:after {
+			content: '\F00C';
+			font-family: 'Font Awesome 5 Free';
+			font-weight: 900;
+			font-size: 11px;
+			color: #fff;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			opacity: 0;
+		}
+	}
+
+	.checkbox-input:checked ~ .checkbox {
+		background-color: $color-primary;
+
+		&:after {
 			opacity: 1;
 		}
+	}
 
-		.ingredient-checkbox {
-			.ingredient-quantity {
-				min-width: 80px;
-				max-width: 80px;
-			}
+	.ingredient-quantity {
+		font-family: $font-family-bold;
+		font-size: $font-size-sm;
+		font-weight: 900;
+		color: $color-text;
+		flex-shrink: 0;
+		white-space: nowrap;
+	}
 
-			.ingredient-name {
-				width: calc(100% - 80px);
-			}
+	.ingredient-name {
+		font-family: $font-family-bold;
+		font-size: $font-size-sm;
+		font-weight: 900;
+		color: $color-text;
+		flex: 1;
+		padding-right: 60px;
+	}
+}
+
+.ingredient-actions {
+	position: absolute;
+	right: 5px;
+	display: flex;
+	gap: 4px;
+	opacity: 0;
+	transition: opacity $transition-base;
+	background: $color-white;
+	border-radius: 3px;
+	padding: 2px;
+}
+
+.edit-btn,
+.delete-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	background: transparent;
+	transition: all $transition-base;
+
+	svg {
+		font-size: 11px;
+	}
+}
+
+.edit-btn {
+	color: $color-primary;
+
+	&:hover {
+		background: $color-primary;
+		color: $color-white;
+	}
+}
+
+.delete-btn {
+	color: #e74c3c;
+
+	&:hover {
+		background: #e74c3c;
+		color: #fff;
+	}
+}
+
+@media (max-width: 768px) {
+	.ingredient-actions {
+		opacity: 1;
+	}
+
+	.ingredient-checkbox {
+		.ingredient-quantity,
+		.ingredient-name {
+			font-size: 13px;
+		}
+
+		.ingredient-name {
+			padding-right: 50px;
 		}
 	}
 }

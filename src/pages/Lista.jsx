@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
+import { useCalendarStore } from '../stores/calendarStore';
 import {
 	getCalendars,
 	getAllListaIngredients,
@@ -21,7 +22,7 @@ import CalendarSwitchModal from '../components/lista/CalendarSwitchModal';
 import './Lista.scss';
 
 // MOCK DATA for design verification
-const USE_MOCK_DATA = true; // Set to false when API is working
+const USE_MOCK_DATA = false; // Set to false when API is working
 
 const MOCK_CALENDARS = {
 	data: [
@@ -204,9 +205,12 @@ export default function Lista() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const queryClient = useQueryClient();
 
+	// Get stored calendar ID from Zustand store
+	const { selectedCalendarId: storedCalendarId, setSelectedCalendar } = useCalendarStore();
+
 	const calendarId = searchParams.get('id');
 	const [selectedCalendarId, setSelectedCalendarId] = useState(
-		calendarId ? parseInt(calendarId) : null
+		calendarId ? parseInt(calendarId) : storedCalendarId
 	);
 
 	// Modal states
@@ -242,18 +246,22 @@ export default function Lista() {
 		enabled: !!selectedCalendarId,
 	});
 
-	// Auto-select first calendar if none selected
+	// Auto-select calendar: URL param > stored selection > first calendar
 	useEffect(() => {
 		if (
 			!selectedCalendarId &&
 			calendarsData?.data?.length > 0 &&
 			!calendarsLoading
 		) {
-			const firstCalendar = calendarsData.data[0];
-			setSelectedCalendarId(firstCalendar.id);
-			setSearchParams({ id: firstCalendar.id });
+			// Try to find stored calendar, otherwise use first
+			const calendarToSelect =
+				calendarsData.data.find((c) => c.id === storedCalendarId) ||
+				calendarsData.data[0];
+			setSelectedCalendar(calendarToSelect.id, calendarToSelect.title);
+			setSelectedCalendarId(calendarToSelect.id);
+			setSearchParams({ id: calendarToSelect.id });
 		}
-	}, [calendarsData, selectedCalendarId, calendarsLoading, setSearchParams]);
+	}, [calendarsData, selectedCalendarId, calendarsLoading, setSearchParams, storedCalendarId, setSelectedCalendar]);
 
 	// Update URL when calendar changes
 	useEffect(() => {
@@ -400,6 +408,8 @@ export default function Lista() {
 	};
 
 	const handleSelectCalendar = (id) => {
+		const calendar = calendars.find((c) => c.id === id);
+		setSelectedCalendar(id, calendar?.title || '');
 		setSelectedCalendarId(id);
 		setShowCalendarSwitch(false);
 	};
@@ -438,12 +448,62 @@ export default function Lista() {
 	}
 
 	const calendars = calendarsData?.data || [];
-	const currentCalendar = calendars.find((c) => c.id === selectedCalendarId);
-	const listaContent = listaData?.data || {};
-	const categories = listaContent.categorias || [];
-	const ingredients = listaContent.ingredients || {};
+	// Handle both mock data (has .data wrapper) and real API (no .data wrapper)
+	const listaContent = listaData?.data || listaData || {};
+
+	// Use calendar from calendars list, or fallback to calendar from lista response
+	const currentCalendar = calendars.find((c) => c.id === selectedCalendarId) ||
+		listaContent.calendar || listaContent.calendario;
+
+	// Handle both API field names: categories/categorias
+	const categories = listaContent.categories || listaContent.categorias || [];
+	const rawIngredients = listaContent.ingredients || {};
 	const takenIngredients = listaContent.taken_ingredientes || [];
-	const totalCount = listaContent.total_count || 0;
+
+	// Normalize and aggregate ingredients
+	const ingredients = Object.keys(rawIngredients).reduce((acc, categoryId) => {
+		const categoryIngredients = rawIngredients[categoryId] || [];
+
+		// Group ingredients by their ID to aggregate quantities
+		const ingredientMap = new Map();
+
+		categoryIngredients.forEach(ing => {
+			const key = `${ing.ingrediente_id || ing.id}-${ing.ingrediente || ing.nombre}`;
+
+			if (ingredientMap.has(key)) {
+				// Aggregate quantities for repeated ingredients
+				const existing = ingredientMap.get(key);
+				const existingQty = parseFloat(existing.cantidad) || 0;
+				const newQty = parseFloat(ing.cantidad) || 0;
+				existing.cantidad = existingQty + newQty;
+
+				// Also aggregate from repeat array if it exists
+				if (ing.repeat && ing.repeat.length > 0) {
+					const repeatQty = ing.repeat.reduce((sum, r) => sum + (parseFloat(r.cantidad) || 0), 0);
+					existing.cantidad += repeatQty;
+				}
+			} else {
+				// Add new ingredient with aggregated quantity from repeats
+				let totalQty = parseFloat(ing.cantidad) || 0;
+				if (ing.repeat && ing.repeat.length > 0) {
+					totalQty += ing.repeat.reduce((sum, r) => sum + (parseFloat(r.cantidad) || 0), 0);
+				}
+
+				ingredientMap.set(key, {
+					...ing,
+					cantidad: totalQty,
+					type: ing.type || 'receta', // Default to 'receta' if type is missing
+				});
+			}
+		});
+
+		acc[categoryId] = Array.from(ingredientMap.values());
+		return acc;
+	}, {});
+
+	// Calculate total count if not provided
+	const totalCount = listaContent.total_count ||
+		Object.values(ingredients).reduce((sum, catIngredients) => sum + catIngredients.length, 0);
 
 	// Count unchecked ingredients
 	const uncheckedCount = totalCount - takenIngredients.length;

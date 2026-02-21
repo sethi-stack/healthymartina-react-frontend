@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useCalendarStore } from '../stores/calendarStore';
 import {
 	getCalendars,
 	getCalendar,
@@ -27,6 +28,9 @@ export default function Calendar() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+
+	// Get calendar store to persist selection across pages
+	const { setSelectedCalendar, clearSelectedCalendar } = useCalendarStore();
 
 	const calendarId = searchParams.get('id');
 	const [selectedCalendarId, setSelectedCalendarId] = useState(
@@ -85,7 +89,9 @@ export default function Calendar() {
 		mutationFn: (data) => createCalendar(data),
 		onSuccess: (response) => {
 			queryClient.invalidateQueries({ queryKey: ['calendars'] });
-			setSelectedCalendarId(response.calendar.id);
+			const newCalendar = response.calendar;
+			setSelectedCalendar(newCalendar.id, newCalendar.title);
+			setSelectedCalendarId(newCalendar.id);
 			setShowCreateModal(false);
 		},
 	});
@@ -114,9 +120,12 @@ export default function Calendar() {
 					(c) => c.id !== selectedCalendarId
 				);
 				if (remainingCalendars.length > 0) {
-					setSelectedCalendarId(remainingCalendars[0].id);
+					const firstRemaining = remainingCalendars[0];
+					setSelectedCalendar(firstRemaining.id, firstRemaining.title);
+					setSelectedCalendarId(firstRemaining.id);
 				}
 			} else {
+				clearSelectedCalendar();
 				setSelectedCalendarId(null);
 			}
 		},
@@ -127,7 +136,9 @@ export default function Calendar() {
 		mutationFn: ({ id, title }) => copyCalendar(id, title),
 		onSuccess: (response) => {
 			queryClient.invalidateQueries({ queryKey: ['calendars'] });
-			setSelectedCalendarId(response.calendar.id);
+			const copiedCalendar = response.calendar;
+			setSelectedCalendar(copiedCalendar.id, copiedCalendar.title);
+			setSelectedCalendarId(copiedCalendar.id);
 			setShowCopyModal(false);
 		},
 	});
@@ -155,6 +166,8 @@ export default function Calendar() {
 	};
 
 	const handleSelectCalendar = (id) => {
+		const calendar = calendars.find((c) => c.id === id);
+		setSelectedCalendar(id, calendar?.title || '');
 		setSelectedCalendarId(id);
 	};
 

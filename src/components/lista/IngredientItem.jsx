@@ -41,48 +41,53 @@ export default function IngredientItem({
 	// Format quantity and measure
 	const getQuantityText = () => {
 		const cantidad = ingredient.cantidad;
-		const medida = ingredient.medida || ingredient.unidad_medida || '';
+		const medidaSingular = ingredient.medida || ingredient.unidad_medida || '';
+		const medidaPlural = ingredient.medida_plural || medidaSingular;
 
-		if (!cantidad && !medida) return '';
+		if (!cantidad && !medidaSingular) return '';
 
-		if (medida.toLowerCase() === 'al gusto') {
+		if (medidaSingular.toLowerCase() === 'al gusto') {
 			return 'al gusto';
 		}
 
-		return `${cantidad || ''} ${medida}`.trim();
+		// Use plural form if quantity > 1
+		const medida = cantidad > 1 ? medidaPlural : medidaSingular;
+
+		// Format quantity: show decimals only if not a whole number
+		const formattedCantidad = cantidad % 1 === 0 ? cantidad : cantidad.toFixed(2);
+
+		return `${formattedCantidad || ''} ${medida}`.trim();
 	};
 
 	return (
-		<div className={`ingredient-item hm-list__item ${isTaken ? 'taken hm-list__item--checked' : ''}`}>
-			<label className='ingredient-checkbox ingrediente hm-checkbox'>
+		<div className={`ingredient-item ${isTaken ? 'taken' : ''}`}>
+			<label className='ingredient-checkbox'>
 				<input
 					type='checkbox'
 					checked={isTaken}
 					onChange={handleToggle}
-					className='checkbox-input hm-checkbox__input'
+					className='checkbox-input'
 				/>
-				<span className='checkbox hm-checkbox__box'></span>
-				<div className={`ingredient-content hm-checkbox__content ${isTaken ? 'hm-checkbox__content--strikethrough' : ''}`}>
-					<h3 className='ingredient-quantity cantidad hm-checkbox__quantity'>
-						{getQuantityText() && <span>{getQuantityText()}</span>}
-					</h3>
-					<span className={`ingredient-name hm-checkbox__label ${isTaken ? 'hm-checkbox__label--strikethrough' : ''}`}>
-						{ingredient.ingrediente || ingredient.nombre}
-					</span>
-				</div>
+				<span className='checkbox'></span>
+				{getQuantityText() && (
+					<span className='ingredient-quantity'>{getQuantityText()}</span>
+				)}
+				<span className='ingredient-name'>
+					{ingredient.ingrediente || ingredient.nombre}
+				</span>
 			</label>
 
 			{isManual && (
-				<div className='ingredient-actions button-hamburger hm-list__item-actions'>
+				<div className='ingredient-actions'>
 					<button
-						className='edit-btn hm-btn hm-btn--icon hm-btn--sm'
+						className='edit-btn'
 						onClick={handleEdit}
 						title='Editar ingrediente'
 					>
 						<FaEdit />
 					</button>
 					<button
-						className='delete-btn hm-btn hm-btn--icon hm-btn--sm hm-btn--danger'
+						className='delete-btn'
 						onClick={handleDelete}
 						title='Eliminar ingrediente'
 					>

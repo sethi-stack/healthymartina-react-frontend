@@ -200,7 +200,7 @@ export const getListaData = async (calendarId) => {
  * @returns {Promise<Object>} - All ingredients grouped by category
  */
 export const getAllListaIngredients = async (calendarId) => {
-	const response = await apiClient.get(`/calendars/${calendarId}/lista/all`);
+	const response = await apiClient.get(`/calendars/${calendarId}/lista/`);
 	return response.data;
 };
 
