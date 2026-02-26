@@ -179,7 +179,8 @@
 			color: $individual;
 		}
 
-		input:checked ~ .radiolabel {
+		input:checked ~ .radiolabel,
+		.radiolabel.selected {
 			background-color: $individual;
 			color: #fff;
 			font-weight: 500;

@@ -133,7 +133,7 @@ export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, meal
 													setSelectedDays([dayKey]);
 												}}
 											/>
-											<span className='radiolabel label-mealname'>{label}</span>
+											<span className={`radiolabel label-mealname${key === selectedMealKey ? ' selected' : ''}`}>{label}</span>
 										</label>
 									);
 								})}

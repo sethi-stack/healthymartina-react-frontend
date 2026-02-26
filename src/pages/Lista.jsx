@@ -26,7 +26,11 @@ const USE_MOCK_DATA = false; // Set to false when API is working
 
 const MOCK_CALENDARS = {
 	data: [
-		{ id: 1, title: 'Mi Calendario de Enero', nombre: 'Mi Calendario de Enero' },
+		{
+			id: 1,
+			title: 'Mi Calendario de Enero',
+			nombre: 'Mi Calendario de Enero',
+		},
 		{ id: 2, title: 'Plan Semanal', nombre: 'Plan Semanal' },
 	],
 };
@@ -206,11 +210,12 @@ export default function Lista() {
 	const queryClient = useQueryClient();
 
 	// Get stored calendar ID from Zustand store
-	const { selectedCalendarId: storedCalendarId, setSelectedCalendar } = useCalendarStore();
+	const { selectedCalendarId: storedCalendarId, setSelectedCalendar } =
+		useCalendarStore();
 
 	const calendarId = searchParams.get('id');
 	const [selectedCalendarId, setSelectedCalendarId] = useState(
-		calendarId ? parseInt(calendarId) : storedCalendarId
+		calendarId ? parseInt(calendarId) : storedCalendarId,
 	);
 
 	// Modal states
@@ -261,7 +266,14 @@ export default function Lista() {
 			setSelectedCalendarId(calendarToSelect.id);
 			setSearchParams({ id: calendarToSelect.id });
 		}
-	}, [calendarsData, selectedCalendarId, calendarsLoading, setSearchParams, storedCalendarId, setSelectedCalendar]);
+	}, [
+		calendarsData,
+		selectedCalendarId,
+		calendarsLoading,
+		setSearchParams,
+		storedCalendarId,
+		setSelectedCalendar,
+	]);
 
 	// Update URL when calendar changes
 	useEffect(() => {
@@ -399,7 +411,7 @@ export default function Lista() {
 			alert(
 				USE_MOCK_DATA
 					? 'Email enviado exitosamente (mock data)'
-					: 'Email enviado exitosamente'
+					: 'Email enviado exitosamente',
 			);
 		} catch (error) {
 			console.error('Error sending email:', error);
@@ -452,13 +464,39 @@ export default function Lista() {
 	const listaContent = listaData?.data || listaData || {};
 
 	// Use calendar from calendars list, or fallback to calendar from lista response
-	const currentCalendar = calendars.find((c) => c.id === selectedCalendarId) ||
-		listaContent.calendar || listaContent.calendario;
+	const currentCalendar =
+		calendars.find((c) => c.id === selectedCalendarId) ||
+		listaContent.calendar ||
+		listaContent.calendario;
 
 	// Handle both API field names: categories/categorias
 	const categories = listaContent.categories || listaContent.categorias || [];
 	const rawIngredients = listaContent.ingredients || {};
 	const takenIngredients = listaContent.taken_ingredientes || [];
+
+	// Scale an ingredient's cantidad by its servings/porcion ratio.
+	// Subrecipe ingredients store the servings factor in get_servings and use
+	// subrecipe.porcion as the base (the subrecipe's own default yield), not the
+	// parent recipe's porcion. Regular ingredients use porcion directly.
+	const computeScaledQty = (ing) => {
+		const rawQty = parseFloat(ing.cantidad) || 0;
+		// Subrecipe check must come BEFORE the getServings===1 guard:
+		// when user selects the parent recipe's default servings, get_recipe_cantidad
+		// equals exactly 1 (e.g. 1 tz), but we still need to divide by the
+		// sub-recipe's own yield (e.g. 3 tz) to get the correct fraction.
+		if (ing.subrecipe && typeof ing.subrecipe === 'object') {
+			const getServings = parseFloat(ing.get_servings) || 0;
+			const subPorcion = parseFloat(ing.subrecipe.porcion) || 1;
+			return (rawQty * getServings) / subPorcion;
+		}
+		const getServings = parseFloat(ing.get_servings);
+		if (!getServings || getServings === 1) {
+			// No servings data — use raw quantity as-is (e.g. manual items)
+			return rawQty;
+		}
+		const porcion = parseFloat(ing.porcion) || 1;
+		return (rawQty * getServings) / porcion;
+	};
 
 	// Normalize and aggregate ingredients
 	const ingredients = Object.keys(rawIngredients).reduce((acc, categoryId) => {
@@ -467,26 +505,32 @@ export default function Lista() {
 		// Group ingredients by their ID to aggregate quantities
 		const ingredientMap = new Map();
 
-		categoryIngredients.forEach(ing => {
+		categoryIngredients.forEach((ing) => {
 			const key = `${ing.ingrediente_id || ing.id}-${ing.ingrediente || ing.nombre}`;
 
 			if (ingredientMap.has(key)) {
 				// Aggregate quantities for repeated ingredients
 				const existing = ingredientMap.get(key);
 				const existingQty = parseFloat(existing.cantidad) || 0;
-				const newQty = parseFloat(ing.cantidad) || 0;
+				const newQty = computeScaledQty(ing);
 				existing.cantidad = existingQty + newQty;
 
 				// Also aggregate from repeat array if it exists
 				if (ing.repeat && ing.repeat.length > 0) {
-					const repeatQty = ing.repeat.reduce((sum, r) => sum + (parseFloat(r.cantidad) || 0), 0);
+					const repeatQty = ing.repeat.reduce(
+						(sum, r) => sum + computeScaledQty(r),
+						0,
+					);
 					existing.cantidad += repeatQty;
 				}
 			} else {
 				// Add new ingredient with aggregated quantity from repeats
-				let totalQty = parseFloat(ing.cantidad) || 0;
+				let totalQty = computeScaledQty(ing);
 				if (ing.repeat && ing.repeat.length > 0) {
-					totalQty += ing.repeat.reduce((sum, r) => sum + (parseFloat(r.cantidad) || 0), 0);
+					totalQty += ing.repeat.reduce(
+						(sum, r) => sum + computeScaledQty(r),
+						0,
+					);
 				}
 
 				ingredientMap.set(key, {
@@ -502,8 +546,12 @@ export default function Lista() {
 	}, {});
 
 	// Calculate total count if not provided
-	const totalCount = listaContent.total_count ||
-		Object.values(ingredients).reduce((sum, catIngredients) => sum + catIngredients.length, 0);
+	const totalCount =
+		listaContent.total_count ||
+		Object.values(ingredients).reduce(
+			(sum, catIngredients) => sum + catIngredients.length,
+			0,
+		);
 
 	// Count unchecked ingredients
 	const uncheckedCount = totalCount - takenIngredients.length;

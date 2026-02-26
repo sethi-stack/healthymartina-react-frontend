@@ -223,7 +223,7 @@ export default function UpdateMealModal({
 																	setMainSelectedDays([dayKey]);
 																}}
 															/>
-															<span className='radiolabel label-mealname'>{label}</span>
+															<span className={`radiolabel label-mealname${key === selectedMealKey ? ' selected' : ''}`}>{label}</span>
 														</label>
 													);
 												})}
@@ -306,7 +306,7 @@ export default function UpdateMealModal({
 																	setSideSelectedDays([dayKey]);
 																}}
 															/>
-															<span className='radiolabel label-mealname'>{label}</span>
+															<span className={`radiolabel label-mealname${key === selectedMealKey ? ' selected' : ''}`}>{label}</span>
 														</label>
 													);
 												})}
