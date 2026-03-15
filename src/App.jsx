@@ -12,6 +12,7 @@ import { Recetario } from './pages/Recetario';
 import { RecipeDetail } from './pages/RecipeDetail';
 import Calendar from './pages/Calendar';
 import Lista from './pages/Lista';
+import { Perfil } from './pages/Perfil';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -113,7 +114,18 @@ export function App() {
 						}
 					/>
 
-					{/* 404 fallback */}
+					<Route
+					path='/perfil'
+					element={
+						<ProtectedRoute>
+							<AuthenticatedLayout>
+								<Perfil />
+							</AuthenticatedLayout>
+						</ProtectedRoute>
+					}
+				/>
+
+				{/* 404 fallback */}
 					<Route path='*' element={<Navigate to='/login' replace />} />
 				</Routes>
 			</BrowserRouter>

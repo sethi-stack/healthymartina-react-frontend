@@ -1,0 +1,290 @@
+// Perfil page styles
+
+.perfil-page {
+	padding: 24px 0;
+
+	&__title {
+		font-family: 'Gilroy-SemiBold', 'Gilroy', sans-serif;
+		font-size: 1.6em;
+		letter-spacing: 1px;
+		color: #3d5652;
+		margin-bottom: 24px;
+	}
+
+	&__card {
+		background: #fff;
+		border-radius: 7px;
+		border: 1px solid #e7e7e7;
+		overflow: hidden;
+	}
+
+	&__content {
+		padding: 28px 32px;
+	}
+}
+
+.perfil-loading {
+	text-align: center;
+	padding: 40px;
+	color: #7a7a7a;
+	font-family: 'Gilroy', sans-serif;
+}
+
+// ─── Tab content ────────────────────────────────────────────────────────────
+
+.perfil-tab {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+}
+
+// ─── Avatar / Logo ───────────────────────────────────────────────────────────
+
+.perfil-avatar-section {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.perfil-avatar {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 2px solid #ded7d7;
+	flex-shrink: 0;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	&__placeholder {
+		width: 100%;
+		height: 100%;
+		background: #f6f6f6;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #bababa;
+		font-size: 2em;
+	}
+
+	&--business {
+		border-radius: 7px;
+	}
+}
+
+.perfil-avatar-actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+// ─── Buttons ─────────────────────────────────────────────────────────────────
+
+.perfil-btn {
+	font-family: 'Gilroy-Medium', 'Gilroy', sans-serif;
+	font-size: 16px;
+	cursor: pointer;
+	background: #fff;
+	border: none;
+	border-radius: 3px;
+	transition: all 0.2s;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	&--outline {
+		min-width: 100px;
+		height: 32px;
+		padding: 0 14px;
+		border: 1px solid #7a7a7a;
+		color: #7a7a7a;
+
+		&:hover {
+			border-color: #dcb244;
+			color: #dcb244;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	&--text {
+		color: #e3342f;
+		padding: 6px 4px;
+		font-size: 14px;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+}
+
+// ─── Forms ───────────────────────────────────────────────────────────────────
+
+.perfil-section-title {
+	font-family: 'Gilroy-SemiBold', 'Gilroy', sans-serif;
+	font-size: 1em;
+	color: #3d5652;
+	margin: 0 0 16px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #e7e7e7;
+}
+
+.perfil-form {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+
+	&--password {
+		margin-top: 4px;
+	}
+
+	&__row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 16px;
+
+		@media (max-width: 580px) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__field {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+
+		label {
+			font-family: 'Gilroy-Medium', 'Gilroy', sans-serif;
+			font-size: 13px;
+			color: #606060;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		input[type='text'],
+		input[type='email'],
+		input[type='password'],
+		input[type='url'],
+		select {
+			width: 100%;
+			padding: 12px 18px;
+			border: 1px solid #7a7a7a;
+			border-radius: 7px;
+			font-family: 'Gilroy-Medium', 'Gilroy', sans-serif;
+			font-size: 1em;
+			color: #606060;
+			background: #fff;
+			outline: none;
+			transition: border-color 0.2s;
+
+			&:focus {
+				border-color: #dcb244;
+				box-shadow: 0 0 0 2px rgba(220, 178, 68, 0.15);
+			}
+		}
+
+		select {
+			cursor: pointer;
+		}
+
+		&--color {
+			max-width: 260px;
+		}
+	}
+
+	&__actions {
+		padding-top: 8px;
+	}
+}
+
+// ─── Color picker ────────────────────────────────────────────────────────────
+
+.perfil-color-picker {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	input[type='color'] {
+		width: 48px;
+		height: 44px;
+		padding: 2px;
+		border: 1px solid #7a7a7a;
+		border-radius: 7px;
+		cursor: pointer;
+		background: #fff;
+	}
+}
+
+.perfil-color-value {
+	font-family: 'Gilroy', sans-serif;
+	font-size: 14px;
+	color: #7a7a7a;
+}
+
+// ─── Preferences ─────────────────────────────────────────────────────────────
+
+.perfil-pref-section {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.perfil-radio-group,
+.perfil-checkbox-group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.perfil-radio,
+.perfil-checkbox {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+
+	input {
+		width: 16px;
+		height: 16px;
+		cursor: pointer;
+		accent-color: #dcb244;
+		// Override global -webkit-appearance: none that hides native checkbox/radio
+		-webkit-appearance: auto;
+		appearance: auto;
+	}
+
+	span {
+		font-family: 'Gilroy-Medium', 'Gilroy', sans-serif;
+		font-size: 15px;
+		color: #7a7a7a;
+	}
+}
+
+// ─── Feedback ────────────────────────────────────────────────────────────────
+
+.perfil-success {
+	font-family: 'Gilroy', sans-serif;
+	font-size: 14px;
+	color: #38c172;
+	margin: 0;
+}
+
+.perfil-error {
+	font-family: 'Gilroy', sans-serif;
+	font-size: 13px;
+	color: #e3342f;
+	margin: 0;
+}
