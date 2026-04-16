@@ -1,5 +1,6 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import { getRecipes, getAdvancedFilteredRecipes } from '../lib/api/recipes';
 import { RecipeCard } from '../components/recipes/RecipeCard';
 import { FiltersPopup } from '../components/recipes/FiltersPopup';
@@ -7,10 +8,38 @@ import { FilterIcon, ResetFilterIcon, BookmarkIcon } from '../components/icons';
 import './Recetario.scss';
 
 export function Recetario() {
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [hasBookmarkFilter, setHasBookmarkFilter] = useState(false);
 	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 	const [appliedFilters, setAppliedFilters] = useState({});
 	const hasActiveFilters = Object.keys(appliedFilters).length > 0;
+
+	useEffect(() => {
+		const includeIngredients = searchParams
+			.getAll('ingrediente_incluir[]')
+			.map((value) => Number(value))
+			.filter(Boolean);
+
+		if (searchParams.get('reset') === '1') {
+			setAppliedFilters({});
+			setHasBookmarkFilter(false);
+			return;
+		}
+
+		if (searchParams.get('filter') === 'true' && includeIngredients.length > 0) {
+			setHasBookmarkFilter(false);
+			setAppliedFilters((current) => {
+				const next = {
+					...current,
+					ingrediente_incluir: includeIngredients,
+				};
+
+				return JSON.stringify(current.ingrediente_incluir) === JSON.stringify(next.ingrediente_incluir)
+					? current
+					: next;
+			});
+		}
+	}, [searchParams]);
 
 	const {
 		data,
@@ -64,6 +93,7 @@ export function Recetario() {
 	};
 
 	const handleResetFilter = () => {
+		setSearchParams({});
 		setAppliedFilters({});
 		setHasBookmarkFilter(false);
 	};

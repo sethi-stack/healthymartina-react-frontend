@@ -5,6 +5,7 @@ import {
 	CalendarioIcon,
 	ListaIcon,
 	PlanesIcon,
+	CartIcon,
 	SearchIcon,
 } from '../icons';
 import Modal from '../calendar/Modal';
@@ -16,10 +17,10 @@ import './AuthenticatedNav.scss';
  */
 export function AuthenticatedNav({
 	permissions = {},
-	onSearch,
 	searchData = { recipes: [], ingredients: [], calendars: [] },
 }) {
 	const [searchOpen, setSearchOpen] = useState(false);
+	const [searchTerm, setSearchTerm] = useState('');
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -35,36 +36,90 @@ export function AuthenticatedNav({
 
 	const toggleSearch = (e) => {
 		e.preventDefault();
-		setSearchOpen(!searchOpen);
+		setSearchOpen((prev) => !prev);
+		if (!searchOpen) {
+			setSearchTerm('');
+		}
 	};
 
 	const handleCloseSearch = () => {
 		setSearchOpen(false);
+		setSearchTerm('');
 	};
 
-	const handleSearchSelect = (e) => {
-		const selectedOption = e.target.options[e.target.selectedIndex];
-		const value = e.target.value;
-		const type = selectedOption.getAttribute('data-type');
-		const name = selectedOption.text;
+	const normalizeSearchValue = (value) => {
+		return String(value ?? '').toLowerCase().trim();
+	};
 
-		// Logic migrated from search.js
-		if (name) {
-			if (type === 'calendar') {
-				// Calendar route not yet implemented in React, use full page reload
-				window.location.href = `/calendario?id=${value}`;
-			} else if (type === 'ingredient') {
-				// Use React Router for recetario route
-				const params = new URLSearchParams();
-				params.append('filter', 'true');
-				params.append('ingrediente_incluir[]', value);
-				navigate(`/recetario?${params.toString()}`);
-				handleCloseSearch();
-			} else {
-				// Recipe route not yet implemented in React, use full page reload
-				window.location.href = `/receta/${value}`;
-			}
+	const matchesSearch = (text) => {
+		if (!searchTerm.trim()) return true;
+		return normalizeSearchValue(text).includes(normalizeSearchValue(searchTerm));
+	};
+
+	const filteredRecipes = (searchData.recipes || []).filter((item) =>
+		matchesSearch(item?.titulo || item?.title || item?.slug)
+	);
+	const filteredIngredients = (searchData.ingredients || []).filter((item) =>
+		matchesSearch(item?.nombre)
+	);
+	const filteredCalendars = (searchData.calendars || []).filter((item) =>
+		matchesSearch(item?.title || item?.nombre)
+	);
+
+	const handleSearchResult = (type, item) => {
+		if (!item) return;
+
+		handleCloseSearch();
+
+		if (type === 'calendar') {
+			navigate(`/calendario?id=${item.id}`);
+			return;
 		}
+
+		if (type === 'ingredient') {
+			const params = new URLSearchParams();
+			params.append('filter', 'true');
+			params.append('ingrediente_incluir[]', item.id);
+			navigate(`/recetario?${params.toString()}`);
+			return;
+		}
+
+		navigate(`/receta/${item.slug}`);
+	};
+
+	const renderSearchItem = (type, item) => {
+		const icon =
+			type === 'recipe' ? (
+				<RecetarioIcon />
+			) : type === 'ingredient' ? (
+				<CartIcon />
+			) : (
+				<CalendarioIcon />
+			);
+
+		const title =
+			type === 'recipe'
+				? item?.titulo
+				: type === 'ingredient'
+					? item?.nombre
+					: item?.title;
+
+		return (
+			<button
+				key={`${type}-${item.id}`}
+				type='button'
+				className='search-popup__result'
+				onClick={() => handleSearchResult(type, item)}
+			>
+				<span className='search-popup__result-icon'>{icon}</span>
+				<span className='search-popup__result-body'>
+					<span className='search-popup__result-title'>{title}</span>
+					<span className='search-popup__result-type'>
+						{type === 'recipe' ? 'Receta' : type === 'ingredient' ? 'Ingrediente' : 'Calendario'}
+					</span>
+				</span>
+			</button>
+		);
 	};
 
 	return (
@@ -139,52 +194,70 @@ export function AuthenticatedNav({
 					title='Buscador'
 					className='buscador search-popup-buscadr'
 					dataModal='search'
+					width={740}
 				>
-					<form
-						className='search-popup__form hm-form'
-						onSubmit={(e) => e.preventDefault()}
-					>
-						<div
-							className='slide-indicadores slide-active s-a bigdrop'
-							id='bigdrop'
-						>
-							<select
-								className='search-select search-popup__select'
-								multiple={false}
-								onChange={handleSearchSelect}
-								size={10}
-							>
-								{searchData.recipes?.map((recipe) => (
-									<option
-										key={`recipe-${recipe.slug}`}
-										className='recipe-search'
-										data-type='recipe'
-										value={recipe.slug}
-									>
-										{recipe.titulo}
-									</option>
-								))}
-								{searchData.ingredients?.map((ingredient) => (
-									<option
-										key={`ingredient-${ingredient.id}`}
-										className='ingredient-search'
-										data-type='ingredient'
-										value={ingredient.id}
-									>
-										{ingredient.nombre}
-									</option>
-								))}
-								{searchData.calendars?.map((calendar) => (
-									<option
-										key={`calendar-${calendar.id}`}
-										className='calendar-search'
-										data-type='calendar'
-										value={calendar.id}
-									>
-										{calendar.title}
-									</option>
-								))}
-							</select>
+					<form className='search-popup__form hm-form' onSubmit={(e) => e.preventDefault()}>
+						<div className='search-popup__field'>
+							<input
+								type='text'
+								className='search-popup__input'
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
+								placeholder='Busca recetas, ingredientes o calendarios'
+								autoComplete='off'
+							/>
+						</div>
+
+						<div className='search-popup__results'>
+							{filteredRecipes.length === 0 &&
+							filteredIngredients.length === 0 &&
+							filteredCalendars.length === 0 ? (
+								<p className='search-popup__empty'>
+									No encontramos resultados para esa búsqueda.
+								</p>
+							) : (
+								<>
+									{filteredRecipes.length > 0 && (
+										<section className='search-popup__group'>
+											<h4 className='search-popup__group-title'>
+												<RecetarioIcon />
+												Recetas
+											</h4>
+											<div className='search-popup__group-list'>
+												{filteredRecipes.map((item) => renderSearchItem('recipe', item))}
+											</div>
+										</section>
+									)}
+
+									{filteredIngredients.length > 0 && (
+										<section className='search-popup__group'>
+											<h4 className='search-popup__group-title'>
+												<CartIcon />
+												Ingredientes
+											</h4>
+											<div className='search-popup__group-list'>
+												{filteredIngredients.map((item) =>
+													renderSearchItem('ingredient', item)
+												)}
+											</div>
+										</section>
+									)}
+
+									{filteredCalendars.length > 0 && (
+										<section className='search-popup__group'>
+											<h4 className='search-popup__group-title'>
+												<CalendarioIcon />
+												Calendarios
+											</h4>
+											<div className='search-popup__group-list'>
+												{filteredCalendars.map((item) =>
+													renderSearchItem('calendar', item)
+												)}
+											</div>
+										</section>
+									)}
+								</>
+							)}
 						</div>
 					</form>
 				</Modal>

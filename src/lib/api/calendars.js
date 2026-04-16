@@ -149,16 +149,25 @@ export const getCalendarNutrition = async (calendarId, dayId) => {
  * @param {Object} data - Export data
  * @param {number} data.calendar - Calendar ID
  * @param {Array<number>} data.export_param - Export options [1=calendar, 2=lista, 3=notes, 4=nutrition]
- * @param {Array<number>} data.receta1 - Recipe IDs to include
- * @param {number} data.receta_cover - Cover recipe ID (optional)
- * @param {string} data.content - Template content (optional)
- * @param {boolean} data.leftover - Include leftovers (optional)
+ * @param {number} data.hero_recipe_id - Hero/cover recipe ID (optional)
+ * @param {Array<number>} data.selected_recipes - Recipe IDs to include as full recipe pages (optional)
+ * @param {string} data.template - PDF template name (`classic`, `modern`, or `bold`)
  * @returns {Promise<Blob>} - PDF blob
  */
 export const exportCalendarPdf = async (data) => {
 	const response = await apiClient.post('/calendars/export/pdf', data, {
 		responseType: 'blob',
 	});
+	return response.data;
+};
+
+/**
+ * Email calendar as PDF
+ * @param {Object} data - Export data
+ * @returns {Promise<Object>} - Response
+ */
+export const sendCalendarPdfEmail = async (data) => {
+	const response = await apiClient.post('/calendars/export/pdf/email', data);
 	return response.data;
 };
 
@@ -295,4 +304,3 @@ export const sendListaEmail = async (calendarId, email) => {
 	});
 	return response.data;
 };
-
