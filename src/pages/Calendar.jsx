@@ -84,6 +84,18 @@ export default function Calendar() {
 		}
 	}, [selectedCalendarId, setSearchParams]);
 
+	// Keep global selected calendar store in sync with the currently active calendar.
+	// This prevents add-to-calendar flows outside this page from using a stale calendar ID.
+	useEffect(() => {
+		if (!selectedCalendarId || !calendarsData?.data?.length) return;
+		const activeCalendar = calendarsData.data.find(
+			(c) => c.id === selectedCalendarId
+		);
+		if (activeCalendar) {
+			setSelectedCalendar(activeCalendar.id, activeCalendar.title || '');
+		}
+	}, [selectedCalendarId, calendarsData, setSelectedCalendar]);
+
 	// Create calendar mutation
 	const createMutation = useMutation({
 		mutationFn: (data) => createCalendar(data),

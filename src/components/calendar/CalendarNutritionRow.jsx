@@ -111,6 +111,8 @@ function NutritionDayColumn({
 		queryFn: () => getCalendarNutrition(calendarId, dayKey),
 		enabled: !!calendarId && !!dayKey,
 		retry: false, // Don't retry on error, use defaults
+		staleTime: 10 * 60 * 1000,
+		refetchOnMount: false,
 	});
 
 	// Parse nutrition data - handle both array format and object format

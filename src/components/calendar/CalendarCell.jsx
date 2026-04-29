@@ -95,9 +95,19 @@ export default function CalendarCell({
 	// Delete mutation
 	const deleteMutation = useMutation({
 		mutationFn: (data) => removeRecipeFromCalendar(calendarId, data),
-		onSuccess: () => {
-			queryClient.invalidateQueries(['calendar', calendarId]);
-			queryClient.invalidateQueries(['calendars']);
+		onSuccess: (response) => {
+			const updatedCalendar =
+				response?.calendar?.data || response?.calendar || null;
+			if (updatedCalendar) {
+				queryClient.setQueryData(['calendar', calendarId], {
+					data: updatedCalendar,
+				});
+			} else {
+				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
+			}
+			queryClient.invalidateQueries({
+				queryKey: ['calendar-nutrition', calendarId],
+			});
 		},
 		onError: (error) => {
 			console.error('Error removing recipe:', error);

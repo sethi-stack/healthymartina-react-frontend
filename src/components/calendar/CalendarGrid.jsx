@@ -17,8 +17,6 @@ export default function CalendarGrid({ calendar }) {
 	const [labelType, setLabelType] = useState(null); // 'days' or 'meals'
 	const [selectedLabelKey, setSelectedLabelKey] = useState(null);
 
-	// Debug: Log calendar data to see what we're getting
-	console.log('Calendar data:', calendar);
 
 	// Parse calendar data - handle both API resource format and direct model format
 	const labels = calendar.labels
@@ -124,12 +122,6 @@ export default function CalendarGrid({ calendar }) {
 		? labels.meals 
 		: defaultMeals;
 
-	// Debug parsed data
-	console.log('Parsed labels:', labels);
-	console.log('Days:', days);
-	console.log('Meals:', meals);
-	console.log('Main schedule:', mainSchedule);
-
 	// Get all recipe IDs to fetch recipe details
 	const allRecipeIds = new Set();
 	Object.values(mainSchedule).forEach((day) => {
@@ -146,10 +138,11 @@ export default function CalendarGrid({ calendar }) {
 	// Fetch all recipe details
 	const recipeQueries = useQueries({
 		queries: Array.from(allRecipeIds).map((recipeId) => ({
-			queryKey: ['recipe', recipeId],
+			queryKey: ['recipe', 'id', recipeId],
 			queryFn: () => getRecipe(recipeId),
-			staleTime: 5 * 60 * 1000, // 5 minutes
+			staleTime: 10 * 60 * 1000,
 			enabled: !!recipeId,
+			refetchOnMount: false,
 		})),
 	});
 
@@ -288,4 +281,3 @@ export default function CalendarGrid({ calendar }) {
 		</div>
 	);
 }
-

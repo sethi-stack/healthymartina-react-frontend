@@ -54,16 +54,20 @@ export default function UpdateMealModal({
 
 	// Fetch main recipe if ID exists
 	const { data: mainRecipeData } = useQuery({
-		queryKey: ['recipe', mainRecipeId],
+		queryKey: ['recipe', 'id', mainRecipeId],
 		queryFn: () => getRecipe(mainRecipeId),
 		enabled: !!mainRecipeId,
+		staleTime: 10 * 60 * 1000,
+		refetchOnMount: false,
 	});
 
 	// Fetch side recipe if ID exists
 	const { data: sideRecipeData } = useQuery({
-		queryKey: ['recipe', sideRecipeId],
+		queryKey: ['recipe', 'id', sideRecipeId],
 		queryFn: () => getRecipe(sideRecipeId),
 		enabled: !!sideRecipeId,
+		staleTime: 10 * 60 * 1000,
+		refetchOnMount: false,
 	});
 
 	// Set initial recipe data when fetched
@@ -79,12 +83,46 @@ export default function UpdateMealModal({
 		}
 	}, [sideRecipeData]);
 
+	// In update mode, preselect all days where the same main recipe is currently assigned
+	// for the selected meal. This allows unchecking days to remove that assignment.
+	useEffect(() => {
+		if (!mainRecipe?.id) return;
+		const assignedDays = Object.entries(mainSchedule || {})
+			.filter(([, meals]) => meals?.[selectedMealKey] === mainRecipe.id)
+			.map(([dayKeyFromSchedule]) => dayKeyFromSchedule);
+		setMainSelectedDays(
+			assignedDays.length > 0 ? assignedDays : [dayKey]
+		);
+	}, [mainRecipe?.id, mainSchedule, selectedMealKey, dayKey]);
+
+	// In update mode, preselect all days where the same side recipe is currently assigned
+	// for the selected meal. This allows unchecking days to remove that assignment.
+	useEffect(() => {
+		if (!sideRecipe?.id) return;
+		const assignedDays = Object.entries(sidesSchedule || {})
+			.filter(([, meals]) => meals?.[selectedMealKey] === sideRecipe.id)
+			.map(([dayKeyFromSchedule]) => dayKeyFromSchedule);
+		setSideSelectedDays(
+			assignedDays.length > 0 ? assignedDays : [dayKey]
+		);
+	}, [sideRecipe?.id, sidesSchedule, selectedMealKey, dayKey]);
+
 	// Update mutation
 	const updateRecipeMutation = useMutation({
 		mutationFn: (data) => updateRecipeInCalendar(calendarId, data),
-		onSuccess: () => {
-			queryClient.invalidateQueries(['calendar', calendarId]);
-			queryClient.invalidateQueries(['calendars']);
+		onSuccess: (response) => {
+			const updatedCalendar =
+				response?.calendar?.data || response?.calendar || null;
+			if (updatedCalendar) {
+				queryClient.setQueryData(['calendar', calendarId], {
+					data: updatedCalendar,
+				});
+			} else {
+				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
+			}
+			queryClient.invalidateQueries({
+				queryKey: ['calendar-nutrition', calendarId],
+			});
 			onClose();
 		},
 		onError: (error) => {

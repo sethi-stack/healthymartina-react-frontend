@@ -42,7 +42,7 @@ export default function DaysSelector({ selectedRecipeId, mealType = 'main', meal
 					// Same recipe exists - can update
 					return {
 						enabled: true,
-						checked: true,
+						checked: isUpdateMode ? selectedDays.includes(dayKey) : true,
 					};
 				}
 
@@ -76,7 +76,7 @@ export default function DaysSelector({ selectedRecipeId, mealType = 'main', meal
 					// Same side recipe exists - can update
 					return {
 						enabled: true,
-						checked: true,
+						checked: isUpdateMode ? selectedDays.includes(dayKey) : true,
 					};
 				}
 
@@ -87,7 +87,15 @@ export default function DaysSelector({ selectedRecipeId, mealType = 'main', meal
 				};
 			}
 		},
-		[selectedRecipeId, mealType, mealKey, mainSchedule, sidesSchedule, selectedDays]
+		[
+			selectedRecipeId,
+			mealType,
+			mealKey,
+			mainSchedule,
+			sidesSchedule,
+			selectedDays,
+			isUpdateMode,
+		]
 	);
 
 	// Get enabled days count for validation

@@ -28,10 +28,19 @@ export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, meal
 	// Mutation for adding recipe
 	const addRecipeMutation = useMutation({
 		mutationFn: (data) => addRecipeToCalendar(calendarId, data),
-		onSuccess: () => {
-			// Invalidate and refetch calendar data
-			queryClient.invalidateQueries(['calendar', calendarId]);
-			queryClient.invalidateQueries(['calendars']);
+		onSuccess: (response) => {
+			const updatedCalendar =
+				response?.calendar?.data || response?.calendar || null;
+			if (updatedCalendar) {
+				queryClient.setQueryData(['calendar', calendarId], {
+					data: updatedCalendar,
+				});
+			} else {
+				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
+			}
+			queryClient.invalidateQueries({
+				queryKey: ['calendar-nutrition', calendarId],
+			});
 			onClose();
 		},
 		onError: (error) => {
