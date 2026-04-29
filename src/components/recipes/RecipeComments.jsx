@@ -146,16 +146,16 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 				<h3>Comentarios</h3>
 				<div className='right'>
 					<p>{comments.length} Comentarios</p>
-					<a
+					<button
+						type='button'
 						className='add-new-comment'
-						href='#'
 						onClick={(e) => {
 							e.preventDefault();
 							handleAddComment();
 						}}
 					>
 						Agregar comentario
-					</a>
+					</button>
 				</div>
 			</div>
 			<div id='recipe-data' data-recipe={recipeId}></div>

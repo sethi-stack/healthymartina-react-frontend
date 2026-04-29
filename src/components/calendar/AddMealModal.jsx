@@ -14,15 +14,15 @@ import { addRecipeToCalendar } from '../../lib/api/calendars';
  * Based on calendario-planificador.blade.php lines 445-517
  * and general.js lines 782-808, 870-952
  */
-export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, mealKey, mealName, mainSchedule, sidesSchedule, dayLabels, mealLabels, onClose }) {
+export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, mealKey, mealName, mainSchedule, sidesSchedule, dayLabels, mealLabels, onClose, initialRecipe = null }) {
 	const queryClient = useQueryClient();
 
 	// Form state
-	const [selectedRecipe, setSelectedRecipe] = useState(null);
+	const [selectedRecipe, setSelectedRecipe] = useState(initialRecipe);
 	const [servings, setServings] = useState(2);
 	const [isLeftover, setIsLeftover] = useState(false);
 	const [selectedDays, setSelectedDays] = useState([dayKey]);
-	const [showRecipeList, setShowRecipeList] = useState(true);
+	const [showRecipeList, setShowRecipeList] = useState(!initialRecipe);
 	const [selectedMealKey, setSelectedMealKey] = useState(mealKey); // tracks Tiempos selection
 
 	// Mutation for adding recipe

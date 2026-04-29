@@ -655,7 +655,8 @@
 					margin: 0;
 				}
 
-				a {
+				a,
+				button.add-new-comment {
 					color: #fff;
 					background-color: #dcb244;
 					border: 1px solid #dcb244;
@@ -664,6 +665,10 @@
 					text-transform: uppercase;
 					text-decoration: none;
 					border-radius: 5px;
+					font-family: inherit;
+					font-size: inherit;
+					line-height: 1.2;
+					cursor: pointer;
 
 					&:hover {
 						color: #dcb244;
@@ -824,11 +829,12 @@
 
 	.container-popup {
 		width: 550px;
+		max-width: calc(100vw - 32px);
 		background-color: #fff;
 		border: 3px solid #dcb244;
 		border-radius: 25px;
 		position: relative;
-		padding: 15px 0;
+		padding: 18px 0 24px;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
@@ -868,9 +874,9 @@
 			text-transform: uppercase;
 			font-weight: 400;
 			letter-spacing: 1px;
-			padding-bottom: 10px;
+			padding-bottom: 12px;
 			width: 100%;
-			margin: 0 2.5%;
+			margin: 0 28px;
 
 			&.response-to {
 				text-transform: initial;
@@ -900,8 +906,10 @@
 		}
 
 		form {
-			width: 95%;
-			margin: 0 auto;
+			width: 100%;
+			margin: 8px auto 0;
+			padding: 0 28px;
+			box-sizing: border-box;
 
 			textarea.comment {
 				width: 100%;
@@ -909,11 +917,15 @@
 				font-size: 16px;
 				font-family: 'Gilroy-Medium' !important;
 				color: #7a7a7a;
-				padding: 10px;
+				padding: 14px 20px 14px 14px;
+				line-height: 1.45;
+				box-sizing: border-box;
 				border-radius: 10px;
 				border: 1px solid #7a7a7a;
-				margin-top: 10px;
+				margin-top: 8px;
 				resize: vertical;
+				overflow-y: auto;
+				display: block;
 
 				&:focus {
 					outline: none !important;
@@ -924,8 +936,8 @@
 
 			input[type='submit'].send-comment {
 				width: 100%;
-				padding: 15px 0;
-				margin-top: 20px;
+				padding: 16px 0;
+				margin-top: 18px;
 				background-color: #dcb244;
 				color: #fff;
 				border: 2px solid #dcb244;

@@ -1,7 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { getRecipes, getAdvancedFilteredRecipes } from '../lib/api/recipes';
+import { getCalendar, getCalendars } from '../lib/api/calendars';
+import AddMealModal from '../components/calendar/AddMealModal';
+import { useCalendarStore } from '../stores/calendarStore';
 import { RecipeCard } from '../components/recipes/RecipeCard';
 import { FiltersPopup } from '../components/recipes/FiltersPopup';
 import { FilterIcon, ResetFilterIcon, BookmarkIcon } from '../components/icons';
@@ -12,7 +15,47 @@ export function Recetario() {
 	const [hasBookmarkFilter, setHasBookmarkFilter] = useState(false);
 	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 	const [appliedFilters, setAppliedFilters] = useState({});
+	const [showAddMealModal, setShowAddMealModal] = useState(false);
+	const [selectedRecipeForCalendar, setSelectedRecipeForCalendar] = useState(null);
+	const selectedCalendarIdFromStore = useCalendarStore(
+		(state) => state.selectedCalendarId
+	);
+	const setSelectedCalendar = useCalendarStore((state) => state.setSelectedCalendar);
 	const hasActiveFilters = Object.keys(appliedFilters).length > 0;
+
+	const { data: calendarsData } = useQuery({
+		queryKey: ['calendars'],
+		queryFn: () => getCalendars(),
+		staleTime: 5 * 60 * 1000,
+	});
+
+	const calendars = calendarsData?.data || [];
+	const hasStoredCalendarInList = calendars.some(
+		(calendar) => calendar.id === selectedCalendarIdFromStore
+	);
+	const activeCalendarId = hasStoredCalendarInList
+		? selectedCalendarIdFromStore
+		: calendars?.[0]?.id || null;
+
+	useEffect(() => {
+		if (!activeCalendarId) return;
+		if (selectedCalendarIdFromStore !== activeCalendarId) {
+			const activeCalendar = calendars.find((c) => c.id === activeCalendarId);
+			setSelectedCalendar(activeCalendarId, activeCalendar?.title || '');
+		}
+	}, [
+		activeCalendarId,
+		selectedCalendarIdFromStore,
+		calendars,
+		setSelectedCalendar,
+	]);
+
+	const { data: activeCalendarData } = useQuery({
+		queryKey: ['calendar', activeCalendarId],
+		queryFn: () => getCalendar(activeCalendarId),
+		enabled: !!activeCalendarId,
+		staleTime: 60 * 1000,
+	});
 
 	useEffect(() => {
 		const includeIngredients = searchParams
@@ -84,8 +127,12 @@ export function Recetario() {
 	);
 
 	const handleAddToCalendar = (recipe) => {
-		console.log('Add to calendar:', recipe);
-		// Implement popup logic later
+		if (!activeCalendarId) {
+			alert('No hay calendarios disponibles. Crea uno primero.');
+			return;
+		}
+		setSelectedRecipeForCalendar(recipe);
+		setShowAddMealModal(true);
 	};
 
 	const handleFilterClick = () => {
@@ -109,6 +156,39 @@ export function Recetario() {
 	const recipes = data?.pages.flatMap((page) => page.data) || [];
 	const totalRecipes =
 		data?.pages[0]?.meta?.total || data?.pages[0]?.total || 0;
+	const calendar = activeCalendarData?.data || activeCalendarData;
+
+	const parseSchedule = (value) => {
+		if (!value) return {};
+		if (typeof value === 'string') {
+			try {
+				return JSON.parse(value);
+			} catch (_e) {
+				return {};
+			}
+		}
+		return value;
+	};
+
+	const labels = parseSchedule(calendar?.labels);
+	const mainSchedule = parseSchedule(calendar?.main_schedule);
+	const sidesSchedule = parseSchedule(calendar?.sides_schedule);
+	const dayLabels = labels.days || {
+		day_1: 'Lunes',
+		day_2: 'Martes',
+		day_3: 'Miércoles',
+		day_4: 'Jueves',
+		day_5: 'Viernes',
+		day_6: 'Sábado',
+		day_7: 'Domingo',
+	};
+	const mealLabels = labels.meals || {
+		meal_1: 'Desayuno',
+		meal_2: 'Snack AM',
+		meal_3: 'Almuerzo',
+		meal_4: 'Snack PM',
+		meal_5: 'Cena',
+	};
 
 	return (
 		<div id='application'>
@@ -197,6 +277,25 @@ export function Recetario() {
 					onClose={() => setIsFiltersOpen(false)}
 					onApplyFilters={handleApplyFilters}
 					initialFilters={appliedFilters}
+				/>
+			)}
+			{showAddMealModal && selectedRecipeForCalendar && activeCalendarId && (
+				<AddMealModal
+					calendarId={activeCalendarId}
+					dayNum={1}
+					dayKey='day_1'
+					mealNum={1}
+					mealKey='meal_1'
+					mealName={mealLabels.meal_1 || 'Desayuno'}
+					mainSchedule={mainSchedule}
+					sidesSchedule={sidesSchedule}
+					dayLabels={dayLabels}
+					mealLabels={mealLabels}
+					initialRecipe={selectedRecipeForCalendar}
+					onClose={() => {
+						setShowAddMealModal(false);
+						setSelectedRecipeForCalendar(null);
+					}}
 				/>
 			)}
 		</div>

@@ -31,6 +31,18 @@ export const getRecipeBySlug = async (slug) => {
 };
 
 /**
+ * Export recipe as PDF
+ * @param {number} recipeId - Recipe ID
+ * @returns {Promise<Blob>} - PDF blob
+ */
+export const exportRecipePdf = async (recipeId) => {
+	const response = await apiClient.get(`/recipes/${recipeId}/pdf`, {
+		responseType: 'blob',
+	});
+	return response.data;
+};
+
+/**
  * Add or update reaction to a recipe
  * @param {number} recipeId - Recipe ID
  * @param {boolean} isLike - true for like, false for dislike
