@@ -3,6 +3,7 @@ $border-line-lighter: #e0e0e0;
 $individual: #dcb244;
 
 .lista-json {
+	position: relative;
 	border: none !important;
 
 	.lista-calendar-inner {
@@ -17,7 +18,8 @@ $individual: #dcb244;
 	}
 
 	.indicador .right p {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
 	}
 
 	.indicador .right p img {
@@ -72,6 +74,22 @@ $individual: #dcb244;
 			font-size: 16px;
 			text-align: center;
 		}
+	}
+}
+
+.page-loading-overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(255, 255, 255, 0.55);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 30;
+	pointer-events: all;
+
+	.loader img {
+		width: 48px;
+		height: 48px;
 	}
 }
 

@@ -1,8 +1,7 @@
 @import '../../assets/scss/tokens';
 
 .ingredient-item {
-	display: flex;
-	align-items: center;
+	display: block;
 	padding: 8px 0;
 	position: relative;
 
@@ -25,15 +24,16 @@
 	}
 }
 
-.ingredient-checkbox {
+.ingredient-item .ingredient-checkbox.checkbox-label {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: 12px;
 	width: 100%;
-	cursor: pointer;
-	user-select: none;
-	position: relative;
-	padding-left: 30px;
+	height: auto !important;
+	min-height: 24px;
+	margin: 0;
+	padding: 0 60px 0 28px;
+	line-height: normal;
 
 	.checkbox-input {
 		position: absolute;
@@ -42,35 +42,18 @@
 		height: 0;
 	}
 
-	.checkbox {
-		position: absolute;
+	.checkmark {
+		top: 2px;
 		left: 0;
-		width: 20px;
-		height: 20px;
-		border: 1px solid $color-primary;
-		border-radius: 3px;
-		flex-shrink: 0;
-
-		&:after {
-			content: '\F00C';
-			font-family: 'Font Awesome 5 Free';
-			font-weight: 900;
-			font-size: 11px;
-			color: #fff;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			opacity: 0;
-		}
 	}
 
-	.checkbox-input:checked ~ .checkbox {
-		background-color: $color-primary;
-
-		&:after {
-			opacity: 1;
-		}
+	.ingredient-text {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		min-width: 0;
+		flex: 1;
+		width: calc(100% - 20px);
 	}
 
 	.ingredient-quantity {
@@ -78,17 +61,24 @@
 		font-size: $font-size-sm;
 		font-weight: 900;
 		color: $color-text;
-		flex-shrink: 0;
 		white-space: nowrap;
+		line-height: 1.3;
+		flex-shrink: 0;
 	}
 
 	.ingredient-name {
+		display: block;
 		font-family: $font-family-bold;
 		font-size: $font-size-sm;
 		font-weight: 900;
 		color: $color-text;
+		line-height: 1.3;
+		white-space: normal;
+		overflow-wrap: break-word;
+		word-break: normal;
+		hyphens: auto;
+		min-width: 0;
 		flex: 1;
-		padding-right: 60px;
 	}
 }
 
@@ -145,14 +135,12 @@
 		opacity: 1;
 	}
 
-	.ingredient-checkbox {
+	.ingredient-checkbox.checkbox-label {
+		padding-right: 50px;
+
 		.ingredient-quantity,
 		.ingredient-name {
 			font-size: 13px;
-		}
-
-		.ingredient-name {
-			padding-right: 50px;
 		}
 	}
 }

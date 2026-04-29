@@ -230,6 +230,7 @@ export default function Lista() {
 	const {
 		data: calendarsData,
 		isLoading: calendarsLoading,
+		isFetching: calendarsFetching,
 		error: calendarsError,
 	} = useQuery({
 		queryKey: ['calendars'],
@@ -242,6 +243,7 @@ export default function Lista() {
 	const {
 		data: listaData,
 		isLoading: listaLoading,
+		isFetching: listaFetching,
 		error: listaError,
 	} = useQuery({
 		queryKey: ['lista-all', selectedCalendarId],
@@ -289,10 +291,88 @@ export default function Lista() {
 					Promise.resolve({
 						success: true,
 						message: 'Toggled (mock)',
+						action: 'created',
+						taken_ingredients: [],
 					})
 			: (data) => toggleIngredientTaken(selectedCalendarId, data),
-		onSuccess: () => {
-			queryClient.invalidateQueries(['lista-all', selectedCalendarId]);
+		onMutate: async (variables) => {
+			// Prevent refetch race and apply optimistic checkbox change immediately.
+			await queryClient.cancelQueries({
+				queryKey: ['lista-all', selectedCalendarId],
+			});
+
+			const previousListaData = queryClient.getQueryData([
+				'lista-all',
+				selectedCalendarId,
+			]);
+
+			queryClient.setQueryData(['lista-all', selectedCalendarId], (current) => {
+				if (!current) return current;
+
+				const base = current.data ? current.data : current;
+				const taken =
+					base.taken_ingredients || base.taken_ingredientes || [];
+
+				const exists = taken.some(
+					(item) =>
+						Number(item.ingrediente_id) === Number(variables.ingredientId) &&
+						Number(item.categoria_id) === Number(variables.categoryId) &&
+						item.ingrediente_type === variables.type
+				);
+
+				const updatedTaken = exists
+					? taken.filter(
+							(item) =>
+								!(
+									Number(item.ingrediente_id) ===
+										Number(variables.ingredientId) &&
+									Number(item.categoria_id) ===
+										Number(variables.categoryId) &&
+									item.ingrediente_type === variables.type
+								)
+					  )
+					: [
+							...taken,
+							{
+								calendario_id: selectedCalendarId,
+								categoria_id: variables.categoryId,
+								ingrediente_id: variables.ingredientId,
+								ingrediente_type: variables.type,
+							},
+					  ];
+
+				const updatedBase = {
+					...base,
+					taken_ingredients: updatedTaken,
+				};
+
+				return current.data ? { ...current, data: updatedBase } : updatedBase;
+			});
+
+			return { previousListaData };
+		},
+		onSuccess: (response) => {
+			// Keep cache aligned with backend authoritative taken list when provided.
+			if (response?.taken_ingredients) {
+				queryClient.setQueryData(['lista-all', selectedCalendarId], (current) => {
+					if (!current) return current;
+					const base = current.data ? current.data : current;
+					const updatedBase = {
+						...base,
+						taken_ingredients: response.taken_ingredients,
+					};
+					return current.data ? { ...current, data: updatedBase } : updatedBase;
+				});
+			}
+		},
+		onError: (_error, _variables, context) => {
+			// Rollback optimistic update on failure.
+			if (context?.previousListaData) {
+				queryClient.setQueryData(
+					['lista-all', selectedCalendarId],
+					context.previousListaData
+				);
+			}
 		},
 	});
 
@@ -310,7 +390,11 @@ export default function Lista() {
 			queryClient.invalidateQueries(['lista-all', selectedCalendarId]);
 			setShowAddModal(false);
 			setSelectedCategoryId(null);
-			alert('Ingrediente agregado (mock data)');
+			alert(
+				USE_MOCK_DATA
+					? 'Ingrediente agregado (mock data)'
+					: 'Ingrediente agregado exitosamente'
+			);
 		},
 	});
 
@@ -322,12 +406,20 @@ export default function Lista() {
 						success: true,
 						message: 'Updated (mock)',
 					})
-			: ({ id, data }) => updateListaIngredient(id, data),
+			: ({ id, data }) =>
+					updateListaIngredient(id, {
+						...data,
+						calendarId: selectedCalendarId,
+					}),
 		onSuccess: () => {
 			queryClient.invalidateQueries(['lista-all', selectedCalendarId]);
 			setShowEditModal(false);
 			setSelectedIngredient(null);
-			alert('Ingrediente actualizado (mock data)');
+			alert(
+				USE_MOCK_DATA
+					? 'Ingrediente actualizado (mock data)'
+					: 'Ingrediente actualizado exitosamente'
+			);
 		},
 	});
 
@@ -339,27 +431,32 @@ export default function Lista() {
 						success: true,
 						message: 'Deleted (mock)',
 					})
-			: (id) => deleteListaIngredient(id),
+			: (id) => deleteListaIngredient(selectedCalendarId, id),
 		onSuccess: () => {
 			queryClient.invalidateQueries(['lista-all', selectedCalendarId]);
 			setShowDeleteModal(false);
 			setSelectedIngredient(null);
-			alert('Ingrediente eliminado (mock data)');
+			alert(
+				USE_MOCK_DATA
+					? 'Ingrediente eliminado (mock data)'
+					: 'Ingrediente eliminado exitosamente'
+			);
 		},
 	});
 
 	// Email mutation
 	const emailMutation = useMutation({
 		mutationFn: USE_MOCK_DATA
-			? (email) =>
+			? (payload) =>
 					Promise.resolve({
 						success: true,
 						message: 'Email sent (mock)',
 					})
-			: (email) => sendListaEmail(selectedCalendarId, email),
+			: (payload) => sendListaEmail(selectedCalendarId, payload),
 	});
 
 	const handleToggleIngredient = (ingredientId, categoryId, type) => {
+		if (toggleMutation.isPending) return;
 		toggleMutation.mutate({
 			ingredientId,
 			categoryId,
@@ -406,8 +503,12 @@ export default function Lista() {
 	};
 
 	const handleSendEmail = async (email) => {
+		const flatListaIngredients = Object.values(rawIngredients || {}).flat();
 		try {
-			await emailMutation.mutateAsync(email);
+			await emailMutation.mutateAsync({
+				email,
+				listaIngredients: flatListaIngredients,
+			});
 			alert(
 				USE_MOCK_DATA
 					? 'Email enviado exitosamente (mock data)'
@@ -472,7 +573,9 @@ export default function Lista() {
 	// Handle both API field names: categories/categorias
 	const categories = listaContent.categories || listaContent.categorias || [];
 	const rawIngredients = listaContent.ingredients || {};
-	const takenIngredients = listaContent.taken_ingredientes || [];
+	const takenIngredients =
+		listaContent.taken_ingredients || listaContent.taken_ingredientes || [];
+	const customItems = listaContent.custom_items || [];
 
 	// Scale an ingredient's cantidad by its servings/porcion ratio.
 	// Subrecipe ingredients store the servings factor in get_servings and use
@@ -545,6 +648,21 @@ export default function Lista() {
 		return acc;
 	}, {});
 
+	// Merge custom/manual items into category ingredient buckets so they render in-grid.
+	customItems.forEach((item) => {
+		const categoryId = String(item.categoria_id || item.categoria);
+		if (!ingredients[categoryId]) {
+			ingredients[categoryId] = [];
+		}
+		ingredients[categoryId].push({
+			...item,
+			id: item.id,
+			ingrediente_id: item.id,
+			ingrediente: item.nombre,
+			type: 'manual',
+		});
+	});
+
 	// Calculate total count if not provided
 	const totalCount =
 		listaContent.total_count ||
@@ -555,9 +673,26 @@ export default function Lista() {
 
 	// Count unchecked ingredients
 	const uncheckedCount = totalCount - takenIngredients.length;
+	const isBusy =
+		!calendarsLoading &&
+		!listaLoading &&
+		(calendarsFetching ||
+		listaFetching ||
+		toggleMutation.isPending ||
+		addMutation.isPending ||
+		updateMutation.isPending ||
+		deleteMutation.isPending ||
+		emailMutation.isPending);
 
 	return (
 		<div className='general-container lista-json'>
+			{isBusy && (
+				<div className='page-loading-overlay'>
+					<div className='loader'>
+						<img src='/img/progress.gif' alt='Loading' />
+					</div>
+				</div>
+			)}
 			<div className='lista-calendar-inner'>
 				<ListaHeader
 					calendar={currentCalendar}

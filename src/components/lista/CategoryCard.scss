@@ -25,8 +25,11 @@ $individual: #dcb244;
 	.title {
 		width: 100%;
 		padding: 20px 15px;
+		min-height: 86px;
 		border-bottom: 1px solid $border-line-lighter;
 		background-color: #f6f6f6;
+		display: flex;
+		align-items: center;
 
 		p {
 			width: 100%;
@@ -36,6 +39,7 @@ $individual: #dcb244;
 			font-size: 14px;
 			font-weight: 600;
 			text-transform: capitalize;
+			line-height: 1.2;
 		}
 	}
 

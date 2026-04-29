@@ -61,19 +61,21 @@ export default function IngredientItem({
 
 	return (
 		<div className={`ingredient-item ${isTaken ? 'taken' : ''}`}>
-			<label className='ingredient-checkbox'>
+			<label className='checkbox-label ingredient-checkbox'>
 				<input
 					type='checkbox'
 					checked={isTaken}
 					onChange={handleToggle}
 					className='checkbox-input'
 				/>
-				<span className='checkbox'></span>
-				{getQuantityText() && (
-					<span className='ingredient-quantity'>{getQuantityText()}</span>
-				)}
-				<span className='ingredient-name'>
-					{ingredient.ingrediente || ingredient.nombre}
+				<span className='checkmark'></span>
+				<span className='ingredient-text'>
+					{getQuantityText() && (
+						<span className='ingredient-quantity'>{getQuantityText()}</span>
+					)}
+					<span className='ingredient-name'>
+						{ingredient.ingrediente || ingredient.nombre}
+					</span>
 				</span>
 			</label>
 

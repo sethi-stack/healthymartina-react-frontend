@@ -161,7 +161,7 @@
 }
 
 /* Checkbox styling */
-.checkbox-label {
+.auth-page .checkbox-label {
 	height: 1.5em !important;
 	width: 50% !important;
 	font-size: 0.7em !important;
@@ -174,7 +174,7 @@
 	padding-left: 3em !important;
 }
 
-.checkbox-label input[type='checkbox'] {
+.auth-page .checkbox-label input[type='checkbox'] {
 	width: 0 !important;
 	position: absolute !important;
 	opacity: 0 !important;
@@ -182,7 +182,7 @@
 	margin: 0 !important;
 }
 
-.checkmark {
+.auth-page .checkmark {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -196,7 +196,7 @@
 	align-items: center;
 }
 
-.checkmark:after {
+.auth-page .checkmark:after {
 	font-family: 'Font Awesome 5 Free';
 	content: '\f00c';
 	font-weight: 900;
@@ -208,11 +208,11 @@
 	transition: opacity 0.2s ease;
 }
 
-.checkbox-label input:checked ~ .checkmark {
+.auth-page .checkbox-label input:checked ~ .checkmark {
 	background-color: $individual;
 }
 
-.checkbox-label input:checked ~ .checkmark:after {
+.auth-page .checkbox-label input:checked ~ .checkmark:after {
 	opacity: 1;
 }
 

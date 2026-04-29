@@ -47,6 +47,7 @@ export default function Calendar() {
 	const {
 		data: calendarsData,
 		isLoading: calendarsLoading,
+		isFetching: calendarsFetching,
 		error: calendarsError,
 	} = useQuery({
 		queryKey: ['calendars'],
@@ -57,6 +58,7 @@ export default function Calendar() {
 	const {
 		data: calendarData,
 		isLoading: calendarLoading,
+		isFetching: calendarFetching,
 		error: calendarError,
 	} = useQuery({
 		queryKey: ['calendar', selectedCalendarId],
@@ -195,9 +197,25 @@ export default function Calendar() {
 
 	const calendars = calendarsData?.data || [];
 	const calendar = calendarData?.data || calendarData;
+	const isBusy =
+		!calendarsLoading &&
+		!calendarLoading &&
+		(calendarsFetching ||
+		calendarFetching ||
+		createMutation.isPending ||
+		updateMutation.isPending ||
+		deleteMutation.isPending ||
+		copyMutation.isPending);
 
 	return (
 		<div className='general-container calendario-json'>
+			{isBusy && (
+				<div className='page-loading-overlay'>
+					<div className='loader'>
+						<img src='/img/progress.gif' alt='Loading' />
+					</div>
+				</div>
+			)}
 			<CalendarOptions
 				calendar={calendar}
 				calendars={calendars}

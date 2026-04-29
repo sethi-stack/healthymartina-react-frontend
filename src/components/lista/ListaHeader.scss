@@ -6,15 +6,20 @@ $border-line-lighter: #e0e0e0;
 	justify-content: space-between;
 	align-items: center;
 	padding: 20px 30px;
+	min-height: 84px;
 	border: 1px solid $border-line-lighter;
 	border-bottom: none !important;
 	background: #fff;
 
 	.left {
+		display: flex;
+		align-items: center;
+
 		h3 {
 			margin: 0;
 			font-size: 20px;
 			font-weight: 600;
+			line-height: 1;
 			color: #dcb244;
 			text-transform: uppercase;
 			letter-spacing: 1px;
@@ -22,13 +27,16 @@ $border-line-lighter: #e0e0e0;
 	}
 
 	.right {
+		display: flex;
+		align-items: center;
+
 		p {
-			display: inline-flex;
+			display: flex;
 			align-items: center;
 			gap: 8px;
 			margin: 0;
 			font-size: 14px;
-			color: #b0b0b0;
+			color: #8c8c8c;
 			font-weight: 500;
 
 			img {

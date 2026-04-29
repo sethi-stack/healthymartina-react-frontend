@@ -236,11 +236,14 @@ export const getCategoryIngredients = async (calendarId, categoryId) => {
  * @returns {Promise<Object>} - Updated taken list
  */
 export const toggleIngredientTaken = async (calendarId, data) => {
-	const response = await apiClient.post(`/calendars/${calendarId}/lista/toggle`, {
-		ingred_id: data.ingredientId,
-		ingred_cat: data.categoryId,
-		ingred_type: data.type,
-	});
+	const response = await apiClient.post(
+		`/calendars/${calendarId}/lista/toggle-taken`,
+		{
+		ingrediente_id: data.ingredientId,
+		categoria_id: data.categoryId,
+		ingrediente_type: data.type,
+		}
+	);
 	return response.data;
 };
 
@@ -256,7 +259,7 @@ export const toggleIngredientTaken = async (calendarId, data) => {
  */
 export const addListaIngredient = async (calendarId, data) => {
 	const response = await apiClient.post(
-		`/calendars/${calendarId}/lista/ingredients`,
+		`/calendars/${calendarId}/lista/items`,
 		{
 			cantidad: data.cantidad,
 			unidad_medida: data.unidad_medida,
@@ -278,7 +281,15 @@ export const addListaIngredient = async (calendarId, data) => {
  * @returns {Promise<Object>} - Updated ingredient
  */
 export const updateListaIngredient = async (ingredientId, data) => {
-	const response = await apiClient.put(`/lista/ingredients/${ingredientId}`, data);
+	const response = await apiClient.put(
+		`/calendars/${data.calendarId}/lista/items/${ingredientId}`,
+		{
+			cantidad: data.cantidad,
+			unidad_medida: data.unidad_medida,
+			nombre: data.nombre,
+			categoria: data.categoria,
+		}
+	);
 	return response.data;
 };
 
@@ -287,8 +298,10 @@ export const updateListaIngredient = async (ingredientId, data) => {
  * @param {number} ingredientId - Ingredient ID
  * @returns {Promise<Object>} - Response
  */
-export const deleteListaIngredient = async (ingredientId) => {
-	const response = await apiClient.delete(`/lista/ingredients/${ingredientId}`);
+export const deleteListaIngredient = async (calendarId, ingredientId) => {
+	const response = await apiClient.delete(
+		`/calendars/${calendarId}/lista/items/${ingredientId}`
+	);
 	return response.data;
 };
 
@@ -298,9 +311,13 @@ export const deleteListaIngredient = async (ingredientId) => {
  * @param {string} email - Optional email address (defaults to user's email)
  * @returns {Promise<Object>} - Response
  */
-export const sendListaEmail = async (calendarId, email) => {
-	const response = await apiClient.post(`/calendars/${calendarId}/lista/email`, {
-		email,
-	});
+export const sendListaEmail = async (calendarId, payload) => {
+	const response = await apiClient.post(
+		`/calendars/${calendarId}/lista/pdf/email`,
+		{
+			recipient_email: payload?.email,
+			lista_ingredients: JSON.stringify(payload?.listaIngredients || []),
+		}
+	);
 	return response.data;
 };
