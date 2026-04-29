@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FaEye, FaUndo, FaTrashAlt } from 'react-icons/fa';
-import { removeRecipeFromCalendar } from '../../lib/api/calendars';
+import { addRecipeToCalendar, removeRecipeFromCalendar } from '../../lib/api/calendars';
 import { RecipeActionMenu } from '../shared/RecipeActionMenu';
 import { RecipeCard } from '../recipes/RecipeCard';
 import AddMealModal from './AddMealModal';
@@ -37,6 +37,7 @@ export default function CalendarCell({
 }) {
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
+	const [isDragHover, setIsDragHover] = useState(false);
 	const queryClient = useQueryClient();
 
 	// Get image base URL from environment variable
@@ -115,6 +116,55 @@ export default function CalendarCell({
 		},
 	});
 
+	const moveRecipeMutation = useMutation({
+		mutationFn: async (payload) => {
+			await addRecipeToCalendar(calendarId, {
+				recetaid: payload.recipeId,
+				mealtype: payload.mealType,
+				mealnum: mealKey,
+				daynum: [dayKey],
+				porciones: payload.servings || 1,
+				leftover: payload.leftover ? 1 : 0,
+			});
+
+			// If source cell also had a side recipe, move it together with the main.
+			if (payload.sideRecipeId) {
+				await addRecipeToCalendar(calendarId, {
+					recetaid: payload.sideRecipeId,
+					mealtype: 'side',
+					mealnum: mealKey,
+					daynum: [dayKey],
+					porciones: payload.sideServings || 1,
+					leftover: payload.sideLeftover ? 1 : 0,
+				});
+			}
+
+			return removeRecipeFromCalendar(calendarId, {
+				daynum: payload.fromDayKey,
+				mealnum: payload.fromMealKey,
+				mealtype: payload.mealType,
+			});
+		},
+		onSuccess: (response) => {
+			const updatedCalendar =
+				response?.calendar?.data || response?.calendar || null;
+			if (updatedCalendar) {
+				queryClient.setQueryData(['calendar', calendarId], {
+					data: updatedCalendar,
+				});
+			} else {
+				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
+			}
+			queryClient.invalidateQueries({
+				queryKey: ['calendar-nutrition', calendarId, dayKey],
+			});
+		},
+		onError: (error) => {
+			console.error('Error moving recipe:', error);
+			alert('Error al mover la receta. Por favor intente de nuevo.');
+		},
+	});
+
 	const handleCellClick = () => {
 		if (hasRecipe) {
 			setShowUpdateModal(true);
@@ -157,18 +207,76 @@ export default function CalendarCell({
 		return title.toUpperCase();
 	};
 
+	const handleDragStart = (e) => {
+		if (!mainRecipeId) return;
+		const payload = {
+			calendarId,
+			recipeId: mainRecipeId,
+			mealType: 'main',
+			fromDayKey: dayKey,
+			fromMealKey: mealKey,
+			servings: mainServing || 1,
+			leftover: !!mainLeftover,
+			sideRecipeId: sideRecipeId || null,
+			sideServings: sideServing || 1,
+			sideLeftover: !!sideLeftover,
+		};
+		e.dataTransfer.setData('application/json', JSON.stringify(payload));
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setDragImage(e.currentTarget, 16, 16);
+	};
+
+	const handleDragOver = (e) => {
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'move';
+		setIsDragHover(true);
+	};
+
+	const handleDragLeave = () => {
+		setIsDragHover(false);
+	};
+
+	const handleDrop = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setIsDragHover(false);
+		const raw = e.dataTransfer.getData('application/json');
+		if (!raw) return;
+
+		let payload = null;
+		try {
+			payload = JSON.parse(raw);
+		} catch (_err) {
+			return;
+		}
+		if (!payload?.recipeId) return;
+		if (payload.calendarId !== calendarId) return;
+		if (payload.fromDayKey === dayKey && payload.fromMealKey === mealKey) return;
+
+		moveRecipeMutation.mutate(payload);
+	};
+
 	return (
 		<>
 			<div
 				id={cellId}
-				className='col-day-td hm-calendar__day-col'
+				className={`col-day-td hm-calendar__day-col ${
+					isDragHover ? 'hm-calendar__day-col--drop-target' : ''
+				}`}
 				data-daynum={dayNum}
 				data-mealnum={mealNum}
 				data-mealname={mealName}
 				onClick={handleCellClick}
+				onDragOver={handleDragOver}
+				onDragLeave={handleDragLeave}
+				onDrop={handleDrop}
 			>
 				{hasRecipe ? (
-					<div className='calRecipe hm-calendar__cell' draggable='true'>
+					<div
+						className='calRecipe hm-calendar__cell'
+						draggable='true'
+						onDragStart={handleDragStart}
+					>
 						{mainRecipeId && (
 							<RecipeCard
 								recipe={mainRecipe || { id: mainRecipeId, titulo: `RECETA ${mainRecipeId}` }}

@@ -23,15 +23,20 @@
 		}
 	}
 
-	.calRecipe {
-		height: 100%;
-		position: relative;
-		cursor: pointer;
+		.calRecipe {
+			height: 100%;
+			position: relative;
+			cursor: pointer;
+			display: block;
+			width: 100%;
+			max-width: 100%;
+			overflow: visible;
 
 		.calRecipeMain,
 		.calRecipeSide {
 			height: 50%;
 			position: relative;
+			width: 100%;
 
 			&.recipeLeftover {
 				.calRecpImg::before {
@@ -45,6 +50,27 @@
 					background: rgba(255, 255, 255, 0.7);
 				}
 			}
+		}
+
+		// On smaller screens, keep enough space for title/menu in split cells.
+		@media (max-width: 1280px) {
+			.calRecipeMain,
+			.calRecipeSide {
+				.calRecpImg {
+					height: 62%;
+				}
+
+				.calRecpInfo {
+					height: 38%;
+					min-height: 34px;
+				}
+			}
+		}
+
+		// If only one recipe block is present (main OR side), use full cell height.
+		.calRecipeMain:only-child,
+		.calRecipeSide:only-child {
+			height: 100%;
 		}
 
 		.calRecipeSide {
