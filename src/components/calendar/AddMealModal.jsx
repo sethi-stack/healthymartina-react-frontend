@@ -108,7 +108,16 @@ export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, meal
 								</span>
 								<input type='hidden' name='recetaid' className='recetaid' value={selectedRecipe.id} />
 							</div>
-							<a href={`/receta/${selectedRecipe.slug}?ser=${servings}`} className='recetalink' target='_blank' rel='noopener noreferrer'>
+							<a
+								href={`${
+									selectedRecipe.slug
+										? `/receta/${selectedRecipe.slug}`
+										: `/receta-id/${selectedRecipe.id}`
+								}?ser=${servings}`}
+								className='recetalink'
+								target='_blank'
+								rel='noopener noreferrer'
+							>
 								Ver detalles de receta
 							</a>
 						</div>

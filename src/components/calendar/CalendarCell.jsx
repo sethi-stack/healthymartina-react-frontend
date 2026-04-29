@@ -115,17 +115,20 @@ export default function CalendarCell({
 
 	const handleViewRecipe = (recipe, e) => {
 		e.stopPropagation();
-		window.open(`/receta/${recipe.slug}`, '_blank');
-		setMainMenuOpen(false);
-		setSideMenuOpen(false);
+		if (!recipe) return;
+		const detailUrl = recipe.slug
+			? `/receta/${recipe.slug}`
+			: recipe.id
+				? `/receta-id/${recipe.id}`
+				: null;
+		if (!detailUrl) return;
+		window.open(detailUrl, '_blank');
 	};
 
 	const handleToggleLeftover = (mealType, e) => {
 		e.stopPropagation();
 		// TODO: Implement leftover toggle
 		console.log('Toggle leftover for', mealType);
-		setMainMenuOpen(false);
-		setSideMenuOpen(false);
 	};
 
 	const handleDeleteRecipe = (mealType, e) => {
@@ -137,8 +140,6 @@ export default function CalendarCell({
 				mealtype: mealType,
 			});
 		}
-		setMainMenuOpen(false);
-		setSideMenuOpen(false);
 	};
 
 	const formatTitle = (title) => {
@@ -168,7 +169,12 @@ export default function CalendarCell({
 								customClass='calRecipeMain'
 								customMenu={
 									<RecipeActionMenu
-										onViewRecipe={(e) => handleViewRecipe(mainRecipe, e)}
+										onViewRecipe={(e) =>
+											handleViewRecipe(
+												mainRecipe || { id: mainRecipeId },
+												e
+											)
+										}
 										onToggleLeftover={(e) => handleToggleLeftover('main', e)}
 										onDeleteRecipe={(e) => handleDeleteRecipe('main', e)}
 										isLeftover={mainLeftover}
@@ -193,7 +199,12 @@ export default function CalendarCell({
 								customClass='calRecipeSide hm-calendar__recipe--side'
 								customMenu={
 									<RecipeActionMenu
-										onViewRecipe={(e) => handleViewRecipe(sideRecipe, e)}
+										onViewRecipe={(e) =>
+											handleViewRecipe(
+												sideRecipe || { id: sideRecipeId },
+												e
+											)
+										}
 										onToggleLeftover={(e) => handleToggleLeftover('side', e)}
 										onDeleteRecipe={(e) => handleDeleteRecipe('side', e)}
 										isLeftover={sideLeftover}
@@ -254,4 +265,3 @@ export default function CalendarCell({
 		</>
 	);
 }
-

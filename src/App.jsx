@@ -94,6 +94,16 @@ export function App() {
 						}
 					/>
 					<Route
+						path='/receta-id/:id'
+						element={
+							<ProtectedRoute>
+								<AuthenticatedLayout>
+									<RecipeDetail />
+								</AuthenticatedLayout>
+							</ProtectedRoute>
+						}
+					/>
+					<Route
 						path='/calendario'
 						element={
 							<ProtectedRoute>

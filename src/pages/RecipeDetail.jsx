@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { useRecipe } from '../hooks/useRecipe';
+import { useQuery } from '@tanstack/react-query';
+import { getRecipe, getRecipeBySlug } from '../lib/api/recipes';
 import { RecipeHeader } from '../components/recipes/RecipeHeader';
 import { RecipeImage } from '../components/recipes/RecipeImage';
 import { RecipeActions } from '../components/recipes/RecipeActions';
@@ -17,8 +18,28 @@ import './RecipeDetail.scss';
  * Displays full recipe information with ingredients, instructions, nutrition, etc.
  */
 export function RecipeDetail() {
-	const { slug } = useParams();
-	const { data: recipeResponse, isLoading, isError, error } = useRecipe(slug);
+	const { slug, id } = useParams();
+	const recipeSlug = slug || null;
+	const recipeId = id ? Number(id) : null;
+
+	const slugQuery = useQuery({
+		queryKey: ['recipe', 'slug', recipeSlug],
+		queryFn: () => getRecipeBySlug(recipeSlug),
+		enabled: !!recipeSlug,
+		staleTime: 5 * 60 * 1000,
+	});
+
+	const idQuery = useQuery({
+		queryKey: ['recipe', 'id', recipeId],
+		queryFn: () => getRecipe(recipeId),
+		enabled: !recipeSlug && !!recipeId,
+		staleTime: 5 * 60 * 1000,
+	});
+
+	const recipeResponse = recipeSlug ? slugQuery.data : idQuery.data;
+	const isLoading = recipeSlug ? slugQuery.isLoading : idQuery.isLoading;
+	const isError = recipeSlug ? slugQuery.isError : idQuery.isError;
+	const error = recipeSlug ? slugQuery.error : idQuery.error;
 
 	const [activeLeftTab, setActiveLeftTab] = useState('ingredientes');
 	const [activeRightTab, setActiveRightTab] = useState('instrucciones');
