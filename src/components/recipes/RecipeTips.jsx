@@ -5,13 +5,8 @@ import React from 'react';
  * Displays tips and variations for the recipe
  */
 export function RecipeTips({ tips }) {
-	// Debug: Log received data
-	console.log('RecipeTips - Received tips:', tips);
-
 	// Ensure tips is an array
 	const tipsArray = Array.isArray(tips) ? tips : [];
-
-	console.log('RecipeTips - Processed tipsArray:', tipsArray);
 
 	// Group tips in pairs (title + description)
 	const groupedTips = [];
@@ -32,7 +27,7 @@ export function RecipeTips({ tips }) {
 
 	if (groupedTips.length === 0) {
 		return (
-			<div className='slide'>
+			<div className='recipe-tab-content recipe-tips'>
 				<p style={{ padding: '20px', color: '#7a7a7a' }}>
 					No hay tips disponibles para esta receta.
 				</p>
@@ -51,7 +46,7 @@ export function RecipeTips({ tips }) {
 	};
 
 	return (
-		<div className='slide'>
+		<div className='recipe-tab-content recipe-tips'>
 			{groupedTips.map((tip, index) => (
 				<div key={index} className='tip'>
 					<p>

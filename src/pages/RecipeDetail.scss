@@ -189,7 +189,7 @@
 					}
 				}
 
-				.options {
+				.recipe-options {
 					width: 100%;
 					padding-bottom: 70px;
 					background: #fff;
@@ -473,8 +473,9 @@
 					display: flex;
 					flex-wrap: wrap;
 					justify-content: flex-start;
-					border-bottom: 1px solid #ded7d7;
+					border-bottom: none !important;
 					padding-left: 20px;
+					border-top: none !important;
 
 					a {
 						color: inherit;
@@ -494,15 +495,20 @@
 					}
 				}
 
-				.options {
+				.recipe-options {
 					background-color: #fff;
+					border-top: none !important;
 
 					.mobile-section {
 						// Desktop: only show active section
 						display: none;
+						border-top: none !important;
+						border-bottom: none !important;
 
 						&.active {
 							display: block;
+							border-top: none !important;
+							border-bottom: none !important;
 						}
 
 						.slide {
@@ -514,63 +520,168 @@
 					// Legacy support for direct .slide usage
 					.slide {
 						display: none;
-						margin: 20px 0;
+						margin: 0;
 
 						&.active {
 							display: block;
 						}
 
+						// Prevent empty slide wrappers from creating phantom separators/spacing.
+						&:empty {
+							display: none !important;
+							margin: 0 !important;
+							padding: 0 !important;
+							border: 0 !important;
+						}
+
 						.instruccion {
-							display: flex;
-							flex-wrap: wrap;
+							display: grid;
+							grid-template-columns: 44px 1fr;
+							column-gap: 18px;
 							justify-content: flex-start;
-							align-items: flex-start;
+							align-items: start;
 							width: 100%;
-							flex-flow: row;
-							flex-direction: row;
-							margin-bottom: 25px;
+							margin-bottom: 16px;
 							padding-right: 25px;
 							padding-left: 25px;
 							font-size: 15px;
 							font-weight: 900 !important;
+							border: 0 !important;
+							box-shadow: none !important;
 
 							.index {
-								margin: 0 0px;
-								height: 32px;
-								width: 32px;
+								height: 44px;
+								width: 44px;
 								background-color: #dcb244;
 								border-radius: 50%;
-								display: flex;
-								flex-wrap: wrap;
+								display: inline-flex;
 								justify-content: center;
 								align-items: center;
-								font-size: 25px;
+								font-size: 26px;
 								font-weight: bold;
 								color: #fff;
-								margin-right: 35px;
 								padding: 0;
 								flex-shrink: 0;
 
 								span {
+									display: block;
+									margin: 0 !important;
+									padding: 0 !important;
+									width: auto !important;
+									height: auto !important;
+									background: transparent !important;
+									border-radius: 0 !important;
 									line-height: 1;
+									transform: none;
 								}
 							}
 
 							p {
 								flex: 1;
 								margin: 0;
+								line-height: 1.35;
+								word-break: break-word;
 							}
 						}
 
 						.tip {
+							border: 0 !important;
+							box-shadow: none !important;
+
 							p {
-								margin: 0 15px 15px;
+								margin: 0 15px 18px;
 								font-size: 15px;
-								text-align: justify;
+								text-align: left;
+								line-height: 1.4;
 
 								b {
 									font-family: 'Gotham-Book' !important;
 									letter-spacing: 1px;
+									display: block;
+									margin-bottom: 4px;
+								}
+
+								text {
+									font-weight: 900 !important;
+								}
+							}
+						}
+					}
+
+					.recipe-tab-content {
+						display: block;
+						margin: 0;
+						padding-top: 18px;
+					}
+				}
+			}
+
+					.recipe-tab-content {
+						.instruccion {
+							display: grid;
+							grid-template-columns: 44px 1fr;
+							column-gap: 18px;
+							justify-content: flex-start;
+							align-items: start;
+							width: 100%;
+							margin-bottom: 16px;
+							padding-right: 25px;
+							padding-left: 25px;
+							font-size: 15px;
+							font-weight: 900 !important;
+							border: 0 !important;
+							box-shadow: none !important;
+
+							.index {
+								height: 44px;
+								width: 44px;
+								background-color: #dcb244;
+								border-radius: 50%;
+								display: inline-flex;
+								justify-content: center;
+								align-items: center;
+								font-size: 26px;
+								font-weight: bold;
+								color: #fff;
+								padding: 0;
+								flex-shrink: 0;
+
+								span {
+									display: block;
+									margin: 0 !important;
+									padding: 0 !important;
+									width: auto !important;
+									height: auto !important;
+									background: transparent !important;
+									border-radius: 0 !important;
+									line-height: 1;
+									transform: none;
+								}
+							}
+
+							p {
+								flex: 1;
+								margin: 0;
+								line-height: 1.35;
+								word-break: break-word;
+							}
+						}
+
+						.tip {
+							border: 0 !important;
+							box-shadow: none !important;
+
+							p {
+								margin: 0 15px 18px;
+								font-size: 15px;
+								text-align: left;
+								line-height: 1.4;
+
+								b {
+									font-family: 'Gotham-Book' !important;
+									letter-spacing: 1px;
+									display: block;
+									margin-bottom: 4px;
 								}
 
 								text {
@@ -581,8 +692,6 @@
 					}
 				}
 			}
-		}
-	}
 
 	.teGusto {
 		background: #f9f9f9;
@@ -1088,7 +1197,7 @@
 						}
 					}
 
-					.options {
+					.recipe-options {
 						padding-bottom: 15px;
 
 						// Normal tab behavior - show only active section
@@ -1196,6 +1305,7 @@
 						display: flex;
 						justify-content: space-around;
 						width: 100%;
+						border-top: none !important;
 
 						a {
 							flex: 1;
@@ -1205,7 +1315,7 @@
 						}
 					}
 
-					.options {
+					.recipe-options {
 						padding-bottom: 15px;
 
 						// Normal tab behavior - show only active section (same as info-left)

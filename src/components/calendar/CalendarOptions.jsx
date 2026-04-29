@@ -25,7 +25,7 @@ export default function CalendarOptions({
 	const canEdit = hasCalendar; // Add role check if needed
 
 	return (
-		<div className='options'>
+		<div className='calendar-options'>
 			<div className='left'>
 				{hasCalendar && canEdit && (
 					<>
@@ -211,4 +211,3 @@ export default function CalendarOptions({
 		</div>
 	);
 }
-

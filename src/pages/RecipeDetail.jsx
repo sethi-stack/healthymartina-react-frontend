@@ -93,6 +93,43 @@ export function RecipeDetail() {
 	// Handle different possible API response structures
 	const recipe = recipeResponse.data || recipeResponse.receta || recipeResponse;
 
+	const toArray = (value) => {
+		if (Array.isArray(value)) return value;
+		if (!value) return [];
+		if (typeof value === 'string') {
+			return value
+				.split(/\r?\n/)
+				.map((item) => item.trim())
+				.filter(Boolean);
+		}
+		if (typeof value === 'object') {
+			return Object.values(value).filter(Boolean);
+		}
+		return [];
+	};
+
+	const normalizedIngredients = toArray(
+		recipe.ingredientes ||
+			recipe.ingredients ||
+			recipe.receta?.ingredientes ||
+			recipe.data?.ingredientes ||
+			recipe.getIngredientes?.()
+	);
+
+	const normalizedTips = toArray(
+		recipe.tips ||
+			recipe.receta?.tips ||
+			recipe.data?.tips ||
+			recipe.getTips?.()
+	);
+	const normalizedInstructions = toArray(
+		recipe.instrucciones ||
+			recipe.instructions ||
+			recipe.receta?.instrucciones ||
+			recipe.data?.instrucciones ||
+			recipe.getInstrucciones?.()
+	);
+
 	// Ensure we have the required data structure
 	const recipeData = {
 		id: recipe.id,
@@ -102,7 +139,7 @@ export function RecipeDetail() {
 		ingredientes_count:
 			recipe.ingredientes_count ||
 			recipe.ingredients_count ||
-			(recipe.ingredientes ? recipe.ingredientes.length : 0),
+			normalizedIngredients.length,
 		imagen_principal:
 			recipe.imagen_principal || recipe.main_image || recipe.image,
 		imagen_secundaria: recipe.imagen_secundaria || recipe.secondary_image,
@@ -115,17 +152,9 @@ export function RecipeDetail() {
 				nombre_english: 'serving',
 				tipo_medida_id: 1,
 			},
-		ingredientes:
-			recipe.ingredientes ||
-			recipe.ingredients ||
-			recipe.getIngredientes?.() ||
-			[],
-		instrucciones:
-			recipe.instrucciones ||
-			recipe.instructions ||
-			recipe.getInstrucciones?.() ||
-			[],
-		tips: recipe.tips || recipe.getTips?.() || [],
+		ingredientes: normalizedIngredients,
+		instrucciones: normalizedInstructions,
+		tips: normalizedTips,
 		nutrientes: recipe.nutrientes || recipe.nutrition || { info: [] },
 		filter_info: recipe.filter_info || [],
 		comments: recipe.comments || [],
@@ -180,7 +209,7 @@ export function RecipeDetail() {
 									Información Nutricional
 								</a>
 							</div>
-							<div className='options'>
+							<div className='recipe-options'>
 								<div
 									className={`mobile-section ${
 										activeLeftTab === 'ingredientes' ? 'active' : ''
@@ -228,7 +257,7 @@ export function RecipeDetail() {
 									Tips
 								</a>
 							</div>
-							<div className='options'>
+							<div className='recipe-options'>
 								<div
 									className={`mobile-section ${
 										activeRightTab === 'instrucciones' ? 'active' : ''
