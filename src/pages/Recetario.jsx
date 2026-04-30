@@ -14,6 +14,9 @@ import { FilterBookmarksModal } from '../components/recipes/FilterBookmarksModal
 import { IconActionButton } from '../components/shared/IconActionButton';
 import './Recetario.scss';
 
+const FILTERS_QUERY_KEY = 'filters';
+const FILTERS_STORAGE_KEY = 'recetario_applied_filters_v1';
+
 const hasMeaningfulFilters = (filters = {}) => {
 	if (!filters || typeof filters !== 'object') return false;
 	return Object.keys(filters).some((key) => {
@@ -22,6 +25,42 @@ const hasMeaningfulFilters = (filters = {}) => {
 		if (value && typeof value === 'object') return Object.keys(value).length > 0;
 		return Boolean(value);
 	});
+};
+
+const parseFiltersFromSearchParams = (searchParams) => {
+	const serializedFilters = searchParams.get(FILTERS_QUERY_KEY);
+	if (serializedFilters) {
+		try {
+			const parsed = JSON.parse(serializedFilters);
+			return parsed && typeof parsed === 'object' ? parsed : {};
+		} catch (_error) {
+			return {};
+		}
+	}
+
+	// Legacy fallback support.
+	const includeIngredients = searchParams
+		.getAll('ingrediente_incluir[]')
+		.map((value) => Number(value))
+		.filter(Boolean);
+
+	if (searchParams.get('filter') === 'true' && includeIngredients.length > 0) {
+		return { ingrediente_incluir: includeIngredients };
+	}
+
+	return {};
+};
+
+const parseFiltersFromStorage = () => {
+	if (typeof window === 'undefined') return {};
+	const serializedFilters = window.localStorage.getItem(FILTERS_STORAGE_KEY);
+	if (!serializedFilters) return {};
+	try {
+		const parsed = JSON.parse(serializedFilters);
+		return parsed && typeof parsed === 'object' ? parsed : {};
+	} catch (_error) {
+		return {};
+	}
 };
 
 export function Recetario() {
@@ -73,30 +112,26 @@ export function Recetario() {
 	});
 
 	useEffect(() => {
-		const includeIngredients = searchParams
-			.getAll('ingrediente_incluir[]')
-			.map((value) => Number(value))
-			.filter(Boolean);
-
 		if (searchParams.get('reset') === '1') {
 			setAppliedFilters({});
 			setIsFilterApplied(false);
+			if (typeof window !== 'undefined') {
+				window.localStorage.removeItem(FILTERS_STORAGE_KEY);
+			}
 			return;
 		}
 
-		if (searchParams.get('filter') === 'true' && includeIngredients.length > 0) {
-			setAppliedFilters((current) => {
-				const next = {
-					...current,
-					ingrediente_incluir: includeIngredients,
-				};
+		const filtersFromQuery = parseFiltersFromSearchParams(searchParams);
+		const parsedFilters = hasMeaningfulFilters(filtersFromQuery)
+			? filtersFromQuery
+			: parseFiltersFromStorage();
 
-				return JSON.stringify(current.ingrediente_incluir) === JSON.stringify(next.ingrediente_incluir)
-					? current
-					: next;
-			});
-			setIsFilterApplied(true);
+		if (!hasMeaningfulFilters(filtersFromQuery) && hasMeaningfulFilters(parsedFilters)) {
+			setSearchParams({ [FILTERS_QUERY_KEY]: JSON.stringify(parsedFilters) });
 		}
+
+		setAppliedFilters(parsedFilters);
+		setIsFilterApplied(hasMeaningfulFilters(parsedFilters));
 	}, [searchParams]);
 
 	const {
@@ -158,12 +193,26 @@ export function Recetario() {
 		setSearchParams({});
 		setAppliedFilters({});
 		setIsFilterApplied(false);
+		if (typeof window !== 'undefined') {
+			window.localStorage.removeItem(FILTERS_STORAGE_KEY);
+		}
 	};
 
 	const handleApplyFilters = (filters) => {
 		const hasFilters = hasMeaningfulFilters(filters);
 		setAppliedFilters(filters);
 		setIsFilterApplied(hasFilters);
+		if (hasFilters) {
+			if (typeof window !== 'undefined') {
+				window.localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters));
+			}
+			setSearchParams({ [FILTERS_QUERY_KEY]: JSON.stringify(filters) });
+		} else {
+			if (typeof window !== 'undefined') {
+				window.localStorage.removeItem(FILTERS_STORAGE_KEY);
+			}
+			setSearchParams({});
+		}
 	};
 
 	const handleOpenBookmarkModal = () => {
