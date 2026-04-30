@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getCalendarNutrition } from '../../lib/api/calendars';
+import CalendarNutritionModal from './CalendarNutritionModal';
 import './CalendarNutritionRow.scss';
 
 /**
@@ -10,14 +11,13 @@ import './CalendarNutritionRow.scss';
 export default function CalendarNutritionRow({ calendar, days }) {
 	const [activeView, setActiveView] = useState('statistics'); // 'statistics' or 'macros'
 	const [selectedDay, setSelectedDay] = useState(null);
+	const [selectedDayName, setSelectedDayName] = useState('');
+	const [selectedDayItems, setSelectedDayItems] = useState([]);
 
-	const handleDayClick = (dayKey) => {
-		if (selectedDay === dayKey) {
-			setSelectedDay(null);
-		} else {
-			setSelectedDay(dayKey);
-			// TODO: Fetch nutrition data for the day
-		}
+	const handleDayClick = (dayKey, dayName, items) => {
+		setSelectedDay(dayKey);
+		setSelectedDayName(dayName);
+		setSelectedDayItems(items || []);
 	};
 
 	return (
@@ -80,12 +80,24 @@ export default function CalendarNutritionRow({ calendar, days }) {
 								dayName={dayName}
 								calendarId={calendar?.id}
 								activeView={activeView}
-								onClick={() => handleDayClick(dayKey)}
+								onClick={(items) => handleDayClick(dayKey, dayName, items)}
 							/>
 						);
 					})}
 				</div>
 			</div>
+			{selectedDay && (
+				<CalendarNutritionModal
+					dayName={selectedDayName}
+					items={selectedDayItems}
+					activeView={activeView}
+					onClose={() => {
+						setSelectedDay(null);
+						setSelectedDayName('');
+						setSelectedDayItems([]);
+					}}
+				/>
+			)}
 		</div>
 	);
 }
@@ -189,7 +201,11 @@ function NutritionDayColumn({
 		<div className='col-xs data-nutritions' role='column-1'>
 			<div className='table__column bottom_nutri_bar'>
 				<div className='table__nutrition-container'>
-					<div className='table__nutrition-wrap' id={dayKey} onClick={onClick}>
+					<div
+						className='table__nutrition-wrap'
+						id={dayKey}
+						onClick={() => onClick?.(nutritionItems || [])}
+					>
 						{isLoading ? (
 							<div className='loader-lista-ingrediente'>
 								<img
