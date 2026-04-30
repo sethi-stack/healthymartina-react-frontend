@@ -121,6 +121,22 @@ export const removeRecipeFromCalendar = async (calendarId, data) => {
 };
 
 /**
+ * Update ración/scale for a meal slot.
+ * @param {number} calendarId - Calendar ID
+ * @param {Object} data - Ración update data
+ * @param {'main'|'side'} data.meal_type
+ * @param {string} data.meal_id - meal key (e.g. meal_1)
+ * @param {string} data.day_id - day key (e.g. day_1)
+ * @param {number} data.serving - current serving value
+ * @param {number} data.calendar_scale - ración scale value
+ * @returns {Promise<Object>}
+ */
+export const updateCalendarRacion = async (calendarId, data) => {
+	const response = await apiClient.post(`/calendars/${calendarId}/racion`, data);
+	return response.data;
+};
+
+/**
  * Update calendar labels (days or meals)
  * @param {number} calendarId - Calendar ID
  * @param {Object} data - Label data

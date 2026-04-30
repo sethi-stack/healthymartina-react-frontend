@@ -27,6 +27,8 @@ export default function CalendarCell({
 	sideServing,
 	mainLeftover,
 	sideLeftover,
+	mainRacion,
+	sideRacion,
 	hasRecipe,
 	mainRecipe, // Recipe data passed from parent
 	sideRecipe, // Recipe data passed from parent
@@ -37,6 +39,7 @@ export default function CalendarCell({
 }) {
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
+	const [updateModalTab, setUpdateModalTab] = useState('main');
 	const [isDragHover, setIsDragHover] = useState(false);
 	const queryClient = useQueryClient();
 
@@ -189,6 +192,7 @@ export default function CalendarCell({
 
 	const handleCellClick = () => {
 		if (hasRecipe) {
+			setUpdateModalTab('main');
 			setShowUpdateModal(true);
 		} else {
 			setShowAddModal(true);
@@ -320,6 +324,11 @@ export default function CalendarCell({
 								hideMeta={true}
 								isLeftover={mainLeftover}
 								customClass='calRecipeMain'
+								onClick={(e) => {
+									e.stopPropagation();
+									setUpdateModalTab('main');
+									setShowUpdateModal(true);
+								}}
 								customMenu={
 									<RecipeActionMenu
 										onViewRecipe={(e) =>
@@ -350,6 +359,11 @@ export default function CalendarCell({
 								hideMeta={true}
 								isLeftover={sideLeftover}
 								customClass='calRecipeSide hm-calendar__recipe--side'
+								onClick={(e) => {
+									e.stopPropagation();
+									setUpdateModalTab('side');
+									setShowUpdateModal(true);
+								}}
 								customMenu={
 									<RecipeActionMenu
 										onViewRecipe={(e) =>
@@ -408,10 +422,13 @@ export default function CalendarCell({
 					sideServing={sideServing}
 					mainLeftover={mainLeftover}
 					sideLeftover={sideLeftover}
+					mainRacion={mainRacion}
+					sideRacion={sideRacion}
 					mainSchedule={mainSchedule}
 					sidesSchedule={sidesSchedule}
 					dayLabels={dayLabels}
 					mealLabels={mealLabels}
+					initialTab={updateModalTab}
 					onClose={() => setShowUpdateModal(false)}
 				/>
 			)}

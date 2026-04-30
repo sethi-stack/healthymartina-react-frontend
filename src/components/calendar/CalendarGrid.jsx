@@ -89,6 +89,26 @@ export default function CalendarGrid({ calendar }) {
 			: calendar.data.sides_leftovers
 		: {};
 
+	const mainRacion = calendar.main_racion
+		? typeof calendar.main_racion === 'string'
+			? JSON.parse(calendar.main_racion)
+			: calendar.main_racion
+		: calendar.data?.main_racion
+		? typeof calendar.data.main_racion === 'string'
+			? JSON.parse(calendar.data.main_racion)
+			: calendar.data.main_racion
+		: {};
+
+	const sidesRacion = calendar.sides_racion
+		? typeof calendar.sides_racion === 'string'
+			? JSON.parse(calendar.sides_racion)
+			: calendar.sides_racion
+		: calendar.data?.sides_racion
+		? typeof calendar.data.sides_racion === 'string'
+			? JSON.parse(calendar.data.sides_racion)
+			: calendar.data.sides_racion
+		: {};
+
 	// Default labels from config/constants.php
 	const defaultDays = {
 		day_1: 'Lunes',
@@ -221,6 +241,10 @@ export default function CalendarGrid({ calendar }) {
 								mainLeftovers[`day_${dayNum}`]?.[`meal_${mealNum}`];
 							const sideLeftover =
 								sidesLeftovers[`day_${dayNum}`]?.[`meal_${mealNum}`];
+							const mainRacionValue =
+								mainRacion[`day_${dayNum}`]?.[`meal_${mealNum}`];
+							const sideRacionValue =
+								sidesRacion[`day_${dayNum}`]?.[`meal_${mealNum}`];
 
 							return (
 								<CalendarCell
@@ -238,6 +262,8 @@ export default function CalendarGrid({ calendar }) {
 									sideServing={sideServing}
 									mainLeftover={mainLeftover}
 									sideLeftover={sideLeftover}
+									mainRacion={mainRacionValue}
+									sideRacion={sideRacionValue}
 									hasRecipe={!!mainRecipeId}
 									mainRecipe={mainRecipeId ? recipesMap[mainRecipeId] : null}
 									sideRecipe={sideRecipeId ? recipesMap[sideRecipeId] : null}

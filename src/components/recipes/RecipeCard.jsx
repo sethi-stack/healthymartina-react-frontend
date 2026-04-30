@@ -14,6 +14,7 @@ export const RecipeCard = forwardRef(
 		{
 			recipe,
 			onAddToCalendar,
+			onClick,
 			showMenu = true,
 			variant = 'catalog',
 			hideLink = false,
@@ -144,7 +145,7 @@ export const RecipeCard = forwardRef(
 		);
 
 		return (
-			<div className={`${baseClass} ${leftoverClass} ${customClass}`.trim()} ref={ref}>
+			<div className={`${baseClass} ${leftoverClass} ${customClass}`.trim()} ref={ref} onClick={onClick}>
 				{isCalendar ? content : <div className={innerClass}>{content}</div>}
 			</div>
 		);

@@ -6,7 +6,7 @@ import './MealModal.scss';
 import RecipeSearchField from './RecipeSearchField';
 import ServingsSlider from './ServingsSlider';
 import DaysSelector from './DaysSelector';
-import { updateRecipeInCalendar } from '../../lib/api/calendars';
+import { updateRecipeInCalendar, updateCalendarRacion } from '../../lib/api/calendars';
 import { getRecipe } from '../../lib/api/recipes';
 
 /**
@@ -26,21 +26,25 @@ export default function UpdateMealModal({
 	sideRecipeId,
 	mainServing,
 	sideServing,
+	mainRacion,
+	sideRacion,
 	mainLeftover,
 	sideLeftover,
 	mainSchedule,
 	sidesSchedule,
 	dayLabels,
 	mealLabels,
+	initialTab = 'main',
 	onClose,
 }) {
 	const queryClient = useQueryClient();
-	const [activeTab, setActiveTab] = useState('main');
+	const [activeTab, setActiveTab] = useState(initialTab);
 	const [selectedMealKey, setSelectedMealKey] = useState(mealKey); // tracks Tiempos selection
 
 	// Main recipe state
 	const [mainRecipe, setMainRecipe] = useState(null);
 	const [mainServings, setMainServings] = useState(mainServing || 2);
+	const [mainRacionValue, setMainRacionValue] = useState(mainRacion || 1);
 	const [mainIsLeftover, setMainIsLeftover] = useState(mainLeftover || false);
 	const [mainSelectedDays, setMainSelectedDays] = useState([dayKey]);
 	const [showMainSearch, setShowMainSearch] = useState(false);
@@ -48,6 +52,7 @@ export default function UpdateMealModal({
 	// Side recipe state
 	const [sideRecipe, setSideRecipe] = useState(null);
 	const [sideServings, setSideServings] = useState(sideServing || 2);
+	const [sideRacionValue, setSideRacionValue] = useState(sideRacion || 1);
 	const [sideIsLeftover, setSideIsLeftover] = useState(sideLeftover || false);
 	const [sideSelectedDays, setSideSelectedDays] = useState([dayKey]);
 	const [showSideSearch, setShowSideSearch] = useState(false);
@@ -82,6 +87,10 @@ export default function UpdateMealModal({
 			setSideRecipe(sideRecipeData.data);
 		}
 	}, [sideRecipeData]);
+
+	useEffect(() => {
+		setActiveTab(initialTab === 'side' ? 'side' : 'main');
+	}, [initialTab]);
 
 	// In update mode, preselect all days where the same main recipe is currently assigned
 	// for the selected meal. This allows unchecking days to remove that assignment.
@@ -131,6 +140,28 @@ export default function UpdateMealModal({
 		},
 	});
 
+	const updateRacionMutation = useMutation({
+		mutationFn: (data) => updateCalendarRacion(calendarId, data),
+		onSuccess: (response) => {
+			const updatedCalendar =
+				response?.calendar?.data || response?.calendar || null;
+			if (updatedCalendar) {
+				queryClient.setQueryData(['calendar', calendarId], {
+					data: updatedCalendar,
+				});
+			} else {
+				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
+			}
+			queryClient.invalidateQueries({
+				queryKey: ['calendar-nutrition', calendarId],
+			});
+		},
+		onError: (error) => {
+			console.error('Error updating ración:', error);
+			alert('Error al actualizar ración. Por favor intente de nuevo.');
+		},
+	});
+
 	// Handle main recipe selection
 	const handleMainRecipeSelect = (recipe) => {
 		setMainRecipe(recipe);
@@ -158,6 +189,33 @@ export default function UpdateMealModal({
 			// TODO: Implement side recipe deletion
 			setSideRecipe(null);
 			setShowSideSearch(true);
+		}
+	};
+
+	const handleRacionClick = (mealType) => {
+		const currentRacion = mealType === 'main' ? mainRacionValue : sideRacionValue;
+		const currentServings = mealType === 'main' ? mainServings : sideServings;
+		const label = mealType === 'main' ? 'principal' : 'complementaria';
+		const userValue = window.prompt(`Indica la ración para la receta ${label}`, String(currentRacion || 1));
+		if (userValue === null) return;
+		const parsed = parseFloat(userValue);
+		if (!Number.isFinite(parsed) || parsed <= 0) {
+			alert('La ración debe ser un número mayor a 0.');
+			return;
+		}
+
+		updateRacionMutation.mutate({
+			meal_type: mealType,
+			meal_id: selectedMealKey,
+			day_id: dayKey,
+			serving: currentServings || 1,
+			calendar_scale: parsed,
+		});
+
+		if (mealType === 'main') {
+			setMainRacionValue(parsed);
+		} else {
+			setSideRacionValue(parsed);
 		}
 	};
 
@@ -269,7 +327,16 @@ export default function UpdateMealModal({
 										</div>
 
 										{/* Servings Slider */}
-										<ServingsSlider value={mainServings} onChange={setMainServings} isLeftover={mainIsLeftover} onLeftoverChange={setMainIsLeftover} recipe={mainRecipe} />
+										<ServingsSlider
+											value={mainServings}
+											onChange={setMainServings}
+											isLeftover={mainIsLeftover}
+											onLeftoverChange={setMainIsLeftover}
+											recipe={mainRecipe}
+											showRacionControl={true}
+											racionValue={mainRacionValue}
+											onRacionClick={() => handleRacionClick('main')}
+										/>
 
 										{/* Days Selection */}
 										<DaysSelector
@@ -352,7 +419,16 @@ export default function UpdateMealModal({
 										</div>
 
 										{/* Servings Slider */}
-										<ServingsSlider value={sideServings} onChange={setSideServings} isLeftover={sideIsLeftover} onLeftoverChange={setSideIsLeftover} recipe={sideRecipe} />
+										<ServingsSlider
+											value={sideServings}
+											onChange={setSideServings}
+											isLeftover={sideIsLeftover}
+											onLeftoverChange={setSideIsLeftover}
+											recipe={sideRecipe}
+											showRacionControl={true}
+											racionValue={sideRacionValue}
+											onRacionClick={() => handleRacionClick('side')}
+										/>
 
 										{/* Days Selection */}
 										<DaysSelector

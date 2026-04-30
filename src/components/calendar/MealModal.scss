@@ -227,6 +227,17 @@
 			color: $individual;
 			font-weight: 600;
 		}
+
+		.hm-racion-trigger {
+			background: transparent;
+			border: none;
+			padding: 0;
+			color: $individual;
+			font-weight: 600;
+			font-size: 1rem;
+			cursor: pointer;
+			text-decoration: underline;
+		}
 	}
 
 	// Right column: the leftover toggle

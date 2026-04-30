@@ -6,7 +6,17 @@ import LeftoverToggle from './LeftoverToggle';
  * Range slider for portion selection with leftover toggle
  * Based on calendario-planificador.blade.php lines 487-501
  */
-export default function ServingsSlider({ value, onChange, isLeftover, onLeftoverChange, recipe, showLeftover = true }) {
+export default function ServingsSlider({
+	value,
+	onChange,
+	isLeftover,
+	onLeftoverChange,
+	recipe,
+	showLeftover = true,
+	racionValue = 1,
+	onRacionClick = null,
+	showRacionControl = false,
+}) {
 	const servingLabel = recipe?.porcion_nombre_plural || 'Porciones';
 	const servingSingular = recipe?.porcion_nombre || 'Porción';
 	const isDisabled = isLeftover;
@@ -22,8 +32,16 @@ export default function ServingsSlider({ value, onChange, isLeftover, onLeftover
 						{value === 1 ? servingSingular : servingLabel}
 					</span>
 					<span className='separator'>|</span>
-					<span>{value}</span>{' '}
-					<span>{racionLabel}</span>
+					{showRacionControl ? (
+						<button type='button' className='hm-racion-trigger' onClick={onRacionClick}>
+							{racionValue} {racionValue === 1 ? 'Ración' : 'Racións'}
+						</button>
+					) : (
+						<>
+							<span>{value}</span>{' '}
+							<span>{racionLabel}</span>
+						</>
+					)}
 				</div>
 				{showLeftover && <LeftoverToggle checked={isLeftover} onChange={onLeftoverChange} />}
 			</div>
