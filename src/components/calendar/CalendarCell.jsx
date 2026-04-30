@@ -165,6 +165,28 @@ export default function CalendarCell({
 		},
 	});
 
+	const toggleLeftoverMutation = useMutation({
+		mutationFn: (payload) =>
+			addRecipeToCalendar(calendarId, {
+				recetaid: payload.recipeId,
+				mealtype: payload.mealType,
+				mealnum: mealKey,
+				daynum: [dayKey],
+				porciones: payload.servings || 1,
+				leftover: payload.leftover ? 1 : 0,
+			}),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
+			queryClient.invalidateQueries({
+				queryKey: ['calendar-nutrition', calendarId, dayKey],
+			});
+		},
+		onError: (error) => {
+			console.error('Error updating leftover state:', error);
+			alert('Error al actualizar recalentado. Por favor intente de nuevo.');
+		},
+	});
+
 	const handleCellClick = () => {
 		if (hasRecipe) {
 			setShowUpdateModal(true);
@@ -187,8 +209,21 @@ export default function CalendarCell({
 
 	const handleToggleLeftover = (mealType, e) => {
 		e.stopPropagation();
-		// TODO: Implement leftover toggle
-		console.log('Toggle leftover for', mealType);
+		const isMainMeal = mealType === 'main';
+		const recipeId = isMainMeal ? mainRecipeId : sideRecipeId;
+		const currentLeftover = isMainMeal ? mainLeftover : sideLeftover;
+		const servings = isMainMeal ? mainServing : sideServing;
+
+		if (!recipeId) {
+			return;
+		}
+
+		toggleLeftoverMutation.mutate({
+			recipeId,
+			mealType,
+			servings: servings || 1,
+			leftover: !currentLeftover,
+		});
 	};
 
 	const handleDeleteRecipe = (mealType, e) => {
