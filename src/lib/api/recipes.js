@@ -87,6 +87,16 @@ export const addRecipeComment = async (recipeId, comment) => {
 };
 
 /**
+ * Toggle bookmark for a recipe
+ * @param {number} recipeId - Recipe ID
+ * @returns {Promise<Object>} - Response with bookmark state
+ */
+export const toggleRecipeBookmark = async (recipeId) => {
+	const response = await apiClient.post(`/recipes/${recipeId}/bookmark`);
+	return response.data;
+};
+
+/**
  * Delete a comment
  * @param {number} commentId - Comment ID
  * @returns {Promise<Object>} - Response

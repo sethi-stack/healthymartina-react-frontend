@@ -1,7 +1,16 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+	useInfiniteQuery,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
-import { getRecipes, getAdvancedFilteredRecipes } from '../lib/api/recipes';
+import {
+	getRecipes,
+	getAdvancedFilteredRecipes,
+	toggleRecipeBookmark,
+} from '../lib/api/recipes';
 import { getCalendar, getCalendars } from '../lib/api/calendars';
 import AddMealModal from '../components/calendar/AddMealModal';
 import { useCalendarStore } from '../stores/calendarStore';
@@ -12,7 +21,9 @@ import './Recetario.scss';
 
 export function Recetario() {
 	const [searchParams, setSearchParams] = useSearchParams();
+	const queryClient = useQueryClient();
 	const [hasBookmarkFilter, setHasBookmarkFilter] = useState(false);
+	const [bookmarkedRecipeIds, setBookmarkedRecipeIds] = useState(() => new Set());
 	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 	const [appliedFilters, setAppliedFilters] = useState({});
 	const [showAddMealModal, setShowAddMealModal] = useState(false);
@@ -153,7 +164,40 @@ export function Recetario() {
 		setHasBookmarkFilter(!hasBookmarkFilter);
 	};
 
+	const toggleBookmarkMutation = useMutation({
+		mutationFn: (recipeId) => toggleRecipeBookmark(recipeId),
+		onSuccess: (data, recipeId) => {
+			const isBookmarked = Boolean(data?.bookmarked);
+			setBookmarkedRecipeIds((current) => {
+				const next = new Set(current);
+				if (isBookmarked) {
+					next.add(recipeId);
+				} else {
+					next.delete(recipeId);
+				}
+				return next;
+			});
+			queryClient.invalidateQueries({ queryKey: ['recipes'] });
+		},
+	});
+
+	const handleToggleRecipeBookmark = (recipeId) => {
+		if (toggleBookmarkMutation.isPending) return;
+		toggleBookmarkMutation.mutate(recipeId);
+	};
+
 	const recipes = data?.pages.flatMap((page) => page.data) || [];
+	useEffect(() => {
+		if (!hasBookmarkFilter || recipes.length === 0) return;
+		setBookmarkedRecipeIds((current) => {
+			const next = new Set(current);
+			recipes.forEach((recipe) => {
+				next.add(recipe.id);
+			});
+			return next;
+		});
+	}, [hasBookmarkFilter, recipes]);
+
 	const totalRecipes =
 		data?.pages[0]?.meta?.total || data?.pages[0]?.total || 0;
 	const calendar = activeCalendarData?.data || activeCalendarData;
@@ -244,6 +288,10 @@ export function Recetario() {
 												key={recipe.id}
 												recipe={recipe}
 												onAddToCalendar={handleAddToCalendar}
+												onToggleBookmark={() => handleToggleRecipeBookmark(recipe.id)}
+												isBookmarked={
+													hasBookmarkFilter || bookmarkedRecipeIds.has(recipe.id)
+												}
 											/>
 										);
 									} else {
@@ -252,6 +300,10 @@ export function Recetario() {
 												key={recipe.id}
 												recipe={recipe}
 												onAddToCalendar={handleAddToCalendar}
+												onToggleBookmark={() => handleToggleRecipeBookmark(recipe.id)}
+												isBookmarked={
+													hasBookmarkFilter || bookmarkedRecipeIds.has(recipe.id)
+												}
 											/>
 										);
 									}

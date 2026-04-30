@@ -21,6 +21,8 @@ export const RecipeCard = forwardRef(
 			customMenu = null,
 			customClass = '',
 			isLeftover = false,
+			onToggleBookmark = null,
+			isBookmarked = false,
 			children,
 		},
 		ref
@@ -115,6 +117,8 @@ export const RecipeCard = forwardRef(
 					{!isCalendar && showMenu && !customMenu && (
 						<RecipeActionMenu
 							onAddToCalendar={handleAddToCalendar}
+							onToggleBookmark={onToggleBookmark}
+							isBookmarked={isBookmarked}
 							menuPosition='absolute'
 							customClasses='hm-card__actions'
 						/>
