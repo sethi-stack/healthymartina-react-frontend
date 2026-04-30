@@ -6,7 +6,9 @@ import apiClient from './client';
  * @returns {Promise<Object>} - Response with data and pagination info
  */
 export const getRecipes = async (params = {}) => {
-	const response = await apiClient.get('/recipes', { params });
+	const { bookmark, ...restParams } = params;
+	const endpoint = bookmark ? '/recipes/bookmarks' : '/recipes';
+	const response = await apiClient.get(endpoint, { params: restParams });
 	return response.data;
 };
 
