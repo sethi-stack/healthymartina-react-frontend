@@ -1,38 +1,42 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import {
-	useInfiniteQuery,
-	useMutation,
-	useQuery,
-	useQueryClient,
-} from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
-import {
-	getRecipes,
-	getAdvancedFilteredRecipes,
-	toggleRecipeBookmark,
-} from '../lib/api/recipes';
+import { FiBookmark } from 'react-icons/fi';
+import { MdFilterAltOff } from 'react-icons/md';
+import { LuFilter } from 'react-icons/lu';
+import { getRecipes, getAdvancedFilteredRecipes } from '../lib/api/recipes';
 import { getCalendar, getCalendars } from '../lib/api/calendars';
 import AddMealModal from '../components/calendar/AddMealModal';
 import { useCalendarStore } from '../stores/calendarStore';
 import { RecipeCard } from '../components/recipes/RecipeCard';
 import { FiltersPopup } from '../components/recipes/FiltersPopup';
-import { FilterIcon, ResetFilterIcon, BookmarkIcon } from '../components/icons';
+import { FilterBookmarksModal } from '../components/recipes/FilterBookmarksModal';
+import { IconActionButton } from '../components/shared/IconActionButton';
 import './Recetario.scss';
+
+const hasMeaningfulFilters = (filters = {}) => {
+	if (!filters || typeof filters !== 'object') return false;
+	return Object.keys(filters).some((key) => {
+		const value = filters[key];
+		if (Array.isArray(value)) return value.length > 0;
+		if (value && typeof value === 'object') return Object.keys(value).length > 0;
+		return Boolean(value);
+	});
+};
 
 export function Recetario() {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const queryClient = useQueryClient();
-	const [hasBookmarkFilter, setHasBookmarkFilter] = useState(false);
-	const [bookmarkedRecipeIds, setBookmarkedRecipeIds] = useState(() => new Set());
+	const [isBookmarksModalOpen, setIsBookmarksModalOpen] = useState(false);
 	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 	const [appliedFilters, setAppliedFilters] = useState({});
+	const [isFilterApplied, setIsFilterApplied] = useState(false);
 	const [showAddMealModal, setShowAddMealModal] = useState(false);
 	const [selectedRecipeForCalendar, setSelectedRecipeForCalendar] = useState(null);
 	const selectedCalendarIdFromStore = useCalendarStore(
 		(state) => state.selectedCalendarId
 	);
 	const setSelectedCalendar = useCalendarStore((state) => state.setSelectedCalendar);
-	const hasActiveFilters = Object.keys(appliedFilters).length > 0;
+	const hasActiveFilters = isFilterApplied || hasMeaningfulFilters(appliedFilters);
 
 	const { data: calendarsData } = useQuery({
 		queryKey: ['calendars'],
@@ -76,12 +80,11 @@ export function Recetario() {
 
 		if (searchParams.get('reset') === '1') {
 			setAppliedFilters({});
-			setHasBookmarkFilter(false);
+			setIsFilterApplied(false);
 			return;
 		}
 
 		if (searchParams.get('filter') === 'true' && includeIngredients.length > 0) {
-			setHasBookmarkFilter(false);
 			setAppliedFilters((current) => {
 				const next = {
 					...current,
@@ -92,6 +95,7 @@ export function Recetario() {
 					? current
 					: next;
 			});
+			setIsFilterApplied(true);
 		}
 	}, [searchParams]);
 
@@ -103,13 +107,13 @@ export function Recetario() {
 		status,
 		isLoading,
 	} = useInfiniteQuery({
-		queryKey: ['recipes', { hasBookmarkFilter, filters: appliedFilters }],
+		queryKey: ['recipes', { filters: appliedFilters }],
 		queryFn: ({ pageParam = 1 }) => {
 			// Use advanced filter if filters are applied, otherwise use regular getRecipes
 			if (hasActiveFilters) {
 				return getAdvancedFilteredRecipes(appliedFilters, pageParam, 27);
 			}
-			return getRecipes({ page: pageParam, bookmark: hasBookmarkFilter });
+			return getRecipes({ page: pageParam });
 		},
 		getNextPageParam: (lastPage) => {
 			// Handle Laravel pagination structure (Resource or standard)
@@ -153,50 +157,20 @@ export function Recetario() {
 	const handleResetFilter = () => {
 		setSearchParams({});
 		setAppliedFilters({});
-		setHasBookmarkFilter(false);
+		setIsFilterApplied(false);
 	};
 
 	const handleApplyFilters = (filters) => {
+		const hasFilters = hasMeaningfulFilters(filters);
 		setAppliedFilters(filters);
+		setIsFilterApplied(hasFilters);
 	};
 
-	const handleBookmarkFilter = () => {
-		setHasBookmarkFilter(!hasBookmarkFilter);
-	};
-
-	const toggleBookmarkMutation = useMutation({
-		mutationFn: (recipeId) => toggleRecipeBookmark(recipeId),
-		onSuccess: (data, recipeId) => {
-			const isBookmarked = Boolean(data?.bookmarked);
-			setBookmarkedRecipeIds((current) => {
-				const next = new Set(current);
-				if (isBookmarked) {
-					next.add(recipeId);
-				} else {
-					next.delete(recipeId);
-				}
-				return next;
-			});
-			queryClient.invalidateQueries({ queryKey: ['recipes'] });
-		},
-	});
-
-	const handleToggleRecipeBookmark = (recipeId) => {
-		if (toggleBookmarkMutation.isPending) return;
-		toggleBookmarkMutation.mutate(recipeId);
+	const handleOpenBookmarkModal = () => {
+		setIsBookmarksModalOpen(true);
 	};
 
 	const recipes = data?.pages.flatMap((page) => page.data) || [];
-	useEffect(() => {
-		if (!hasBookmarkFilter || recipes.length === 0) return;
-		setBookmarkedRecipeIds((current) => {
-			const next = new Set(current);
-			recipes.forEach((recipe) => {
-				next.add(recipe.id);
-			});
-			return next;
-		});
-	}, [hasBookmarkFilter, recipes]);
 
 	const totalRecipes =
 		data?.pages[0]?.meta?.total || data?.pages[0]?.total || 0;
@@ -250,24 +224,31 @@ export function Recetario() {
 					<div className='options'>
 						<div className='left'>
 							<div className='button-options'>
-								<button
-									className={`btn-filtro ${hasActiveFilters ? 'active' : ''}`}
+								<IconActionButton
+									icon={LuFilter}
+									label='Filtro'
+									isActive={hasActiveFilters}
 									onClick={handleFilterClick}
-								>
-									<FilterIcon />
-									<p>Filtro</p>
-								</button>
+									className='btn-filtro'
+								/>
 							</div>
 							<div className='button-options reset-filter'>
-								<button className='reset-filter' onClick={handleResetFilter}>
-									<ResetFilterIcon />
-								</button>
+								<IconActionButton
+									icon={MdFilterAltOff}
+									label='Sin filtros'
+									iconOnly
+									onClick={handleResetFilter}
+									className='reset-filter'
+									title='Quitar filtros'
+								/>
 							</div>
 							<div className='button-options'>
-								<button className='save-mark' onClick={handleBookmarkFilter}>
-									<BookmarkIcon />
-									<p>Marcador</p>
-								</button>
+								<IconActionButton
+									icon={FiBookmark}
+									label='Marcador'
+									onClick={handleOpenBookmarkModal}
+									className='save-mark'
+								/>
 							</div>
 						</div>
 						<div className='right'></div>
@@ -288,10 +269,6 @@ export function Recetario() {
 												key={recipe.id}
 												recipe={recipe}
 												onAddToCalendar={handleAddToCalendar}
-												onToggleBookmark={() => handleToggleRecipeBookmark(recipe.id)}
-												isBookmarked={
-													hasBookmarkFilter || bookmarkedRecipeIds.has(recipe.id)
-												}
 											/>
 										);
 									} else {
@@ -300,10 +277,6 @@ export function Recetario() {
 												key={recipe.id}
 												recipe={recipe}
 												onAddToCalendar={handleAddToCalendar}
-												onToggleBookmark={() => handleToggleRecipeBookmark(recipe.id)}
-												isBookmarked={
-													hasBookmarkFilter || bookmarkedRecipeIds.has(recipe.id)
-												}
 											/>
 										);
 									}
@@ -329,6 +302,13 @@ export function Recetario() {
 					onClose={() => setIsFiltersOpen(false)}
 					onApplyFilters={handleApplyFilters}
 					initialFilters={appliedFilters}
+				/>
+			)}
+			{isBookmarksModalOpen && (
+				<FilterBookmarksModal
+					onClose={() => setIsBookmarksModalOpen(false)}
+					currentFilters={appliedFilters}
+					onApplyBookmark={handleApplyFilters}
 				/>
 			)}
 			{showAddMealModal && selectedRecipeForCalendar && activeCalendarId && (

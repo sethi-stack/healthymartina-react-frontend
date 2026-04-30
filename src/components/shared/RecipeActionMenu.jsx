@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { EllipsisVerticalIcon, CalendarMenuIcon } from '../icons';
-import { FaEye, FaUndo, FaTrashAlt, FaBookmark } from 'react-icons/fa';
+import { FaEye, FaUndo, FaTrashAlt } from 'react-icons/fa';
 
 export const RecipeActionMenu = ({
 	onAddToCalendar,
 	onViewRecipe,
 	onToggleLeftover,
 	onDeleteRecipe,
-	onToggleBookmark,
-	isBookmarked = false,
 	isLeftover = false,
 	menuPosition = 'relative', // Add position prop if we need to adjust for RecipeCard
 	customClasses = '',
@@ -104,16 +102,6 @@ export const RecipeActionMenu = ({
 							<CalendarMenuIcon />
 						</span>
 						<span>Agregar a calendario</span>
-					</button>
-				)}
-				{onToggleBookmark && (
-					<button
-						type='button'
-						className='hm-menu__item'
-						onClick={(e) => handleAction(e, onToggleBookmark)}
-					>
-						<FaBookmark className='hm-menu__icon' />
-						<span>{isBookmarked ? 'Quitar marcador' : 'Guardar marcador'}</span>
 					</button>
 				)}
 			</div>

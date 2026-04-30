@@ -228,13 +228,20 @@
 							padding-bottom: 1em;
 							border-bottom: 1px solid #ded7d7;
 
+							.porcion-racion-row {
+								display: inline-flex;
+								align-items: baseline;
+								gap: 5px;
+								white-space: nowrap;
+							}
+
 							.porcion-cantidad {
 								display: inline;
 								font-weight: bold;
 							}
 
 							.porcionTexto {
-								margin-left: 5px;
+								display: inline;
 							}
 
 							// Use the imported slider styles from _slider.scss

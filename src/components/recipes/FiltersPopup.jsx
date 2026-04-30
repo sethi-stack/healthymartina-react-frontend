@@ -153,7 +153,7 @@ export function FiltersPopup({
 			}
 		}
 
-		onApplyFilters(cleanedFilters);
+		onApplyFilters(cleanedFilters, { source: 'manual' });
 		onClose();
 	};
 
@@ -167,7 +167,7 @@ export function FiltersPopup({
 			calorias: { min: 0, max: 900 },
 			nutrientes: {},
 		});
-		onApplyFilters({});
+		onApplyFilters({}, { source: 'manual' });
 	};
 
 	const defaults = metadata?.defaults || {};

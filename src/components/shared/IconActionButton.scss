@@ -1,0 +1,49 @@
+@import '@/assets/scss/init';
+
+.hm-icon-action-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 15px;
+	@include font-gilroy-medium;
+
+	&__icon {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+	}
+
+	&--icon-only {
+		padding: 8px;
+		min-width: auto;
+	}
+
+	&.hm-btn--outline {
+		color: $gris-oscuro;
+		border-color: $gris-oscuro;
+	}
+
+	&.hm-btn--outline:hover:not(:disabled) {
+		background: #fff;
+		color: $individual;
+		border-color: $individual;
+	}
+
+	&.hm-btn--primary {
+		background: $individual;
+		border-color: $individual;
+		color: #fff;
+	}
+
+	&.hm-icon-action-btn--active {
+		background: $individual !important;
+		border-color: $individual !important;
+		color: #fff !important;
+	}
+
+	&.hm-btn--primary:hover:not(:disabled) {
+		background: $individual;
+		color: #fff;
+		border-color: $individual;
+	}
+}

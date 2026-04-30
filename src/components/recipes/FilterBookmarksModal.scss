@@ -1,0 +1,129 @@
+@import '@/assets/scss/init';
+
+.popup.filter-bookmarks {
+	display: flex !important;
+
+	.filter-bookmarks__content {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+		padding: 0 36px 10px;
+		box-sizing: border-box;
+	}
+
+	.filter-bookmarks__save {
+		width: 100%;
+		box-sizing: border-box;
+		margin: 0 !important;
+		padding: 0 !important;
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			@include font-gilroy-semibold;
+			color: $gris-oscuro;
+		}
+
+		input {
+			display: block;
+			width: 100%;
+			border: 1px solid $gris-oscuro;
+			border-radius: 6px;
+			padding: 10px 12px;
+			margin: 0 !important;
+			@include font-gilroy-medium;
+			background: #fff;
+		}
+	}
+
+	.filter-bookmarks__save-actions {
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 10px;
+
+		button {
+			background: $individual;
+			color: #fff;
+			border: none;
+			border-radius: 6px;
+			padding: 8px 16px;
+			min-width: 120px;
+			height: auto;
+			width: auto;
+			line-height: 1.2;
+			cursor: pointer;
+			@include font-gilroy-semibold;
+		}
+	}
+
+	.filter-bookmarks__error {
+		margin-top: 8px;
+		color: #c74444;
+		@include font-gilroy-medium;
+	}
+
+	.filter-bookmarks__list {
+		width: 100%;
+		box-sizing: border-box;
+		margin: 0 !important;
+		padding: 0 !important;
+
+		h4 {
+			margin: 0 0 10px;
+			@include font-gilroy-semibold;
+			color: $gris-oscuro;
+		}
+
+		ul {
+			list-style: none;
+			margin: 0 !important;
+			padding: 0;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		li {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 10px;
+			padding: 12px;
+			border-bottom: 1px solid #eee;
+
+			&:last-child {
+				border-bottom: 0;
+			}
+
+			span {
+				@include font-gilroy-medium;
+				color: $gris-oscuro;
+			}
+		}
+	}
+
+	.filter-bookmarks__actions {
+		display: flex;
+		gap: 8px;
+
+		button {
+			border: 1px solid $gris-oscuro;
+			background: #fff;
+			border-radius: 6px;
+			padding: 6px 10px;
+			cursor: pointer;
+			@include font-gilroy-medium;
+		}
+
+		.apply:hover {
+			border-color: $individual;
+			color: $individual;
+		}
+
+		.delete {
+			color: #c74444;
+			border-color: #c74444;
+		}
+	}
+}

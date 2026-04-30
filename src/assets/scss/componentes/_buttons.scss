@@ -2,7 +2,7 @@
 	display: flex;
 	justify-content: center;
 	margin-right: 10px;
-	button,
+	button:not(.hm-btn),
 	a {
 		text-decoration: none;
 		color: $gris-oscuro;
@@ -36,7 +36,7 @@
 			}
 		}
 	}
-	.active {
+	.active:not(.hm-btn) {
 		background-color: $individual;
 		color: white;
 		border-color: $individual;

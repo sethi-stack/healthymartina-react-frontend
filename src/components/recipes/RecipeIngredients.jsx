@@ -46,22 +46,24 @@ export function RecipeIngredients({ ingredients, portions }) {
 	return (
 		<div className='slide active'>
 			<form className='rango porcionRango'>
-				<p>
-					{formatPortionDisplay(currentPortion)}
-				</p>
-				<span
-					className={
-						portions?.tipo_medida_id === 1 ? 'receta-porcion' : ''
-					}
-					data-medida_english={portions?.nombre_english}
-					data-tipo_medida_id={portions?.tipo_medida_id}
-					data-nombre={portions?.nombre}
-					data-nombre_plural={portions?.nombre_plural}
-				>
-					{currentPortion === 1
-						? portions?.nombre || 'Porción'
-						: portions?.nombre_plural || 'Porciones'}
-				</span>
+				<div className='porcion-racion-row'>
+					<p className='porcion-cantidad porcionNumero'>
+						{formatPortionDisplay(currentPortion)}
+					</p>
+					<span
+						className={`porcionTexto ${
+							portions?.tipo_medida_id === 1 ? 'receta-porcion' : ''
+						}`.trim()}
+						data-medida_english={portions?.nombre_english}
+						data-tipo_medida_id={portions?.tipo_medida_id}
+						data-nombre={portions?.nombre}
+						data-nombre_plural={portions?.nombre_plural}
+					>
+						{currentPortion === 1
+							? portions?.nombre || 'Porción'
+							: portions?.nombre_plural || 'Porciones'}
+					</span>
+				</div>
 				<input
 					className='e-range'
 					type='range'

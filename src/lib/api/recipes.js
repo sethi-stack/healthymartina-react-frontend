@@ -6,9 +6,7 @@ import apiClient from './client';
  * @returns {Promise<Object>} - Response with data and pagination info
  */
 export const getRecipes = async (params = {}) => {
-	const { bookmark, ...restParams } = params;
-	const endpoint = bookmark ? '/recipes/bookmarks' : '/recipes';
-	const response = await apiClient.get(endpoint, { params: restParams });
+	const response = await apiClient.get('/recipes', { params });
 	return response.data;
 };
 
@@ -86,13 +84,18 @@ export const addRecipeComment = async (recipeId, comment) => {
 	return response.data;
 };
 
-/**
- * Toggle bookmark for a recipe
- * @param {number} recipeId - Recipe ID
- * @returns {Promise<Object>} - Response with bookmark state
- */
-export const toggleRecipeBookmark = async (recipeId) => {
-	const response = await apiClient.post(`/recipes/${recipeId}/bookmark`);
+export const getFilterBookmarks = async () => {
+	const response = await apiClient.get('/filters/bookmarks');
+	return response.data;
+};
+
+export const saveFilterBookmark = async ({ name, filters }) => {
+	const response = await apiClient.post('/filters/bookmarks', { name, filters });
+	return response.data;
+};
+
+export const deleteFilterBookmark = async (bookmarkId) => {
+	const response = await apiClient.delete(`/filters/bookmarks/${bookmarkId}`);
 	return response.data;
 };
 

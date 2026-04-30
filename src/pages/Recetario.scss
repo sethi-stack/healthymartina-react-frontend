@@ -24,6 +24,7 @@
 		display: flex;
 		justify-content: space-between;
 		margin-bottom: 20px;
+		overflow: hidden;
 
 		.left {
 			display: flex;
@@ -31,48 +32,7 @@
 		}
 
 		.button-options {
-			button {
-				display: flex;
-				align-items: center;
-				gap: 5px;
-				background: transparent;
-				border: 1px solid $gris-oscuro;
-				border-radius: 5px;
-				padding: 8px 15px;
-				cursor: pointer;
-				@include font-gilroy-medium;
-				color: $gris-oscuro;
-				transition: all 0.3s ease;
-
-				svg {
-					height: 16px;
-					width: auto;
-					.cls-1 {
-						fill: $gris-oscuro;
-					}
-				}
-
-				p {
-					margin: 0;
-				}
-
-				&:hover {
-					border-color: $individual;
-					color: $individual;
-					svg .cls-1 {
-						fill: $individual;
-					}
-				}
-
-				&.active {
-					background-color: $individual;
-					border-color: $individual;
-					color: #fff;
-					svg .cls-1 {
-						fill: #fff;
-					}
-				}
-			}
+			margin-right: 0;
 
 			&.reset-filter {
 				button {
@@ -86,9 +46,10 @@
 		.sub-container {
 			display: flex;
 			flex-wrap: wrap;
-			margin: 0 -15px; // Offset the padding on the outer cards
-			
-			.col13, .hm-card {
+			// margin: 0 -15px; // Offset the padding on the outer cards
+
+			.col13,
+			.hm-card {
 				width: calc(100% / 3);
 				max-width: calc(100% / 3);
 				flex: 0 0 calc(100% / 3);
