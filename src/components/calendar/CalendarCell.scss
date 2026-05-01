@@ -102,6 +102,11 @@
 					height: 40%;
 					opacity: 0.2;
 				}
+
+				svg .cls-1,
+				svg path {
+					fill: rgba(122, 122, 122, 0.35);
+				}
 			}
 
 			.recipe-image-overlay {

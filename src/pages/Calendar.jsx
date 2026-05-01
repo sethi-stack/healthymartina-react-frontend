@@ -189,7 +189,7 @@ export default function Calendar() {
 		return (
 			<div className='calendar-loading'>
 				<div className='loader'>
-					<img src='/img/progress.gif' alt='Loading' />
+					<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading' />
 				</div>
 			</div>
 		);
@@ -212,7 +212,7 @@ export default function Calendar() {
 			{isBusy && (
 				<div className='page-loading-overlay'>
 					<div className='loader'>
-						<img src='/img/progress.gif' alt='Loading' />
+						<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading' />
 					</div>
 				</div>
 			)}

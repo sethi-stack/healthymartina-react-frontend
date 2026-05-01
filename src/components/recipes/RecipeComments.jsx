@@ -162,7 +162,7 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 			<div className='comments'>
 				{isLoadingComments ? (
 					<div style={{ textAlign: 'center', padding: '20px' }}>
-						<img src='/img/progress.gif' alt='Loading...' />
+						<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading...' />
 					</div>
 				) : comments.length === 0 ? (
 					<div

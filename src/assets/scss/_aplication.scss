@@ -9,6 +9,21 @@
 	}
 }
 
+.hm-loading-spin {
+	width: 36px;
+	height: 36px;
+	animation: hm-spin 1s linear infinite;
+}
+
+@keyframes hm-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
 .buscador {
 	.container-popup {
 		margin-top: -650px;

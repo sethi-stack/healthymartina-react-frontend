@@ -535,6 +535,15 @@
 		align-items: center;
 		justify-content: center;
 		color: $color-text-light;
+
+		svg {
+			opacity: 0.22;
+		}
+
+		svg .cls-1,
+		svg path {
+			fill: rgba($color-text, 0.35);
+		}
 	}
 
 	&__image-overlay {

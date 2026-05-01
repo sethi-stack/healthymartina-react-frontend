@@ -546,7 +546,7 @@ export default function Lista() {
 		return (
 			<div className='lista-loading'>
 				<div className='loader'>
-					<img src='/img/progress.gif' alt='Loading' />
+					<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading' />
 				</div>
 			</div>
 		);
@@ -689,7 +689,7 @@ export default function Lista() {
 			{isBusy && (
 				<div className='page-loading-overlay'>
 					<div className='loader'>
-						<img src='/img/progress.gif' alt='Loading' />
+						<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading' />
 					</div>
 				</div>
 			)}
@@ -714,7 +714,7 @@ export default function Lista() {
 				) : listaLoading ? (
 					<div className='lista-loading'>
 						<div className='loader'>
-							<img src='/img/progress.gif' alt='Loading' />
+							<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading' />
 						</div>
 					</div>
 				) : (

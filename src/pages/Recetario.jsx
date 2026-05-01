@@ -339,7 +339,11 @@ export function Recetario() {
 										padding: '20px',
 									}}
 								>
-									<img src='/img/progress.gif' alt='Loading...' />
+									<img
+										src='/img/iconos/recalentado.svg'
+										className='hm-loading-spin'
+										alt='Loading...'
+									/>
 								</div>
 							)}
 						</div>

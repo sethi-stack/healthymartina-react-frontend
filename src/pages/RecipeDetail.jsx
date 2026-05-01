@@ -53,7 +53,7 @@ export function RecipeDetail() {
 						className='general-container'
 						style={{ textAlign: 'center', padding: '50px' }}
 					>
-						<img src='/img/progress.gif' alt='Loading...' />
+						<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading...' />
 						<p>Cargando receta...</p>
 					</div>
 				</div>

@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useRef } from 'react';
 import {
 	ClockIcon,
 	CartIcon,
-	CalendarioIcon,
+	RecetarioIcon,
 	EllipsisVerticalIcon,
 	CalendarMenuIcon,
 } from '../icons';
@@ -79,7 +79,7 @@ export const RecipeCard = forwardRef(
 		const renderImage = () => (
 			<div className={imageClass}>
 				<div className={isCalendar ? 'recipe-image-background hm-card__image-placeholder' : 'hm-card__image-placeholder'}>
-					<CalendarioIcon />
+					<RecetarioIcon />
 				</div>
 				{imageUrl && (
 					<img
