@@ -276,15 +276,16 @@ export function Recetario() {
 								<IconActionButton
 									icon={LuFilter}
 									label='Filtro'
+									variant='default'
 									isActive={hasActiveFilters}
 									onClick={handleFilterClick}
-									className='btn-filtro'
 								/>
 							</div>
 							<div className='button-options reset-filter'>
 								<IconActionButton
 									icon={MdFilterAltOff}
 									label='Sin filtros'
+									variant='default'
 									iconOnly
 									onClick={handleResetFilter}
 									className='reset-filter'
@@ -295,6 +296,7 @@ export function Recetario() {
 								<IconActionButton
 									icon={FiBookmark}
 									label='Marcador'
+									variant='default'
 									onClick={handleOpenBookmarkModal}
 									className='save-mark'
 								/>

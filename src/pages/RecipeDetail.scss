@@ -393,6 +393,16 @@
 										font-weight: bold !important;
 									}
 								}
+
+								p a.subrecipe-link {
+									font-weight: 900 !important;
+									color: inherit;
+									text-decoration: underline;
+
+									&:hover {
+										color: #c9a035;
+									}
+								}
 							}
 						}
 

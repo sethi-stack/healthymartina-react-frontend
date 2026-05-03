@@ -10,7 +10,11 @@ import './CalendarGrid.scss';
  * Calendar Grid Component
  * Displays the calendar grid with days and meals
  */
-export default function CalendarGrid({ calendar }) {
+export default function CalendarGrid({
+	calendar,
+	nutritionPlanId = null,
+	readOnly = false,
+}) {
 	if (!calendar) return null;
 
 	const [showEditLabelsModal, setShowEditLabelsModal] = useState(false);
@@ -183,12 +187,16 @@ export default function CalendarGrid({ calendar }) {
 					<div
 						key={dayKey}
 						className='col-day-th hm-calendar__day-col hm-calendar__day-col--header'
-						onClick={(e) => {
-							e.preventDefault();
-							setLabelType('days');
-							setSelectedLabelKey(dayKey);
-							setShowEditLabelsModal(true);
-						}}
+						onClick={
+							readOnly
+								? undefined
+								: (e) => {
+										e.preventDefault();
+										setLabelType('days');
+										setSelectedLabelKey(dayKey);
+										setShowEditLabelsModal(true);
+								  }
+						}
 					>
 						<span id='labels' data-val={dayKey}></span>
 						<p className={`desk cal_label_${dayKey} hm-calendar__label hm-calendar__label--desktop hm-label hm-label--day hm-label--clickable`} style={{ width: '100%' }}>
@@ -209,12 +217,16 @@ export default function CalendarGrid({ calendar }) {
 						{/* Meal label column */}
 						<div
 							className='col-part-td hm-calendar__label-col'
-							onClick={(e) => {
-								e.preventDefault();
-								setLabelType('meals');
-								setSelectedLabelKey(mealKey);
-								setShowEditLabelsModal(true);
-							}}
+							onClick={
+								readOnly
+									? undefined
+									: (e) => {
+											e.preventDefault();
+											setLabelType('meals');
+											setSelectedLabelKey(mealKey);
+											setShowEditLabelsModal(true);
+									  }
+							}
 						>
 							<span id='labels' data-val={mealKey}></span>
 							<p className={`desk cal_label_${mealKey} hm-calendar__label hm-calendar__label--vertical hm-calendar__label--desktop hm-label hm-label--meal hm-label--clickable`} style={{ width: '100%' }}>
@@ -271,6 +283,7 @@ export default function CalendarGrid({ calendar }) {
 									mealLabels={meals}
 									mainSchedule={mainSchedule}
 									sidesSchedule={sidesSchedule}
+									readOnly={readOnly}
 								/>
 							);
 						})}
@@ -279,10 +292,14 @@ export default function CalendarGrid({ calendar }) {
 			})}
 
 			{/* Nutrition row - shows nutritional info for each day */}
-			<CalendarNutritionRow calendar={calendar} days={days} />
+			<CalendarNutritionRow
+				calendar={calendar}
+				days={days}
+				nutritionPlanId={nutritionPlanId}
+			/>
 
 			{/* Edit Labels Modal */}
-			{showEditLabelsModal && (
+			{showEditLabelsModal && !readOnly && (
 				<EditLabelsModal
 					calendar={calendar}
 					labelType={labelType}

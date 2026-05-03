@@ -155,8 +155,10 @@ export const updateCalendarLabels = async (calendarId, data) => {
  * @param {string} dayId - Day key (e.g., 'day_1')
  * @returns {Promise<Object>} - Nutritional information
  */
-export const getCalendarNutrition = async (calendarId, dayId) => {
-	const response = await apiClient.get(`/calendars/${calendarId}/nutrition/${dayId}`);
+export const getCalendarNutrition = async (calendarId, dayId, params = {}) => {
+	const response = await apiClient.get(`/calendars/${calendarId}/nutrition/${dayId}`, {
+		params,
+	});
 	return response.data;
 };
 

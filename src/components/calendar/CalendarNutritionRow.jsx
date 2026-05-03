@@ -8,7 +8,7 @@ import './CalendarNutritionRow.scss';
  * Calendar Nutrition Row Component
  * Displays nutritional information for each day below the calendar grid
  */
-export default function CalendarNutritionRow({ calendar, days }) {
+export default function CalendarNutritionRow({ calendar, days, nutritionPlanId = null }) {
 	const [activeView, setActiveView] = useState('statistics'); // 'statistics' or 'macros'
 	const [selectedDay, setSelectedDay] = useState(null);
 	const [selectedDayName, setSelectedDayName] = useState('');
@@ -79,6 +79,7 @@ export default function CalendarNutritionRow({ calendar, days }) {
 								dayKey={dayKey}
 								dayName={dayName}
 								calendarId={calendar?.id}
+								nutritionPlanId={nutritionPlanId}
 								activeView={activeView}
 								onClick={(items) => handleDayClick(dayKey, dayName, items)}
 							/>
@@ -110,6 +111,7 @@ function NutritionDayColumn({
 	dayKey,
 	dayName,
 	calendarId,
+	nutritionPlanId,
 	activeView,
 	onClick,
 }) {
@@ -119,8 +121,13 @@ function NutritionDayColumn({
 		isLoading,
 		error,
 	} = useQuery({
-		queryKey: ['calendar-nutrition', calendarId, dayKey],
-		queryFn: () => getCalendarNutrition(calendarId, dayKey),
+		queryKey: ['calendar-nutrition', calendarId, dayKey, nutritionPlanId],
+		queryFn: () =>
+			getCalendarNutrition(
+				calendarId,
+				dayKey,
+				nutritionPlanId ? { plan_id: nutritionPlanId } : {}
+			),
 		enabled: !!calendarId && !!dayKey,
 		retry: false, // Don't retry on error, use defaults
 		staleTime: 10 * 60 * 1000,

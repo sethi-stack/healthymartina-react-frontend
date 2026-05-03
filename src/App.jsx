@@ -13,6 +13,7 @@ import { RecipeDetail } from './pages/RecipeDetail';
 import Calendar from './pages/Calendar';
 import Lista from './pages/Lista';
 import { Perfil } from './pages/Perfil';
+import Planes from './pages/Planes';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -119,6 +120,26 @@ export function App() {
 							<ProtectedRoute>
 								<AuthenticatedLayout>
 									<Lista />
+								</AuthenticatedLayout>
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path='/planes'
+						element={
+							<ProtectedRoute>
+								<AuthenticatedLayout>
+									<Planes />
+								</AuthenticatedLayout>
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path='/planes/:id'
+						element={
+							<ProtectedRoute>
+								<AuthenticatedLayout>
+									<Planes />
 								</AuthenticatedLayout>
 							</ProtectedRoute>
 						}

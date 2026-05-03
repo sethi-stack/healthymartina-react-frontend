@@ -36,10 +36,41 @@ export function RecipeIngredients({ ingredients, portions }) {
 	// Helper to render ingredient name (handles HTML links)
 	const renderIngredientName = (ingrediente) => {
 		const name = ingrediente.ingrediente || '';
-		// Check if it contains HTML (link)
+		const normalizeSubRecipeUrl = (rawUrl = '', rawName = '') => {
+			if (!rawUrl && !rawName) return '';
+
+			const matchSlugFromPath = (value) => {
+				const match = String(value).match(/\/receta\/([^/?#]+)/i);
+				return match?.[1] || '';
+			};
+
+			const slugFromUrl = matchSlugFromPath(rawUrl);
+			if (slugFromUrl) return `/receta/${slugFromUrl}`;
+
+			const slugFromNameHref = String(rawName).match(/href=['"]([^'"]+)['"]/i)?.[1];
+			const slugFromName = matchSlugFromPath(slugFromNameHref || '');
+			if (slugFromName) return `/receta/${slugFromName}`;
+
+			return '';
+		};
+
+		const subRecipeUrl = normalizeSubRecipeUrl(ingrediente['sub-url'], name);
+		const isSubRecipe = ingrediente.type === 'subrecipe' || Boolean(subRecipeUrl);
+
+		if (isSubRecipe) {
+			const plainTextName = name.replace(/<[^>]*>/g, '').trim();
+			return (
+				<a href={subRecipeUrl || '#'} className='subrecipe-link'>
+					{plainTextName || 'Sub-receta'}
+				</a>
+			);
+		}
+
+		// Fallback for legacy HTML content.
 		if (name.includes('<a') || name.includes('href=')) {
 			return <span dangerouslySetInnerHTML={{ __html: name }} />;
 		}
+
 		return name;
 	};
 

@@ -36,6 +36,7 @@ export default function CalendarCell({
 	mealLabels,
 	mainSchedule,
 	sidesSchedule,
+	readOnly = false,
 }) {
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -191,6 +192,7 @@ export default function CalendarCell({
 	});
 
 	const handleCellClick = () => {
+		if (readOnly) return;
 		if (hasRecipe) {
 			setUpdateModalTab('main');
 			setShowUpdateModal(true);
@@ -212,6 +214,7 @@ export default function CalendarCell({
 	};
 
 	const handleToggleLeftover = (mealType, e) => {
+		if (readOnly) return;
 		e.stopPropagation();
 		const isMainMeal = mealType === 'main';
 		const recipeId = isMainMeal ? mainRecipeId : sideRecipeId;
@@ -231,6 +234,7 @@ export default function CalendarCell({
 	};
 
 	const handleDeleteRecipe = (mealType, e) => {
+		if (readOnly) return;
 		e.stopPropagation();
 		if (confirm('¿Está seguro de que desea eliminar esta receta del calendario?')) {
 			deleteMutation.mutate({
@@ -247,6 +251,7 @@ export default function CalendarCell({
 	};
 
 	const handleDragStart = (e) => {
+		if (readOnly) return;
 		if (!mainRecipeId) return;
 		const payload = {
 			calendarId,
@@ -266,16 +271,19 @@ export default function CalendarCell({
 	};
 
 	const handleDragOver = (e) => {
+		if (readOnly) return;
 		e.preventDefault();
 		e.dataTransfer.dropEffect = 'move';
 		setIsDragHover(true);
 	};
 
 	const handleDragLeave = () => {
+		if (readOnly) return;
 		setIsDragHover(false);
 	};
 
 	const handleDrop = (e) => {
+		if (readOnly) return;
 		e.preventDefault();
 		e.stopPropagation();
 		setIsDragHover(false);
@@ -306,15 +314,15 @@ export default function CalendarCell({
 				data-mealnum={mealNum}
 				data-mealname={mealName}
 				onClick={handleCellClick}
-				onDragOver={handleDragOver}
-				onDragLeave={handleDragLeave}
-				onDrop={handleDrop}
+				onDragOver={readOnly ? undefined : handleDragOver}
+				onDragLeave={readOnly ? undefined : handleDragLeave}
+				onDrop={readOnly ? undefined : handleDrop}
 			>
 				{hasRecipe ? (
 					<div
 						className='calRecipe hm-calendar__cell'
-						draggable='true'
-						onDragStart={handleDragStart}
+						draggable={readOnly ? 'false' : 'true'}
+						onDragStart={readOnly ? undefined : handleDragStart}
 					>
 						{mainRecipeId && (
 							<RecipeCard
@@ -326,22 +334,25 @@ export default function CalendarCell({
 								customClass='calRecipeMain'
 								onClick={(e) => {
 									e.stopPropagation();
+									if (readOnly) return;
 									setUpdateModalTab('main');
 									setShowUpdateModal(true);
 								}}
 								customMenu={
-									<RecipeActionMenu
-										onViewRecipe={(e) =>
-											handleViewRecipe(
-												mainRecipe || { id: mainRecipeId },
-												e
-											)
-										}
-										onToggleLeftover={(e) => handleToggleLeftover('main', e)}
-										onDeleteRecipe={(e) => handleDeleteRecipe('main', e)}
-										isLeftover={mainLeftover}
-										triggerSize='sm'
-									/>
+									readOnly ? null : (
+										<RecipeActionMenu
+											onViewRecipe={(e) =>
+												handleViewRecipe(
+													mainRecipe || { id: mainRecipeId },
+													e
+												)
+											}
+											onToggleLeftover={(e) => handleToggleLeftover('main', e)}
+											onDeleteRecipe={(e) => handleDeleteRecipe('main', e)}
+											isLeftover={mainLeftover}
+											triggerSize='sm'
+										/>
+									)
 								}
 							>
 								{/* {mainServing && (
@@ -361,22 +372,25 @@ export default function CalendarCell({
 								customClass='calRecipeSide hm-calendar__recipe--side'
 								onClick={(e) => {
 									e.stopPropagation();
+									if (readOnly) return;
 									setUpdateModalTab('side');
 									setShowUpdateModal(true);
 								}}
 								customMenu={
-									<RecipeActionMenu
-										onViewRecipe={(e) =>
-											handleViewRecipe(
-												sideRecipe || { id: sideRecipeId },
-												e
-											)
-										}
-										onToggleLeftover={(e) => handleToggleLeftover('side', e)}
-										onDeleteRecipe={(e) => handleDeleteRecipe('side', e)}
-										isLeftover={sideLeftover}
-										triggerSize='sm'
-									/>
+									readOnly ? null : (
+										<RecipeActionMenu
+											onViewRecipe={(e) =>
+												handleViewRecipe(
+													sideRecipe || { id: sideRecipeId },
+													e
+												)
+											}
+											onToggleLeftover={(e) => handleToggleLeftover('side', e)}
+											onDeleteRecipe={(e) => handleDeleteRecipe('side', e)}
+											isLeftover={sideLeftover}
+											triggerSize='sm'
+										/>
+									)
 								}
 							>
 								{/* {sideServing && (
@@ -392,7 +406,7 @@ export default function CalendarCell({
 				)}
 			</div>
 
-			{showAddModal && (
+			{showAddModal && !readOnly && (
 				<AddMealModal
 					calendarId={calendarId}
 					dayNum={dayNum}
@@ -408,7 +422,7 @@ export default function CalendarCell({
 				/>
 			)}
 
-			{showUpdateModal && hasRecipe && (
+			{showUpdateModal && hasRecipe && !readOnly && (
 				<UpdateMealModal
 					calendarId={calendarId}
 					dayNum={dayNum}
