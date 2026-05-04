@@ -156,8 +156,8 @@ function NutritionDayColumn({
 				}
 				return item;
 			});
-			// Only set nutritionItems if there's actual data (not all zeros)
-			if (items.length > 0 && items.some(item => item.cantidad > 0)) {
+			// Render all returned nutrition items, even when values are zero.
+			if (items.length > 0) {
 				nutritionItems = items;
 			}
 		} else if (Array.isArray(nutritionData.nutrition)) {
@@ -175,8 +175,8 @@ function NutritionDayColumn({
 				}
 				return item;
 			});
-			// Only set nutritionItems if there's actual data (not all zeros)
-			if (items.length > 0 && items.some(item => item.cantidad > 0)) {
+			// Render all returned nutrition items, even when values are zero.
+			if (items.length > 0) {
 				nutritionItems = items;
 			}
 		}
@@ -190,8 +190,8 @@ function NutritionDayColumn({
 			porcentaje: item.porcentaje || item.percentage || 0,
 			main_color: item.main_color || item.color || '#42bd41',
 		}));
-		// Only set nutritionItems if there's actual data (not all zeros)
-		if (items.length > 0 && items.some(item => item.cantidad > 0)) {
+		// Render all returned nutrition items, even when values are zero.
+		if (items.length > 0) {
 			nutritionItems = items;
 		}
 	}

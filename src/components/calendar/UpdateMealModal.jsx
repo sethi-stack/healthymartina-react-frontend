@@ -92,29 +92,14 @@ export default function UpdateMealModal({
 		setActiveTab(initialTab === 'side' ? 'side' : 'main');
 	}, [initialTab]);
 
-	// In update mode, preselect all days where the same main recipe is currently assigned
-	// for the selected meal. This allows unchecking days to remove that assignment.
+	// Day-scoped edit by default: editing one cell should not auto-target other days.
 	useEffect(() => {
-		if (!mainRecipe?.id) return;
-		const assignedDays = Object.entries(mainSchedule || {})
-			.filter(([, meals]) => meals?.[selectedMealKey] === mainRecipe.id)
-			.map(([dayKeyFromSchedule]) => dayKeyFromSchedule);
-		setMainSelectedDays(
-			assignedDays.length > 0 ? assignedDays : [dayKey]
-		);
-	}, [mainRecipe?.id, mainSchedule, selectedMealKey, dayKey]);
+		setMainSelectedDays([dayKey]);
+	}, [dayKey, selectedMealKey]);
 
-	// In update mode, preselect all days where the same side recipe is currently assigned
-	// for the selected meal. This allows unchecking days to remove that assignment.
 	useEffect(() => {
-		if (!sideRecipe?.id) return;
-		const assignedDays = Object.entries(sidesSchedule || {})
-			.filter(([, meals]) => meals?.[selectedMealKey] === sideRecipe.id)
-			.map(([dayKeyFromSchedule]) => dayKeyFromSchedule);
-		setSideSelectedDays(
-			assignedDays.length > 0 ? assignedDays : [dayKey]
-		);
-	}, [sideRecipe?.id, sidesSchedule, selectedMealKey, dayKey]);
+		setSideSelectedDays([dayKey]);
+	}, [dayKey, selectedMealKey]);
 
 	// Update mutation
 	const updateRecipeMutation = useMutation({

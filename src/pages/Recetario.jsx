@@ -7,6 +7,7 @@ import { LuFilter } from 'react-icons/lu';
 import { getRecipes, getAdvancedFilteredRecipes } from '../lib/api/recipes';
 import { getCalendar, getCalendars } from '../lib/api/calendars';
 import AddMealModal from '../components/calendar/AddMealModal';
+import CalendarPickerModal from '../components/calendar/CalendarPickerModal';
 import { useCalendarStore } from '../stores/calendarStore';
 import { RecipeCard } from '../components/recipes/RecipeCard';
 import { FiltersPopup } from '../components/recipes/FiltersPopup';
@@ -70,6 +71,8 @@ export function Recetario() {
 	const [appliedFilters, setAppliedFilters] = useState({});
 	const [isFilterApplied, setIsFilterApplied] = useState(false);
 	const [showAddMealModal, setShowAddMealModal] = useState(false);
+	const [showCalendarPicker, setShowCalendarPicker] = useState(false);
+	const [targetCalendarId, setTargetCalendarId] = useState(null);
 	const [selectedRecipeForCalendar, setSelectedRecipeForCalendar] = useState(null);
 	const selectedCalendarIdFromStore = useCalendarStore(
 		(state) => state.selectedCalendarId
@@ -108,6 +111,13 @@ export function Recetario() {
 		queryKey: ['calendar', activeCalendarId],
 		queryFn: () => getCalendar(activeCalendarId),
 		enabled: !!activeCalendarId,
+		staleTime: 60 * 1000,
+	});
+
+	const { data: targetCalendarData } = useQuery({
+		queryKey: ['calendar', targetCalendarId],
+		queryFn: () => getCalendar(targetCalendarId),
+		enabled: !!targetCalendarId,
 		staleTime: 60 * 1000,
 	});
 
@@ -182,7 +192,7 @@ export function Recetario() {
 			return;
 		}
 		setSelectedRecipeForCalendar(recipe);
-		setShowAddMealModal(true);
+		setShowCalendarPicker(true);
 	};
 
 	const handleFilterClick = () => {
@@ -223,7 +233,8 @@ export function Recetario() {
 
 	const totalRecipes =
 		data?.pages[0]?.meta?.total || data?.pages[0]?.total || 0;
-	const calendar = activeCalendarData?.data || activeCalendarData;
+	const calendar =
+		targetCalendarData?.data || targetCalendarData || activeCalendarData?.data || activeCalendarData;
 
 	const parseSchedule = (value) => {
 		if (!value) return {};
@@ -366,9 +377,23 @@ export function Recetario() {
 					onApplyBookmark={handleApplyFilters}
 				/>
 			)}
-			{showAddMealModal && selectedRecipeForCalendar && activeCalendarId && (
+			{showCalendarPicker && (
+				<CalendarPickerModal
+					calendars={calendars}
+					initialCalendarId={activeCalendarId}
+					onClose={() => setShowCalendarPicker(false)}
+					onConfirm={(calendarId) => {
+						const selected = calendars.find((calendarItem) => calendarItem.id === calendarId);
+						setSelectedCalendar(calendarId, selected?.title || '');
+						setTargetCalendarId(calendarId);
+						setShowCalendarPicker(false);
+						setShowAddMealModal(true);
+					}}
+				/>
+			)}
+			{showAddMealModal && selectedRecipeForCalendar && (targetCalendarId || activeCalendarId) && calendar && (
 				<AddMealModal
-					calendarId={activeCalendarId}
+					calendarId={targetCalendarId || activeCalendarId}
 					dayNum={1}
 					dayKey='day_1'
 					mealNum={1}
@@ -381,6 +406,7 @@ export function Recetario() {
 					initialRecipe={selectedRecipeForCalendar}
 					onClose={() => {
 						setShowAddMealModal(false);
+						setTargetCalendarId(null);
 						setSelectedRecipeForCalendar(null);
 					}}
 				/>

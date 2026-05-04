@@ -5,6 +5,7 @@ import { getCalendar, getCalendars } from '../../lib/api/calendars';
 import { exportRecipePdf } from '../../lib/api/recipes';
 import { useCalendarStore } from '../../stores/calendarStore';
 import AddMealModal from '../calendar/AddMealModal';
+import CalendarPickerModal from '../calendar/CalendarPickerModal';
 
 /**
  * Recipe Actions Component
@@ -12,6 +13,8 @@ import AddMealModal from '../calendar/AddMealModal';
  */
 export function RecipeActions({ recipeId, recipeTitle }) {
 	const [showAddModal, setShowAddModal] = useState(false);
+	const [showCalendarPicker, setShowCalendarPicker] = useState(false);
+	const [targetCalendarId, setTargetCalendarId] = useState(null);
 	const selectedCalendarIdFromStore = useCalendarStore(
 		(state) => state.selectedCalendarId
 	);
@@ -51,6 +54,13 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 		staleTime: 60 * 1000,
 	});
 
+	const { data: targetCalendarData } = useQuery({
+		queryKey: ['calendar', targetCalendarId],
+		queryFn: () => getCalendar(targetCalendarId),
+		enabled: !!targetCalendarId,
+		staleTime: 60 * 1000,
+	});
+
 	const exportMutation = useMutation({
 		mutationFn: () => exportRecipePdf(recipeId),
 		onSuccess: (blob) => {
@@ -73,7 +83,7 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 			alert('No hay calendarios disponibles. Crea uno primero.');
 			return;
 		}
-		setShowAddModal(true);
+		setShowCalendarPicker(true);
 	};
 
 	const handleExport = () => {
@@ -91,7 +101,7 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 		}
 		return value;
 	};
-	const calendar = activeCalendarData?.data || activeCalendarData;
+	const calendar = targetCalendarData?.data || targetCalendarData || activeCalendarData?.data || activeCalendarData;
 	const labels = parseSchedule(calendar?.labels);
 	const mainSchedule = parseSchedule(calendar?.main_schedule);
 	const sidesSchedule = parseSchedule(calendar?.sides_schedule);
@@ -150,9 +160,23 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 				</button>
 			</div>
 			<div className='right'></div>
-			{showAddModal && activeCalendarId && (
+			{showCalendarPicker && (
+				<CalendarPickerModal
+					calendars={calendars}
+					initialCalendarId={activeCalendarId}
+					onClose={() => setShowCalendarPicker(false)}
+					onConfirm={(calendarId) => {
+						const selected = calendars.find((calendarItem) => calendarItem.id === calendarId);
+						setSelectedCalendar(calendarId, selected?.title || '');
+						setTargetCalendarId(calendarId);
+						setShowCalendarPicker(false);
+						setShowAddModal(true);
+					}}
+				/>
+			)}
+			{showAddModal && (targetCalendarId || activeCalendarId) && calendar && (
 				<AddMealModal
-					calendarId={activeCalendarId}
+					calendarId={targetCalendarId || activeCalendarId}
 					dayNum={1}
 					dayKey='day_1'
 					mealNum={1}
@@ -163,7 +187,10 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 					dayLabels={dayLabels}
 					mealLabels={mealLabels}
 					initialRecipe={{ id: recipeId, titulo: recipeTitle }}
-					onClose={() => setShowAddModal(false)}
+					onClose={() => {
+						setShowAddModal(false);
+						setTargetCalendarId(null);
+					}}
 				/>
 			)}
 		</div>

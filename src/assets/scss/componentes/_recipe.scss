@@ -127,18 +127,11 @@
 				.comment-menu {
 					align-self: center;
 					position: relative;
-					button {
+					.hm-menu__trigger {
 						border: 1px solid #7a7a7a;
 						padding: 5px;
 						background-color: transparent;
 						border-radius: 7px;
-						span {
-							display: block;
-							height: 2px;
-							width: 20px;
-							background-color: #7a7a7a;
-							margin: 3px 0;
-						}
 					}
 					.comment-nav {
 						background: white;
@@ -150,16 +143,19 @@
 						border: 1px solid #7a7a7a;
 						background-color: #fff;
 						border-radius: 7px;
-						a {
+						a, button {
 							font-size: 0.8em;
 							text-decoration: none;
 							color: #7a7a7a;
 							display: flex;
-							flex-wrap: wrap;
-							justify-content: center;
+							flex-wrap: nowrap;
+							justify-content: flex-start;
 							align-items: center;
 							width: 190px;
 							padding: 11px 5px;
+							gap: 8px;
+							background: transparent;
+							border: 0;
 							i {
 								margin-right: 5px;
 							}
@@ -167,11 +163,8 @@
 					}
 				}
 				.active {
-					button {
+					.hm-menu__trigger {
 						border-color: $individual;
-						span {
-							background-color: $individual;
-						}
 					}
 					.comment-nav {
 						display: block;

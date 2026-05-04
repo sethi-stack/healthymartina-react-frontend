@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FaReply, FaTrash } from 'react-icons/fa';
+import { EllipsisVerticalIcon } from '../icons';
 import {
 	getRecipeComments,
 	addRecipeComment,
@@ -210,11 +211,15 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 									</div>
 								</div>
 								<div
-									className={`comment-menu ${
+									className={`comment-menu hm-menu ${
 										openMenuId === comment.id ? 'active' : ''
 									}`}
 								>
 									<button
+										type='button'
+										className={`hm-menu__trigger ${
+											openMenuId === comment.id ? 'hm-menu__trigger--active' : ''
+										}`}
 										onClick={(e) => {
 											e.preventDefault();
 											e.stopPropagation();
@@ -223,14 +228,16 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 											);
 										}}
 									>
-										<span></span>
-										<span></span>
-										<span></span>
+										<EllipsisVerticalIcon />
 									</button>
-									<div className='comment-nav'>
-										<a
-											className='make-response'
-											href='#'
+									<div
+										className={`comment-nav hm-menu__dropdown ${
+											openMenuId === comment.id ? 'hm-menu__dropdown--open' : ''
+										}`}
+									>
+										<button
+											type='button'
+											className='make-response hm-menu__item'
 											onClick={(e) => {
 												e.preventDefault();
 												setOpenMenuId(null);
@@ -239,12 +246,12 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 										>
 											<FaReply />
 											Responder comentario
-										</a>
+										</button>
 										{/* Show delete only if comment is owned by current user */}
-										{comment.is_owned_by_current_user !== false && (
-											<a
-												className='delete-comment'
-												href='#'
+										{comment.is_owned_by_current_user === true && (
+											<button
+												type='button'
+												className='delete-comment hm-menu__item hm-menu__item--danger'
 												onClick={(e) => {
 													e.preventDefault();
 													setOpenMenuId(null);
@@ -253,7 +260,7 @@ export function RecipeComments({ recipeId, comments: initialComments }) {
 											>
 												<FaTrash />
 												Eliminar comentario
-											</a>
+											</button>
 										)}
 									</div>
 								</div>
