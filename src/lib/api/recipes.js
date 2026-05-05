@@ -40,7 +40,13 @@ export const getRecipeBySlug = async (slug) => {
  * @returns {Promise<Blob>} - PDF blob
  */
 export const exportRecipePdf = async (recipeId, { calendarId } = {}) => {
-	if (USE_EXTERNAL_EXPORT_API && calendarId) {
+	if (USE_EXTERNAL_EXPORT_API) {
+		if (!calendarId) {
+			throw new Error(
+				'No hay un calendario activo para exportar esta receta con el flujo externo.'
+			);
+		}
+
 		return await exportCalendarPdfViaAsyncJob({
 			calendar: calendarId,
 			export_param: [1],
