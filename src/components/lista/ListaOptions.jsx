@@ -12,6 +12,8 @@ export default function ListaOptions({
 	onSwitchCalendar,
 	calendars = [],
 	currentCalendarId,
+	isExporting = false,
+	exportProgressLabel = 'Exportando...',
 }) {
 	const [showEmailInput, setShowEmailInput] = useState(false);
 	const [emailAddress, setEmailAddress] = useState('');
@@ -47,7 +49,7 @@ export default function ListaOptions({
 		<div className='options background-light-gray'>
 			<div className='left'>
 				<div className='button-options'>
-					<button onClick={handleExportClick}>
+					<button onClick={handleExportClick} disabled={isExporting}>
 						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14.69 14.69'>
 							<title>exportar</title>
 							<g id='Layer_2' data-name='Layer 2'>
@@ -59,7 +61,7 @@ export default function ListaOptions({
 								</g>
 							</g>
 						</svg>
-						<p>Exportar</p>
+						<p>{isExporting ? exportProgressLabel : 'Exportar'}</p>
 					</button>
 				</div>
 

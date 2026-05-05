@@ -225,6 +225,12 @@ export default function Lista() {
 	const [showCalendarSwitch, setShowCalendarSwitch] = useState(false);
 	const [selectedIngredient, setSelectedIngredient] = useState(null);
 	const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+	const [listaExportProgress, setListaExportProgress] = useState({
+		active: false,
+		progress: 0,
+		rendered: 0,
+		total: 0,
+	});
 
 	// Fetch calendars list
 	const {
@@ -487,7 +493,22 @@ export default function Lista() {
 		}
 
 		try {
-			const blob = await exportListaPdf(selectedCalendarId);
+			setListaExportProgress({
+				active: true,
+				progress: 0,
+				rendered: 0,
+				total: 0,
+			});
+			const blob = await exportListaPdf(selectedCalendarId, {
+				onProgress: (statusResponse) => {
+					setListaExportProgress({
+						active: true,
+						progress: Number(statusResponse?.progress || 0),
+						rendered: Number(statusResponse?.counters?.rendered_recipe_pages || 0),
+						total: Number(statusResponse?.counters?.total_recipe_pages || 0),
+					});
+				},
+			});
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement('a');
 			a.href = url;
@@ -496,9 +517,21 @@ export default function Lista() {
 			a.click();
 			window.URL.revokeObjectURL(url);
 			document.body.removeChild(a);
+			setListaExportProgress({
+				active: false,
+				progress: 100,
+				rendered: 0,
+				total: 0,
+			});
 		} catch (error) {
 			console.error('Error exporting PDF:', error);
 			alert('Error al exportar PDF. Por favor, intenta de nuevo.');
+			setListaExportProgress({
+				active: false,
+				progress: 0,
+				rendered: 0,
+				total: 0,
+			});
 		}
 	};
 
@@ -683,6 +716,16 @@ export default function Lista() {
 		updateMutation.isPending ||
 		deleteMutation.isPending ||
 		emailMutation.isPending);
+	const listaExportLabel = (() => {
+		const percent = Math.max(0, Math.min(99, Number(listaExportProgress.progress || 0)));
+		if (listaExportProgress.total > 0) {
+			return `Exportando ${percent}% (${Math.min(
+				listaExportProgress.rendered,
+				listaExportProgress.total
+			)}/${listaExportProgress.total} recetas)`;
+		}
+		return `Exportando ${percent}%`;
+	})();
 
 	return (
 		<div className='general-container lista-json'>
@@ -690,6 +733,14 @@ export default function Lista() {
 				<div className='page-loading-overlay'>
 					<div className='loader'>
 						<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading' />
+					</div>
+				</div>
+			)}
+			{listaExportProgress.active && (
+				<div className='page-loading-overlay'>
+					<div className='loader'>
+						<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading' />
+						<p>{listaExportLabel}</p>
 					</div>
 				</div>
 			)}
@@ -705,6 +756,8 @@ export default function Lista() {
 					onSwitchCalendar={() => setShowCalendarSwitch(true)}
 					calendars={calendars}
 					currentCalendarId={selectedCalendarId}
+					isExporting={listaExportProgress.active}
+					exportProgressLabel={listaExportLabel}
 				/>
 
 				{!currentCalendar ? (

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
 	downloadCalendarPdfExportJob,
@@ -7,9 +7,17 @@ import {
 	sendCalendarPdfEmail,
 	startCalendarPdfExportJob,
 } from '../../lib/api/calendars';
+import {
+	createInitialExportProgress,
+	EXPORT_PROGRESS_FLOW,
+	getExportSuccessMessage,
+	normalizeExportStatus,
+	readExportErrorMessage,
+} from '../../lib/exportProgress';
 import { getRecipes } from '../../lib/api/recipes';
 import CalendarListaTab from './CalendarListaTab';
 import Modal from './Modal';
+import { useExportProgressStore } from '../../stores/exportProgressStore';
 import './ExportCalendarModal.scss';
 
 function extractCalendarRecipeIds(calendar) {
@@ -51,6 +59,14 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 	const [exportError, setExportError] = useState(null);
 	const [hasInitializedRecipeSelection, setHasInitializedRecipeSelection] =
 		useState(false);
+	const isMountedRef = useRef(true);
+	const progressReplayRef = useRef({
+		seenEventIds: new Set(),
+		queue: Promise.resolve(),
+	});
+	const setGlobalExportProgress = useExportProgressStore((state) => state.setProgress);
+	const completeGlobalExport = useExportProgressStore((state) => state.complete);
+	const failGlobalExport = useExportProgressStore((state) => state.fail);
 	const exportButtonClass = 'export-btn hm-btn hm-btn--primary hm-btn--block';
 
 	const { data: recipeSearchData } = useQuery({
@@ -76,6 +92,13 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		const selectedSet = new Set(selectedRecipeIds.map(Number));
 		return recipeOptions.filter((recipe) => selectedSet.has(Number(recipe.id)));
 	}, [recipeOptions, selectedRecipeIds]);
+
+	useEffect(() => {
+		isMountedRef.current = true;
+		return () => {
+			isMountedRef.current = false;
+		};
+	}, []);
 
 	useEffect(() => {
 		setIncludeRecipePages(true);
@@ -114,10 +137,79 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		selected_recipes: includeRecipePages ? selectedRecipeIds : [],
 	});
 
+	const resetExportProgress = (flow) => {
+		progressReplayRef.current = {
+			seenEventIds: new Set(),
+			queue: Promise.resolve(),
+		};
+		setGlobalExportProgress(createInitialExportProgress(flow));
+	};
+
+	const closeModalForBackgroundExport = () => {
+		onClose?.();
+	};
+
+	const updateExportProgressFromStatus = (statusResponse, flow) => {
+		const normalized = normalizeExportStatus(statusResponse, flow);
+		const stageHistory = Array.isArray(normalized.stageHistory)
+			? normalized.stageHistory
+			: [];
+		const replayState = progressReplayRef.current;
+		const unseenEvents = stageHistory.filter((event) => {
+			const eventId = Number(event?.id || 0);
+			return eventId > 0 && !replayState.seenEventIds.has(eventId);
+		});
+
+		if (!unseenEvents.length) {
+			setGlobalExportProgress(normalized);
+			return normalized;
+		}
+
+		unseenEvents.forEach((event) => {
+			const eventId = Number(event?.id || 0);
+			if (eventId > 0) {
+				replayState.seenEventIds.add(eventId);
+			}
+		});
+
+		const eventSnapshots = unseenEvents.map((event) => ({
+			...normalized,
+			progress: Number.isFinite(Number(event?.progress))
+				? Number(event.progress)
+				: normalized.progress,
+			stage: event?.current || normalized.stage,
+			message: event?.message || normalized.message,
+			recipesDone: Number(
+				event?.recipes_processed ?? normalized.recipesDone ?? 0,
+			),
+			recipesTotal: Number(
+				event?.total_recipe_pages ?? normalized.recipesTotal ?? 0,
+			),
+		}));
+
+		replayState.queue = replayState.queue
+			.then(async () => {
+				for (const snapshot of eventSnapshots) {
+					setGlobalExportProgress(snapshot);
+					// eslint-disable-next-line no-await-in-loop
+					await new Promise((resolve) => setTimeout(resolve, 350));
+				}
+
+				setGlobalExportProgress(normalized);
+			})
+			.catch(() => {
+				setGlobalExportProgress(normalized);
+			});
+
+		return normalized;
+	};
+
 	const handleExportPdf = async () => {
 		if (!calendar?.id) return;
 		setIsExporting(true);
 		setExportError(null);
+		resetExportProgress(EXPORT_PROGRESS_FLOW.CALENDAR_DOWNLOAD);
+		closeModalForBackgroundExport();
 		try {
 			const startResponse = await startCalendarPdfExportJob(getExportPayload());
 			const jobId = startResponse?.job_id;
@@ -126,11 +218,16 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 			}
 
 			let blob;
+			let latestProgress = null;
 			const startAt = Date.now();
 			const maxWaitMs = 4 * 60 * 1000;
 			let status = startResponse?.status || 'queued';
 			while (Date.now() - startAt < maxWaitMs) {
 				const statusResponse = await getCalendarPdfExportJobStatus(jobId);
+				latestProgress = updateExportProgressFromStatus(
+					statusResponse,
+					EXPORT_PROGRESS_FLOW.CALENDAR_DOWNLOAD,
+				);
 				status = statusResponse?.status || status;
 
 				if (status === 'completed') {
@@ -161,31 +258,21 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 			link.click();
 			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url);
-			onClose();
+			completeGlobalExport(
+				latestProgress?.message ||
+					getExportSuccessMessage(EXPORT_PROGRESS_FLOW.CALENDAR_DOWNLOAD),
+			);
 		} catch (error) {
 			console.error('Error exporting PDF:', error);
-			let message = 'Error al exportar el calendario. Intenta de nuevo.';
-			try {
-				const blob = error?.response?.data;
-				if (blob instanceof Blob) {
-					const text = await blob.text();
-					if (text) {
-						try {
-							const parsed = JSON.parse(text);
-							if (parsed?.message) message = parsed.message;
-						} catch (_parseError) {
-							message = text;
-						}
-					}
-				} else if (error?.response?.data?.message) {
-					message = error.response.data.message;
-				}
-			} catch (_readError) {
-				// keep default message
+			const message = await readExportErrorMessage(error);
+			if (isMountedRef.current) {
+				setExportError(message);
 			}
-			setExportError(message);
+			failGlobalExport(message);
 		} finally {
-			setIsExporting(false);
+			if (isMountedRef.current) {
+				setIsExporting(false);
+			}
 		}
 	};
 
@@ -194,20 +281,28 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		if (!calendar?.id) return;
 		setIsExporting(true);
 		setExportError(null);
+		resetExportProgress(EXPORT_PROGRESS_FLOW.CALENDAR_EMAIL);
+		closeModalForBackgroundExport();
 		try {
-			await sendCalendarPdfEmail({
+			const response = await sendCalendarPdfEmail({
 				...getExportPayload(),
 				recipient_email_address: recipientEmail || undefined,
 			});
-			onClose();
+			completeGlobalExport(
+				response?.message ||
+					getExportSuccessMessage(EXPORT_PROGRESS_FLOW.CALENDAR_EMAIL),
+			);
 		} catch (error) {
 			console.error('Error sending calendar PDF email:', error);
-			setExportError(
-				error?.response?.data?.message ||
-					'Error al enviar el PDF por correo. Intenta de nuevo.',
-			);
+			const message = await readExportErrorMessage(error);
+			if (isMountedRef.current) {
+				setExportError(message);
+			}
+			failGlobalExport(message);
 		} finally {
-			setIsExporting(false);
+			if (isMountedRef.current) {
+				setIsExporting(false);
+			}
 		}
 	};
 
@@ -215,8 +310,17 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		if (!calendar?.id) return;
 		setIsExporting(true);
 		setExportError(null);
+		resetExportProgress(EXPORT_PROGRESS_FLOW.LISTA_DOWNLOAD);
+		closeModalForBackgroundExport();
 		try {
-			const blob = await exportListaPdf(calendar.id);
+			let latestProgress = null;
+			const blob = await exportListaPdf(calendar.id, {
+				onProgress: (statusResponse) =>
+					(latestProgress = updateExportProgressFromStatus(
+						statusResponse,
+						EXPORT_PROGRESS_FLOW.LISTA_DOWNLOAD,
+					)),
+			});
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
@@ -225,12 +329,21 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 			link.click();
 			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url);
-			onClose();
+			completeGlobalExport(
+				latestProgress?.message ||
+					getExportSuccessMessage(EXPORT_PROGRESS_FLOW.LISTA_DOWNLOAD),
+			);
 		} catch (error) {
 			console.error('Error exporting lista PDF:', error);
-			setExportError('Error al exportar la lista. Intenta de nuevo.');
+			const message = await readExportErrorMessage(error);
+			if (isMountedRef.current) {
+				setExportError(message);
+			}
+			failGlobalExport(message);
 		} finally {
-			setIsExporting(false);
+			if (isMountedRef.current) {
+				setIsExporting(false);
+			}
 		}
 	};
 

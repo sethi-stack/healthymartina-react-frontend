@@ -39,7 +39,10 @@ export const getRecipeBySlug = async (slug) => {
  * @param {number} recipeId - Recipe ID
  * @returns {Promise<Blob>} - PDF blob
  */
-export const exportRecipePdf = async (recipeId, { calendarId } = {}) => {
+export const exportRecipePdf = async (
+	recipeId,
+	{ calendarId, onProgress } = {}
+) => {
 	if (USE_EXTERNAL_EXPORT_API) {
 		if (!calendarId) {
 			throw new Error(
@@ -52,7 +55,7 @@ export const exportRecipePdf = async (recipeId, { calendarId } = {}) => {
 			export_param: [1],
 			template: 'bold',
 			selected_recipes: [recipeId],
-		});
+		}, { onProgress });
 	}
 
 	const response = await apiClient.get(`/recipes/${recipeId}/pdf`, {

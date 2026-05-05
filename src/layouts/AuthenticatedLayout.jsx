@@ -6,6 +6,7 @@ import {
 	AuthenticatedNav,
 } from '../components/navigation';
 import { Footer } from '../components/Footer';
+import GlobalExportProgressBar from '../components/shared/GlobalExportProgressBar';
 import { getRecipes } from '../lib/api/recipes';
 import { getCalendars } from '../lib/api/calendars';
 import { getIngredients } from '../lib/api/ingredients';
@@ -117,6 +118,7 @@ export function AuthenticatedLayout({ children, permissions, searchData }) {
 				onSearch={handleSearch}
 				searchData={defaultSearchData}
 			/>
+			<GlobalExportProgressBar />
 			<main className='authenticated-layout__content'>{children}</main>
 			<Footer />
 		</div>

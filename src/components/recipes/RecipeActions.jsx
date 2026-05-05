@@ -19,6 +19,11 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 		(state) => state.selectedCalendarId
 	);
 	const setSelectedCalendar = useCalendarStore((state) => state.setSelectedCalendar);
+	const [exportProgress, setExportProgress] = useState({
+		progress: 0,
+		rendered: 0,
+		total: 0,
+	});
 
 	const { data: calendarsData } = useQuery({
 		queryKey: ['calendars'],
@@ -65,6 +70,13 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 		mutationFn: () =>
 			exportRecipePdf(recipeId, {
 				calendarId: activeCalendarId || undefined,
+				onProgress: (statusResponse) => {
+					setExportProgress({
+						progress: Number(statusResponse?.progress || 0),
+						rendered: Number(statusResponse?.counters?.rendered_recipe_pages || 0),
+						total: Number(statusResponse?.counters?.total_recipe_pages || 0),
+					});
+				},
 			}),
 		onSuccess: (blob) => {
 			const url = window.URL.createObjectURL(blob);
@@ -75,9 +87,11 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 			a.click();
 			a.remove();
 			window.URL.revokeObjectURL(url);
+			setExportProgress({ progress: 100, rendered: 0, total: 0 });
 		},
 		onError: () => {
 			alert('No se pudo exportar la receta. Intenta de nuevo.');
+			setExportProgress({ progress: 0, rendered: 0, total: 0 });
 		},
 	});
 
@@ -90,7 +104,20 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 	};
 
 	const handleExport = () => {
+		setExportProgress({ progress: 0, rendered: 0, total: 0 });
 		exportMutation.mutate();
+	};
+
+	const renderExportLabel = () => {
+		if (!exportMutation.isPending) return 'Exportar';
+		const percent = Math.max(0, Math.min(99, Number(exportProgress.progress || 0)));
+		if (exportProgress.total > 0) {
+			return `Exportando ${percent}% (${Math.min(
+				exportProgress.rendered,
+				exportProgress.total
+			)}/${exportProgress.total} recetas)`;
+		}
+		return `Exportando ${percent}%`;
 	};
 
 	const parseSchedule = (value) => {
@@ -158,7 +185,7 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 					data-recipeid={recipeId}
 					data-recipe={recipeTitle}
 				>
-					<p>{exportMutation.isPending ? 'Exportando...' : 'Exportar'}</p>
+					<p>{renderExportLabel()}</p>
 					<FaFileExport />
 				</button>
 			</div>

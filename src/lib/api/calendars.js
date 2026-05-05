@@ -226,7 +226,11 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const exportCalendarPdfViaAsyncJob = async (
 	payload,
-	{ pollIntervalMs = EXPORT_POLL_INTERVAL_MS, maxPolls = EXPORT_MAX_POLLS } = {}
+	{
+		pollIntervalMs = EXPORT_POLL_INTERVAL_MS,
+		maxPolls = EXPORT_MAX_POLLS,
+		onProgress,
+	} = {}
 ) => {
 	const startResponse = await startCalendarPdfExportJob(payload);
 	const jobId = startResponse?.job_id;
@@ -236,6 +240,9 @@ export const exportCalendarPdfViaAsyncJob = async (
 
 	for (let attempt = 0; attempt < maxPolls; attempt += 1) {
 		const statusResponse = await getCalendarPdfExportJobStatus(jobId);
+		if (typeof onProgress === 'function') {
+			onProgress(statusResponse);
+		}
 		const status = statusResponse?.status;
 
 		if (status === 'completed') {
@@ -283,13 +290,16 @@ export const getCalendarLista = async (calendarId) => {
  * @param {number} calendarId - Calendar ID
  * @returns {Promise<Blob>} - PDF blob
  */
-export const exportListaPdf = async (calendarId) => {
+export const exportListaPdf = async (calendarId, options = {}) => {
 	if (USE_EXTERNAL_EXPORT_API) {
-		return await exportCalendarPdfViaAsyncJob({
-			calendar: calendarId,
-			export_param: [2],
-			template: 'bold',
-		});
+		return await exportCalendarPdfViaAsyncJob(
+			{
+				calendar: calendarId,
+				export_param: [2],
+				template: 'bold',
+			},
+			options
+		);
 	}
 
 	const response = await apiClient.get(`/calendars/${calendarId}/lista/pdf`, {
