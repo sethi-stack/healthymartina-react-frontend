@@ -25,7 +25,11 @@ export default function CalendarListaTab({
 		return (
 			<div className='lista-loading'>
 				<div className='loader'>
-					<img src='/img/progress-calendar.gif' alt='Loading' />
+					<img
+						src='/img/iconos/recalentado.svg'
+						className='hm-loading-spin'
+						alt='Loading'
+					/>
 				</div>
 			</div>
 		);
@@ -79,4 +83,3 @@ export default function CalendarListaTab({
 		</div>
 	);
 }
-

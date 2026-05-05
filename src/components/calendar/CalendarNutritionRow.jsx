@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getCalendarNutrition } from '../../lib/api/calendars';
+import { getCalendarNutritionSummary } from '../../lib/api/calendars';
 import CalendarNutritionModal from './CalendarNutritionModal';
 import './CalendarNutritionRow.scss';
 
@@ -13,6 +13,19 @@ export default function CalendarNutritionRow({ calendar, days, nutritionPlanId =
 	const [selectedDay, setSelectedDay] = useState(null);
 	const [selectedDayName, setSelectedDayName] = useState('');
 	const [selectedDayItems, setSelectedDayItems] = useState([]);
+
+	const { data: nutritionSummary, isLoading } = useQuery({
+		queryKey: ['calendar-nutrition', calendar?.id, nutritionPlanId],
+		queryFn: () =>
+			getCalendarNutritionSummary(
+				calendar?.id,
+				nutritionPlanId ? { plan_id: nutritionPlanId } : {}
+			),
+		enabled: !!calendar?.id,
+		retry: false,
+		staleTime: 10 * 60 * 1000,
+		refetchOnMount: false,
+	});
 
 	const handleDayClick = (dayKey, dayName, items) => {
 		setSelectedDay(dayKey);
@@ -78,9 +91,9 @@ export default function CalendarNutritionRow({ calendar, days, nutritionPlanId =
 								key={dayKey}
 								dayKey={dayKey}
 								dayName={dayName}
-								calendarId={calendar?.id}
-								nutritionPlanId={nutritionPlanId}
 								activeView={activeView}
+								isLoading={isLoading}
+								nutritionData={nutritionSummary?.nutrition?.[dayKey]}
 								onClick={(items) => handleDayClick(dayKey, dayName, items)}
 							/>
 						);
@@ -110,30 +123,11 @@ export default function CalendarNutritionRow({ calendar, days, nutritionPlanId =
 function NutritionDayColumn({
 	dayKey,
 	dayName,
-	calendarId,
-	nutritionPlanId,
 	activeView,
+	isLoading,
+	nutritionData,
 	onClick,
 }) {
-	// Fetch nutrition data for this day
-	const {
-		data: nutritionData,
-		isLoading,
-		error,
-	} = useQuery({
-		queryKey: ['calendar-nutrition', calendarId, dayKey, nutritionPlanId],
-		queryFn: () =>
-			getCalendarNutrition(
-				calendarId,
-				dayKey,
-				nutritionPlanId ? { plan_id: nutritionPlanId } : {}
-			),
-		enabled: !!calendarId && !!dayKey,
-		retry: false, // Don't retry on error, use defaults
-		staleTime: 10 * 60 * 1000,
-		refetchOnMount: false,
-	});
-
 	// Parse nutrition data - handle both array format and object format
 	// Don't show default items if there's no nutrition data
 	let nutritionItems = null;
@@ -216,9 +210,9 @@ function NutritionDayColumn({
 						{isLoading ? (
 							<div className='loader-lista-ingrediente'>
 								<img
-									src='/img/progress-calendar.gif'
+									src='/img/iconos/recalentado.svg'
+									className='hm-loading-spin'
 									alt='Loading'
-									style={{ width: '150px' }}
 								/>
 							</div>
 						) : nutritionItems ? (

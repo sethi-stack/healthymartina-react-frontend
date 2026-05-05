@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useQueries } from '@tanstack/react-query';
-import { getRecipe } from '../../lib/api/recipes';
+import { useQuery } from '@tanstack/react-query';
+import { getRecipesByIds } from '../../lib/api/recipes';
 import CalendarCell from './CalendarCell';
 import CalendarNutritionRow from './CalendarNutritionRow';
 import EditLabelsModal from './EditLabelsModal';
@@ -159,24 +159,21 @@ export default function CalendarGrid({
 		});
 	});
 
-	// Fetch all recipe details
-	const recipeQueries = useQueries({
-		queries: Array.from(allRecipeIds).map((recipeId) => ({
-			queryKey: ['recipe', 'id', recipeId],
-			queryFn: () => getRecipe(recipeId),
-			staleTime: 10 * 60 * 1000,
-			enabled: !!recipeId,
-			refetchOnMount: false,
-		})),
+	const recipeIds = Array.from(allRecipeIds);
+
+	// Fetch all recipe details in one request
+	const { data: recipesData } = useQuery({
+		queryKey: ['recipes', 'bulk', recipeIds],
+		queryFn: () => getRecipesByIds(recipeIds),
+		staleTime: 10 * 60 * 1000,
+		enabled: recipeIds.length > 0,
+		refetchOnMount: false,
 	});
 
-	// Create a map of recipe ID to recipe data
-	const recipesMap = {};
-	recipeQueries.forEach((query) => {
-		if (query.data?.data) {
-			recipesMap[query.data.data.id] = query.data.data;
-		}
-	});
+	const recipesMap = (recipesData?.data || []).reduce((acc, recipe) => {
+		acc[recipe.id] = recipe;
+		return acc;
+	}, {});
 
 	return (
 		<div className='general-calendar general-container-json hm-calendar' id='calendrio'>

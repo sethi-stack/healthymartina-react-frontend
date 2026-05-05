@@ -168,6 +168,19 @@ export const getCalendarNutrition = async (calendarId, dayId, params = {}) => {
 };
 
 /**
+ * Get nutritional information for all calendar days.
+ * @param {number} calendarId - Calendar ID
+ * @param {Object} params - Optional query params
+ * @returns {Promise<Object>} - Nutritional information grouped by day
+ */
+export const getCalendarNutritionSummary = async (calendarId, params = {}) => {
+	const response = await apiClient.get(`/calendars/${calendarId}/nutrition`, {
+		params,
+	});
+	return response.data;
+};
+
+/**
  * Export calendar as PDF
  * @param {Object} data - Export data
  * @param {number} data.calendar - Calendar ID

@@ -25,6 +25,18 @@ export const getRecipe = async (id) => {
 };
 
 /**
+ * Get multiple recipes by ID in one request.
+ * @param {number[]} ids
+ * @returns {Promise<{data: Array}>}
+ */
+export const getRecipesByIds = async (ids = []) => {
+	const response = await apiClient.get('/recipes/bulk', {
+		params: { ids },
+	});
+	return response.data;
+};
+
+/**
  * Get single recipe by slug
  * @param {string} slug - Recipe slug
  * @returns {Promise<Object>} - Recipe data
