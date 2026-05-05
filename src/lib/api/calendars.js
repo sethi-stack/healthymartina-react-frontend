@@ -175,6 +175,7 @@ export const getCalendarNutrition = async (calendarId, dayId, params = {}) => {
 export const exportCalendarPdf = async (data) => {
 	const response = await apiClient.post('/calendars/export/pdf', data, {
 		responseType: 'blob',
+		timeout: 180000,
 	});
 	return response.data;
 };
@@ -185,7 +186,9 @@ export const exportCalendarPdf = async (data) => {
  * @returns {Promise<Object>} - Response
  */
 export const sendCalendarPdfEmail = async (data) => {
-	const response = await apiClient.post('/calendars/export/pdf/email', data);
+	const response = await apiClient.post('/calendars/export/pdf/email', data, {
+		timeout: 180000,
+	});
 	return response.data;
 };
 

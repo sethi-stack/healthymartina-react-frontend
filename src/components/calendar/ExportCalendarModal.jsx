@@ -129,7 +129,26 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 			onClose();
 		} catch (error) {
 			console.error('Error exporting PDF:', error);
-			setExportError('Error al exportar el calendario. Intenta de nuevo.');
+			let message = 'Error al exportar el calendario. Intenta de nuevo.';
+			try {
+				const blob = error?.response?.data;
+				if (blob instanceof Blob) {
+					const text = await blob.text();
+					if (text) {
+						try {
+							const parsed = JSON.parse(text);
+							if (parsed?.message) message = parsed.message;
+						} catch (_parseError) {
+							message = text;
+						}
+					}
+				} else if (error?.response?.data?.message) {
+					message = error.response.data.message;
+				}
+			} catch (_readError) {
+				// keep default message
+			}
+			setExportError(message);
 		} finally {
 			setIsExporting(false);
 		}
