@@ -1,4 +1,8 @@
 import apiClient from './client';
+import { exportCalendarPdfViaAsyncJob } from './calendars';
+
+const USE_EXTERNAL_EXPORT_API =
+	import.meta.env.VITE_USE_EXTERNAL_EXPORT_API === 'true';
 
 /**
  * Get recipes with pagination and filtering
@@ -35,7 +39,16 @@ export const getRecipeBySlug = async (slug) => {
  * @param {number} recipeId - Recipe ID
  * @returns {Promise<Blob>} - PDF blob
  */
-export const exportRecipePdf = async (recipeId) => {
+export const exportRecipePdf = async (recipeId, { calendarId } = {}) => {
+	if (USE_EXTERNAL_EXPORT_API && calendarId) {
+		return await exportCalendarPdfViaAsyncJob({
+			calendar: calendarId,
+			export_param: [1],
+			template: 'bold',
+			selected_recipes: [recipeId],
+		});
+	}
+
 	const response = await apiClient.get(`/recipes/${recipeId}/pdf`, {
 		responseType: 'blob',
 	});

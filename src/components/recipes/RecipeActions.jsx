@@ -62,7 +62,10 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 	});
 
 	const exportMutation = useMutation({
-		mutationFn: () => exportRecipePdf(recipeId),
+		mutationFn: () =>
+			exportRecipePdf(recipeId, {
+				calendarId: activeCalendarId || undefined,
+			}),
 		onSuccess: (blob) => {
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement('a');

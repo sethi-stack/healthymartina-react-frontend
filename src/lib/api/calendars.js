@@ -1,5 +1,10 @@
 import { apiClient } from './client';
 
+const USE_EXTERNAL_EXPORT_API =
+	import.meta.env.VITE_USE_EXTERNAL_EXPORT_API === 'true';
+const EXPORT_POLL_INTERVAL_MS = 2000;
+const EXPORT_MAX_POLLS = 120;
+
 /**
  * Calendar API endpoints
  * Calendar-related API calls
@@ -217,6 +222,40 @@ export const downloadCalendarPdfExportJob = async (jobId) => {
 	return response.data;
 };
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const exportCalendarPdfViaAsyncJob = async (
+	payload,
+	{ pollIntervalMs = EXPORT_POLL_INTERVAL_MS, maxPolls = EXPORT_MAX_POLLS } = {}
+) => {
+	const startResponse = await startCalendarPdfExportJob(payload);
+	const jobId = startResponse?.job_id;
+	if (!jobId) {
+		throw new Error('No se pudo iniciar la exportación.');
+	}
+
+	for (let attempt = 0; attempt < maxPolls; attempt += 1) {
+		const statusResponse = await getCalendarPdfExportJobStatus(jobId);
+		const status = statusResponse?.status;
+
+		if (status === 'completed') {
+			return await downloadCalendarPdfExportJob(jobId);
+		}
+
+		if (status === 'failed') {
+			throw new Error(
+				statusResponse?.error_message ||
+					statusResponse?.error ||
+					'La exportación falló.'
+			);
+		}
+
+		await sleep(pollIntervalMs);
+	}
+
+	throw new Error('La exportación tardó demasiado. Intenta de nuevo.');
+};
+
 /**
  * Email calendar as PDF
  * @param {Object} data - Export data
@@ -245,6 +284,14 @@ export const getCalendarLista = async (calendarId) => {
  * @returns {Promise<Blob>} - PDF blob
  */
 export const exportListaPdf = async (calendarId) => {
+	if (USE_EXTERNAL_EXPORT_API) {
+		return await exportCalendarPdfViaAsyncJob({
+			calendar: calendarId,
+			export_param: [2],
+			template: 'bold',
+		});
+	}
+
 	const response = await apiClient.get(`/calendars/${calendarId}/lista/pdf`, {
 		responseType: 'blob',
 	});
