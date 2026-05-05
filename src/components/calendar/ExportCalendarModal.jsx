@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
 	downloadCalendarPdfExportJob,
-	exportCalendarPdf,
 	exportListaPdf,
 	getCalendarPdfExportJobStatus,
 	sendCalendarPdfEmail,
@@ -120,46 +119,38 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		setIsExporting(true);
 		setExportError(null);
 		try {
+			const startResponse = await startCalendarPdfExportJob(getExportPayload());
+			const jobId = startResponse?.job_id;
+			if (!jobId) {
+				throw new Error('No se pudo iniciar la exportación en segundo plano.');
+			}
+
 			let blob;
-			try {
-				const startResponse = await startCalendarPdfExportJob(getExportPayload());
-				const jobId = startResponse?.job_id;
-				if (!jobId) {
-					throw new Error('No se pudo iniciar la exportación en segundo plano.');
+			const startAt = Date.now();
+			const maxWaitMs = 4 * 60 * 1000;
+			let status = startResponse?.status || 'queued';
+			while (Date.now() - startAt < maxWaitMs) {
+				const statusResponse = await getCalendarPdfExportJobStatus(jobId);
+				status = statusResponse?.status || status;
+
+				if (status === 'completed') {
+					blob = await downloadCalendarPdfExportJob(jobId);
+					break;
 				}
 
-				const startAt = Date.now();
-				const maxWaitMs = 4 * 60 * 1000;
-				let status = startResponse?.status || 'queued';
-				while (Date.now() - startAt < maxWaitMs) {
-					const statusResponse = await getCalendarPdfExportJobStatus(jobId);
-					status = statusResponse?.status || status;
-
-					if (status === 'completed') {
-						blob = await downloadCalendarPdfExportJob(jobId);
-						break;
-					}
-
-					if (status === 'failed') {
-						throw new Error(
-							statusResponse?.error || 'La exportación falló en el servicio externo.',
-						);
-					}
-
-					// Poll every 2 seconds until completion/failure.
-					// eslint-disable-next-line no-await-in-loop
-					await new Promise((resolve) => setTimeout(resolve, 2000));
+				if (status === 'failed') {
+					throw new Error(
+						statusResponse?.error || 'La exportación falló en el servicio externo.',
+					);
 				}
 
-				if (!blob) {
-					throw new Error('La exportación tardó demasiado. Intenta de nuevo.');
-				}
-			} catch (asyncError) {
-				// Keep sync export as fallback while async rollout is stabilized.
-				blob = await exportCalendarPdf(getExportPayload());
-				if (!blob) {
-					throw asyncError;
-				}
+				// Poll every 2 seconds until completion/failure.
+				// eslint-disable-next-line no-await-in-loop
+				await new Promise((resolve) => setTimeout(resolve, 2000));
+			}
+
+			if (!blob) {
+				throw new Error('La exportación tardó demasiado. Intenta de nuevo.');
 			}
 
 			const url = window.URL.createObjectURL(blob);
