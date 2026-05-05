@@ -181,6 +181,43 @@ export const exportCalendarPdf = async (data) => {
 };
 
 /**
+ * Start async calendar PDF export job
+ * @param {Object} data - Export payload
+ * @returns {Promise<{success: boolean, job_id: string, status: string}>}
+ */
+export const startCalendarPdfExportJob = async (data) => {
+	const response = await apiClient.post('/calendars/export/pdf/start', data, {
+		timeout: 30000,
+	});
+	return response.data;
+};
+
+/**
+ * Read async calendar PDF export status
+ * @param {string} jobId
+ * @returns {Promise<{status: string, progress?: number, error?: string, file_url?: string}>}
+ */
+export const getCalendarPdfExportJobStatus = async (jobId) => {
+	const response = await apiClient.get(`/calendars/export/pdf/jobs/${jobId}`, {
+		timeout: 30000,
+	});
+	return response.data;
+};
+
+/**
+ * Download completed async calendar PDF export
+ * @param {string} jobId
+ * @returns {Promise<Blob>}
+ */
+export const downloadCalendarPdfExportJob = async (jobId) => {
+	const response = await apiClient.get(`/calendars/export/pdf/jobs/${jobId}/download`, {
+		responseType: 'blob',
+		timeout: 180000,
+	});
+	return response.data;
+};
+
+/**
  * Email calendar as PDF
  * @param {Object} data - Export data
  * @returns {Promise<Object>} - Response
