@@ -15,6 +15,7 @@ export default function CategoryCard({
 	onAddIngredient,
 	onEditIngredient,
 	onDeleteIngredient,
+	isLoading = false,
 	isLast = false,
 }) {
 	const handleAddClick = () => {
@@ -40,6 +41,13 @@ export default function CategoryCard({
 			</div>
 
 			<div className='lista-calendrio list' data-id={category.id}>
+				{isLoading && (
+					<div className='category-loading-overlay'>
+						<div className='loader'>
+							<img src='/img/iconos/recalentado.svg' className='hm-loading-spin' alt='Loading' />
+						</div>
+					</div>
+				)}
 				{ingredients.length === 0 ? (
 					<div className='no-ingredients'>
 						<p>Sin ingredientes</p>

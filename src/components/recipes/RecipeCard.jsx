@@ -22,6 +22,7 @@ export const RecipeCard = forwardRef(
 			customMenu = null,
 			customClass = '',
 			isLeftover = false,
+			calendarServingCount = null,
 			children,
 		},
 		ref
@@ -106,6 +107,11 @@ export const RecipeCard = forwardRef(
 							<div className={titleClass}>
 								<p>{formatTitle(recipe.titulo)}</p>
 							</div>
+							{calendarServingCount ? (
+								<div className='hm-calendar__recipe-serving-inline'>
+									{calendarServingCount}
+								</div>
+							) : null}
 							{customMenu}
 						</div>
 					) : (

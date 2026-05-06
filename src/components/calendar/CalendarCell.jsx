@@ -267,7 +267,16 @@ export default function CalendarCell({
 		};
 		e.dataTransfer.setData('application/json', JSON.stringify(payload));
 		e.dataTransfer.effectAllowed = 'move';
-		e.dataTransfer.setDragImage(e.currentTarget, 16, 16);
+		const dragPreview = document.createElement('div');
+		dragPreview.className = 'hm-calendar__drag-preview';
+		dragPreview.textContent = formatTitle(mainRecipe?.titulo || `RECETA ${mainRecipeId}`);
+		document.body.appendChild(dragPreview);
+		e.dataTransfer.setDragImage(dragPreview, 12, 12);
+		requestAnimationFrame(() => {
+			if (dragPreview.parentNode) {
+				dragPreview.parentNode.removeChild(dragPreview);
+			}
+		});
 	};
 
 	const handleDragOver = (e) => {
@@ -321,17 +330,28 @@ export default function CalendarCell({
 				{hasRecipe ? (
 					<div
 						className='calRecipe hm-calendar__cell'
-						draggable={readOnly ? 'false' : 'true'}
+						draggable={!readOnly}
 						onDragStart={readOnly ? undefined : handleDragStart}
 					>
 						{mainRecipeId && (
 							<RecipeCard
-								recipe={mainRecipe || { id: mainRecipeId, titulo: `RECETA ${mainRecipeId}` }}
+								recipe={
+									mainRecipe
+										? {
+												...mainRecipe,
+												titulo: mainRecipe.titulo || `RECETA ${mainRecipeId}`,
+											}
+										: {
+												id: mainRecipeId,
+												titulo: `RECETA ${mainRecipeId}`,
+											}
+								}
 								variant='calendar'
 								hideLink={true}
 								hideMeta={true}
 								isLeftover={mainLeftover}
 								customClass='calRecipeMain'
+								calendarServingCount={mainServing || null}
 								onClick={(e) => {
 									e.stopPropagation();
 									if (readOnly) return;
@@ -354,22 +374,27 @@ export default function CalendarCell({
 										/>
 									)
 								}
-							>
-								{/* {mainServing && (
-									<div className='calRecpServing hm-calendar__recipe-serving'>
-										{mainServing} porciones
-									</div>
-								)} */}
-							</RecipeCard>
+							/>
 						)}
 						{sideRecipeId && (
 							<RecipeCard
-								recipe={sideRecipe || { id: sideRecipeId, titulo: `ACOMPAÑAMIENTO ${sideRecipeId}` }}
+								recipe={
+									sideRecipe
+										? {
+												...sideRecipe,
+												titulo: sideRecipe.titulo || `ACOMPAÑAMIENTO ${sideRecipeId}`,
+											}
+										: {
+												id: sideRecipeId,
+												titulo: `ACOMPAÑAMIENTO ${sideRecipeId}`,
+											}
+								}
 								variant='calendar'
 								hideLink={true}
 								hideMeta={true}
 								isLeftover={sideLeftover}
 								customClass='calRecipeSide hm-calendar__recipe--side'
+								calendarServingCount={sideServing || null}
 								onClick={(e) => {
 									e.stopPropagation();
 									if (readOnly) return;
@@ -392,13 +417,7 @@ export default function CalendarCell({
 										/>
 									)
 								}
-							>
-								{/* {sideServing && (
-									<div className='calRecpServing hm-calendar__recipe-serving'>
-										{sideServing} porciones
-									</div>
-								)} */}
-							</RecipeCard>
+							/>
 						)}
 					</div>
 				) : (

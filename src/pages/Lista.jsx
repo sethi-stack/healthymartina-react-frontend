@@ -5,6 +5,7 @@ import { useCalendarStore } from '../stores/calendarStore';
 import {
 	getCalendars,
 	getAllListaIngredients,
+	getCategoryIngredients,
 	toggleIngredientTaken,
 	addListaIngredient,
 	updateListaIngredient,
@@ -231,6 +232,7 @@ export default function Lista() {
 		rendered: 0,
 		total: 0,
 	});
+	const [categoryLoadingId, setCategoryLoadingId] = useState(null);
 
 	// Fetch calendars list
 	const {
@@ -392,15 +394,16 @@ export default function Lista() {
 						data: { id: Date.now(), ...data },
 					})
 			: (data) => addListaIngredient(selectedCalendarId, data),
-		onSuccess: () => {
-			queryClient.invalidateQueries(['lista-all', selectedCalendarId]);
+		onMutate: (variables) => {
+			setCategoryLoadingId(Number(variables?.categoria));
+		},
+		onSuccess: async (_response, variables) => {
+			await refreshCategorySlice(Number(variables?.categoria));
 			setShowAddModal(false);
 			setSelectedCategoryId(null);
-			alert(
-				USE_MOCK_DATA
-					? 'Ingrediente agregado (mock data)'
-					: 'Ingrediente agregado exitosamente'
-			);
+		},
+		onSettled: () => {
+			setCategoryLoadingId(null);
 		},
 	});
 
@@ -417,38 +420,81 @@ export default function Lista() {
 						...data,
 						calendarId: selectedCalendarId,
 					}),
-		onSuccess: () => {
-			queryClient.invalidateQueries(['lista-all', selectedCalendarId]);
+		onMutate: (variables) => {
+			setCategoryLoadingId(Number(variables?.data?.categoria));
+		},
+		onSuccess: async (_response, variables) => {
+			await refreshCategorySlice(Number(variables?.data?.categoria));
 			setShowEditModal(false);
 			setSelectedIngredient(null);
-			alert(
-				USE_MOCK_DATA
-					? 'Ingrediente actualizado (mock data)'
-					: 'Ingrediente actualizado exitosamente'
-			);
+		},
+		onSettled: () => {
+			setCategoryLoadingId(null);
 		},
 	});
 
 	// Delete ingredient mutation
 	const deleteMutation = useMutation({
 		mutationFn: USE_MOCK_DATA
-			? (id) =>
+			? ({ id }) =>
 					Promise.resolve({
 						success: true,
 						message: 'Deleted (mock)',
 					})
-			: (id) => deleteListaIngredient(selectedCalendarId, id),
-		onSuccess: () => {
-			queryClient.invalidateQueries(['lista-all', selectedCalendarId]);
+			: ({ id }) => deleteListaIngredient(selectedCalendarId, id),
+		onMutate: (variables) => {
+			setCategoryLoadingId(Number(variables?.categoryId));
+		},
+		onSuccess: async (_response, variables) => {
+			await refreshCategorySlice(Number(variables?.categoryId));
 			setShowDeleteModal(false);
 			setSelectedIngredient(null);
-			alert(
-				USE_MOCK_DATA
-					? 'Ingrediente eliminado (mock data)'
-					: 'Ingrediente eliminado exitosamente'
-			);
+		},
+		onSettled: () => {
+			setCategoryLoadingId(null);
 		},
 	});
+
+	const refreshCategorySlice = async (categoryId) => {
+		if (!selectedCalendarId || !categoryId || USE_MOCK_DATA) {
+			queryClient.invalidateQueries({
+				queryKey: ['lista-all', selectedCalendarId],
+			});
+			return;
+		}
+
+		const response = await getCategoryIngredients(selectedCalendarId, categoryId);
+		const refreshedIngredients = response?.ingredients || [];
+		const refreshedCustomItems = response?.custom_items || [];
+
+		queryClient.setQueryData(['lista-all', selectedCalendarId], (current) => {
+			if (!current) return current;
+
+			const base = current.data ? current.data : current;
+			const nextIngredients = { ...(base.ingredients || {}) };
+			nextIngredients[String(categoryId)] = refreshedIngredients;
+
+			const existingCustom = Array.isArray(base.custom_items)
+				? base.custom_items
+				: [];
+			const customWithoutCategory = existingCustom.filter(
+				(item) =>
+					Number(item?.categoria_id ?? item?.categoria) !== Number(categoryId)
+			);
+			const normalizedRefreshedCustom = (refreshedCustomItems || []).map((item) => ({
+				...item,
+				type: 'manual',
+			}));
+
+			const updatedBase = {
+				...base,
+				ingredients: nextIngredients,
+				custom_items: [...customWithoutCategory, ...normalizedRefreshedCustom],
+			};
+
+			return current.data ? { ...current, data: updatedBase } : updatedBase;
+		});
+	};
 
 	// Email mutation
 	const emailMutation = useMutation({
@@ -482,7 +528,10 @@ export default function Lista() {
 
 	const handleDeleteIngredient = () => {
 		if (selectedIngredient) {
-			deleteMutation.mutate(selectedIngredient.id);
+			deleteMutation.mutate({
+				id: selectedIngredient.id,
+				categoryId: selectedIngredient.categoria || selectedIngredient.categoria_id,
+			});
 		}
 	};
 
@@ -542,14 +591,13 @@ export default function Lista() {
 				email,
 				listaIngredients: flatListaIngredients,
 			});
-			alert(
-				USE_MOCK_DATA
-					? 'Email enviado exitosamente (mock data)'
-					: 'Email enviado exitosamente',
-			);
 		} catch (error) {
 			console.error('Error sending email:', error);
-			alert('Error al enviar email. Por favor, intenta de nuevo.');
+			const backendMessage =
+				error?.response?.data?.message ||
+				error?.message ||
+				'Error al enviar email. Por favor, intenta de nuevo.';
+			alert(backendMessage);
 		}
 	};
 
@@ -711,10 +759,6 @@ export default function Lista() {
 		!listaLoading &&
 		(calendarsFetching ||
 		listaFetching ||
-		toggleMutation.isPending ||
-		addMutation.isPending ||
-		updateMutation.isPending ||
-		deleteMutation.isPending ||
 		emailMutation.isPending);
 	const listaExportLabel = (() => {
 		const percent = Math.max(0, Math.min(99, Number(listaExportProgress.progress || 0)));
@@ -771,15 +815,16 @@ export default function Lista() {
 						</div>
 					</div>
 				) : (
-					<ListaCategoryGrid
-						categories={categories}
-						ingredients={ingredients}
-						takenIngredients={takenIngredients}
-						onToggleIngredient={handleToggleIngredient}
-						onAddIngredient={handleOpenAddModal}
-						onEditIngredient={handleOpenEditModal}
-						onDeleteIngredient={handleOpenDeleteModal}
-					/>
+				<ListaCategoryGrid
+					categories={categories}
+					ingredients={ingredients}
+					takenIngredients={takenIngredients}
+					onToggleIngredient={handleToggleIngredient}
+					onAddIngredient={handleOpenAddModal}
+					onEditIngredient={handleOpenEditModal}
+					onDeleteIngredient={handleOpenDeleteModal}
+					loadingCategoryId={categoryLoadingId}
+				/>
 				)}
 			</div>
 

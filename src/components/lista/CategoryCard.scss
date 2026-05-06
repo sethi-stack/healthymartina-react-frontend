@@ -44,9 +44,26 @@ $individual: #dcb244;
 	}
 
 	.lista-calendrio {
+		position: relative;
 		padding: 15px 20px 0;
 		margin-bottom: 5em;
 		min-height: 200px;
+
+		.category-loading-overlay {
+			position: absolute;
+			inset: 0;
+			background: rgba(245, 245, 245, 0.7);
+			z-index: 4;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			pointer-events: all;
+
+			.loader img {
+				width: 34px;
+				height: 34px;
+			}
+		}
 
 		.no-ingredients {
 			display: flex;

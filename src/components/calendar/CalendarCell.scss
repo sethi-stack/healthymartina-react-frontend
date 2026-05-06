@@ -41,13 +41,17 @@
 			&.recipeLeftover {
 				.calRecpImg::before {
 					content: '';
-					z-index: 1;
+					z-index: 3;
 					position: absolute;
 					top: 0;
 					right: 0;
 					bottom: 0;
 					left: 0;
-					background: rgba(255, 255, 255, 0.7);
+					background: rgba(255, 255, 255, 0.48);
+				}
+
+				.calRecpImg img {
+					opacity: 0.62;
 				}
 			}
 		}
@@ -126,7 +130,7 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			align-items: center;
+			align-items: stretch;
 			background: #fff;
 			padding: 4px;
 			position: relative;
@@ -142,6 +146,7 @@
 			.calRecpName {
 				flex: 1;
 				text-align: center;
+				min-width: 0;
 
 				p {
 					margin: 0;
@@ -154,10 +159,27 @@
 				}
 			}
 
+			.hm-calendar__recipe-serving-inline {
+				flex: 0 0 auto;
+				font-size: 11px;
+				color: #666;
+				white-space: nowrap;
+				align-self: flex-end;
+				line-height: 1;
+				padding-bottom: 1px;
+			}
+
 			.calRecpServing {
+				width: 100%;
+				display: block;
 				font-size: 10px;
 				color: #666;
 				margin-top: 2px;
+				text-align: left;
+				padding-right: 24px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 
 			// Menu styles
@@ -269,5 +291,47 @@
 				}
 			}
 		}
+	}
+}
+
+.hm-calendar__drag-preview {
+	position: fixed;
+	top: -9999px;
+	left: -9999px;
+	padding: 6px 10px;
+	max-width: 220px;
+	font-family: 'Gotham-Bold', sans-serif;
+	font-size: 12px;
+	line-height: 1.2;
+	color: #5f5f5f;
+	background: #fff;
+	border: 1px solid #d7d7d7;
+	border-radius: 6px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+}
+
+@media only screen and (max-width: 768px) {
+	.general-calendar .row-td .col-day-td .calRecipe .calRecpInfo {
+		display: flex !important;
+		flex-direction: column !important;
+		position: relative !important;
+		bottom: auto !important;
+		right: auto !important;
+		width: 100% !important;
+		background: #fff !important;
+	}
+
+	.general-calendar .row-td .col-day-td .calRecipe .calRecpInfo .calRecpName {
+		display: block !important;
+	}
+
+	.general-calendar .row-td .col-day-td .calRecipe .calRecpInfo .calRecpServing {
+		padding-right: 30px !important;
+	}
+
+	.general-calendar .row-td .col-day-td .calRecipe .calRecpInfo .hm-menu {
+		position: absolute !important;
+		right: 4px !important;
+		top: 4px !important;
 	}
 }

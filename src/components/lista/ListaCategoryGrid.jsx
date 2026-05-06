@@ -14,6 +14,7 @@ export default function ListaCategoryGrid({
 	onAddIngredient,
 	onEditIngredient,
 	onDeleteIngredient,
+	loadingCategoryId = null,
 }) {
 	if (categories.length === 0) {
 		return (
@@ -35,6 +36,7 @@ export default function ListaCategoryGrid({
 					onAddIngredient={onAddIngredient}
 					onEditIngredient={onEditIngredient}
 					onDeleteIngredient={onDeleteIngredient}
+					isLoading={Number(loadingCategoryId) === Number(category.id)}
 					isLast={(index + 1) % 3 === 0}
 				/>
 			))}
