@@ -5,19 +5,6 @@ import './AuthenticatedHeader.scss';
 
 const profileLinks = [
 	{ label: 'Mi Perfil', path: '/perfil' },
-	{ label: 'Ayuda', action: 'help', className: 'open-help-scout' },
-	{
-		label: 'Asistente de configuración',
-		action: 'wizard',
-		className: 'open-popup',
-		id: 'setup-wizard',
-	},
-	{
-		label: 'Video tutoriales',
-		external: true,
-		path: 'https://www.youtube.com/@HealthyMartina',
-	},
-	{ label: 'Ascender membresía', path: '/membresia' },
 	{ label: 'Cerrar Sesión', action: 'logout' },
 ];
 

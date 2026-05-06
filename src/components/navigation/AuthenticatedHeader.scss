@@ -250,12 +250,32 @@
 
 .header-app__overlay {
 	position: fixed;
-	inset: 0;
+	top: 70px;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	background: rgba(0, 0, 0, 0.4);
 	opacity: 0;
 	visibility: hidden;
 	transition: opacity 0.2s ease;
 	z-index: 90;
+}
+
+/* Layering fix: keep profile dropdown above nav/header stacking contexts */
+.header-app-wrapper {
+	z-index: 400 !important;
+}
+
+.header-app {
+	z-index: 410 !important;
+}
+
+.menu-collapse {
+	z-index: 420 !important;
+}
+
+.header-app__overlay {
+	z-index: 300 !important;
 }
 
 .header-app__overlay.visible {

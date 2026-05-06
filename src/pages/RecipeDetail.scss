@@ -224,7 +224,10 @@
 
 						.rango {
 							width: 100%;
-							margin: 10px 0;
+							margin: 0 0 10px;
+							padding-top: 14px;
+							padding-left: 8px;
+							padding-right: 8px;
 							padding-bottom: 1em;
 							border-bottom: 1px solid #ded7d7;
 
@@ -338,11 +341,24 @@
 							}
 
 							.ingrediente {
-								display: flex;
-								justify-content: space-between;
+								display: grid;
+								grid-template-columns: minmax(0, 1fr) auto;
+								column-gap: 12px;
+								align-items: start;
 								padding: 5px 0;
 								font-size: 15px;
 								font-weight: 900 !important;
+
+								p:first-child {
+									min-width: 0;
+									word-break: break-word;
+								}
+
+								p:last-child {
+									white-space: nowrap;
+									text-align: right;
+									padding-left: 8px;
+								}
 
 								.nombre {
 									width: 80%;

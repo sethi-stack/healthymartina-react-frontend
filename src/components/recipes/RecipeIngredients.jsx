@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaInfoCircle } from 'react-icons/fa';
 import { usePortionConverter } from '../../hooks/usePortionConverter';
+import { usePreferences } from '../../hooks/useProfile';
 
 /**
  * Recipe Ingredients Component
@@ -9,9 +10,11 @@ import { usePortionConverter } from '../../hooks/usePortionConverter';
 export function RecipeIngredients({ ingredients, portions }) {
 	const basePortion = portions?.cantidad || 1;
 	const [currentPortion, setCurrentPortion] = useState(basePortion);
+	const { data: preferences } = usePreferences();
+	const unitMeasure = preferences?.unit_measure === 'us' ? 'imperial' : 'metric';
 
 	const { convertQuantity, setPortion } = usePortionConverter({
-		unitMeasure: 'metric', // TODO: Get from user preferences
+		unitMeasure,
 		defaultPortion: basePortion,
 	});
 
