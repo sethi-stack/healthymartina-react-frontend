@@ -765,6 +765,13 @@
 		justify-content: center;
 	}
 
+	&__label {
+		font-size: 12px !important;
+		font-family: inherit !important;
+		font-weight: inherit !important;
+		line-height: 1.2;
+	}
+
 	// Dots-only variant (minimal trigger)
 	&--dots-only {
 		.hm-menu__trigger {

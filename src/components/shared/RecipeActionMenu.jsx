@@ -69,7 +69,7 @@ export const RecipeActionMenu = ({
 						onClick={(e) => handleAction(e, onViewRecipe)}
 					>
 						<FaEye className='hm-menu__icon' />
-						<span>Ver receta</span>
+						<span className='hm-menu__label'>Ver receta</span>
 					</button>
 				)}
 				{onToggleLeftover && (
@@ -79,7 +79,7 @@ export const RecipeActionMenu = ({
 						onClick={(e) => handleAction(e, onToggleLeftover)}
 					>
 						<FaUndo className='hm-menu__icon' />
-						<span>{isLeftover ? 'Quitar recalentado' : 'Recalentado'}</span>
+						<span className='hm-menu__label'>{isLeftover ? 'Quitar recalentado' : 'Recalentado'}</span>
 					</button>
 				)}
 				{onDeleteRecipe && (
@@ -89,7 +89,7 @@ export const RecipeActionMenu = ({
 						onClick={(e) => handleAction(e, onDeleteRecipe)}
 					>
 						<FaTrashAlt className='hm-menu__icon' />
-						<span>Eliminar</span>
+						<span className='hm-menu__label'>Eliminar</span>
 					</button>
 				)}
 				{onAddToCalendar && (
@@ -101,7 +101,7 @@ export const RecipeActionMenu = ({
 						<span className='hm-menu__icon'>
 							<CalendarMenuIcon />
 						</span>
-						<span>Agregar a calendario</span>
+						<span className='hm-menu__label'>Agregar a calendario</span>
 					</button>
 				)}
 			</div>

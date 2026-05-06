@@ -7,6 +7,7 @@ import { copyMealPlan, getMealPlans, getMealPlan } from '../lib/api/plans';
 import { getCalendars, getCalendar } from '../lib/api/calendars';
 import { useCalendarStore } from '../stores/calendarStore';
 import AddMealModal from '../components/calendar/AddMealModal';
+import CalendarPickerModal from '../components/calendar/CalendarPickerModal';
 import { RecipeActionMenu } from '../components/shared/RecipeActionMenu';
 import { IconActionButton } from '../components/shared/IconActionButton';
 import CalendarGrid from '../components/calendar/CalendarGrid';
@@ -22,7 +23,9 @@ export default function Planes() {
 	const isCalendarView = searchParams.get('view') === 'calendar';
 	const [selectedPlanId, setSelectedPlanId] = useState(routePlanId);
 	const [showAddMealModal, setShowAddMealModal] = useState(false);
+	const [showCalendarPicker, setShowCalendarPicker] = useState(false);
 	const [showCopyPlanModal, setShowCopyPlanModal] = useState(false);
+	const [targetCalendarId, setTargetCalendarId] = useState(null);
 	const [selectedRecipeForCalendar, setSelectedRecipeForCalendar] = useState(null);
 
 	const selectedCalendarIdFromStore = useCalendarStore(
@@ -104,12 +107,58 @@ export default function Planes() {
 		staleTime: 60 * 1000,
 	});
 
-	const selectedCalendar = activeCalendarData?.data || activeCalendarData;
+	const { data: targetCalendarData } = useQuery({
+		queryKey: ['calendar', targetCalendarId],
+		queryFn: () => getCalendar(targetCalendarId),
+		enabled: !!targetCalendarId,
+		staleTime: 60 * 1000,
+	});
+
+	const selectedCalendar =
+		targetCalendarData?.data ||
+		targetCalendarData ||
+		activeCalendarData?.data ||
+		activeCalendarData;
 
 	const handleAddToCalendar = (recipe) => {
-		if (!activeCalendarId) return;
+		if (!activeCalendarId) {
+			alert('No hay calendarios disponibles. Crea uno primero.');
+			return;
+		}
 		setSelectedRecipeForCalendar(recipe);
-		setShowAddMealModal(true);
+		setShowCalendarPicker(true);
+	};
+
+	const parseSchedule = (value) => {
+		if (!value) return {};
+		if (typeof value === 'string') {
+			try {
+				return JSON.parse(value);
+			} catch (_error) {
+				return {};
+			}
+		}
+		return value;
+	};
+
+	const labels = parseSchedule(selectedCalendar?.labels);
+	const mainSchedule = parseSchedule(selectedCalendar?.main_schedule);
+	const sidesSchedule = parseSchedule(selectedCalendar?.sides_schedule);
+	const dayLabels = labels.days || {
+		day_1: 'Lunes',
+		day_2: 'Martes',
+		day_3: 'Miércoles',
+		day_4: 'Jueves',
+		day_5: 'Viernes',
+		day_6: 'Sábado',
+		day_7: 'Domingo',
+	};
+	const mealLabels = labels.meals || {
+		meal_1: 'Desayuno',
+		meal_2: 'Snack AM',
+		meal_3: 'Almuerzo',
+		meal_4: 'Snack PM',
+		meal_5: 'Cena',
 	};
 
 	if (isLoading) {
@@ -242,19 +291,41 @@ export default function Planes() {
 				)}
 			</div>
 
-			{showAddMealModal && selectedRecipeForCalendar && selectedCalendar && (
+			{showCalendarPicker && (
+				<CalendarPickerModal
+					calendars={calendars}
+					initialCalendarId={activeCalendarId}
+					onClose={() => setShowCalendarPicker(false)}
+					onConfirm={(calendarId) => {
+						const selected = calendars.find((calendarItem) => calendarItem.id === calendarId);
+						setSelectedCalendar(calendarId, selected?.title || '');
+						setTargetCalendarId(calendarId);
+						setShowCalendarPicker(false);
+						setShowAddMealModal(true);
+					}}
+				/>
+			)}
+
+			{showAddMealModal &&
+				selectedRecipeForCalendar &&
+				(targetCalendarId || activeCalendarId) &&
+				selectedCalendar && (
 				<AddMealModal
-					calendar={selectedCalendar}
-					calendarId={activeCalendarId}
-					recipe={selectedRecipeForCalendar}
+					calendarId={targetCalendarId || activeCalendarId}
+					dayNum={1}
+					dayKey='day_1'
+					mealNum={1}
+					mealKey='meal_1'
+					mealName={mealLabels.meal_1 || 'Desayuno'}
+					mainSchedule={mainSchedule}
+					sidesSchedule={sidesSchedule}
+					dayLabels={dayLabels}
+					mealLabels={mealLabels}
+					initialRecipe={selectedRecipeForCalendar}
 					onClose={() => {
 						setShowAddMealModal(false);
+						setTargetCalendarId(null);
 						setSelectedRecipeForCalendar(null);
-					}}
-					onSuccess={() => {
-						setShowAddMealModal(false);
-						setSelectedRecipeForCalendar(null);
-						queryClient.invalidateQueries({ queryKey: ['calendar', activeCalendarId] });
 					}}
 				/>
 			)}
