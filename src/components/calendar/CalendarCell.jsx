@@ -42,7 +42,18 @@ export default function CalendarCell({
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
 	const [updateModalTab, setUpdateModalTab] = useState('main');
 	const [isDragHover, setIsDragHover] = useState(false);
+	const dragPreviewRef = useRef(null);
 	const queryClient = useQueryClient();
+
+	useEffect(
+		() => () => {
+			if (dragPreviewRef.current?.parentNode) {
+				dragPreviewRef.current.parentNode.removeChild(dragPreviewRef.current);
+			}
+			dragPreviewRef.current = null;
+		},
+		[]
+	);
 
 	// Get image base URL from environment variable
 	const imageBaseUrl =
@@ -267,16 +278,26 @@ export default function CalendarCell({
 		};
 		e.dataTransfer.setData('application/json', JSON.stringify(payload));
 		e.dataTransfer.effectAllowed = 'move';
+
+		// Clean previous preview (if any) before creating a new one.
+		if (dragPreviewRef.current?.parentNode) {
+			dragPreviewRef.current.parentNode.removeChild(dragPreviewRef.current);
+		}
+
 		const dragPreview = document.createElement('div');
 		dragPreview.className = 'hm-calendar__drag-preview';
 		dragPreview.textContent = formatTitle(mainRecipe?.titulo || `RECETA ${mainRecipeId}`);
 		document.body.appendChild(dragPreview);
+		dragPreviewRef.current = dragPreview;
 		e.dataTransfer.setDragImage(dragPreview, 12, 12);
-		requestAnimationFrame(() => {
-			if (dragPreview.parentNode) {
-				dragPreview.parentNode.removeChild(dragPreview);
-			}
-		});
+	};
+
+	const handleDragEnd = () => {
+		setIsDragHover(false);
+		if (dragPreviewRef.current?.parentNode) {
+			dragPreviewRef.current.parentNode.removeChild(dragPreviewRef.current);
+		}
+		dragPreviewRef.current = null;
 	};
 
 	const handleDragOver = (e) => {
@@ -332,6 +353,7 @@ export default function CalendarCell({
 						className='calRecipe hm-calendar__cell'
 						draggable={!readOnly}
 						onDragStart={readOnly ? undefined : handleDragStart}
+						onDragEnd={readOnly ? undefined : handleDragEnd}
 					>
 						{mainRecipeId && (
 							<RecipeCard
