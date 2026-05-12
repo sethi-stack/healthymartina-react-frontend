@@ -21,7 +21,7 @@ export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, meal
 	const [selectedRecipe, setSelectedRecipe] = useState(initialRecipe);
 	const [servings, setServings] = useState(2);
 	const [isLeftover, setIsLeftover] = useState(false);
-	const [selectedDays, setSelectedDays] = useState([dayKey]);
+	const [selectedDays, setSelectedDays] = useState(dayKey ? [dayKey] : []);
 	const [showRecipeList, setShowRecipeList] = useState(!initialRecipe);
 	const [selectedMealKey, setSelectedMealKey] = useState(mealKey); // tracks Tiempos selection
 
@@ -95,6 +95,7 @@ export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, meal
 	const isSubmitDisabled = !selectedRecipe || selectedDays.length === 0 || addRecipeMutation.isPending;
 
 	const submitButtonText = addRecipeMutation.isPending ? 'Espere por favor...' : `Agregar ${mealName}`;
+	const defaultDaySelection = dayKey ? [dayKey] : [];
 
 	return (
 		<Modal onClose={onClose} title={`Agregar ${mealName}`} className='popupstyle1 add-meal' dataModal='add-meal' width={720}>
@@ -148,7 +149,7 @@ export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, meal
 												onChange={() => {
 													setSelectedMealKey(key);
 													// Reset days when meal time changes
-													setSelectedDays([dayKey]);
+													setSelectedDays(defaultDaySelection);
 												}}
 											/>
 											<span className={`radiolabel label-mealname${key === selectedMealKey ? ' selected' : ''}`}>{label}</span>

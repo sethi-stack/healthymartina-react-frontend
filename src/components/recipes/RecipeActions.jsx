@@ -208,7 +208,7 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 				<AddMealModal
 					calendarId={targetCalendarId || activeCalendarId}
 					dayNum={1}
-					dayKey='day_1'
+					dayKey={null}
 					mealNum={1}
 					mealKey='meal_1'
 					mealName={mealLabels.meal_1 || 'Desayuno'}

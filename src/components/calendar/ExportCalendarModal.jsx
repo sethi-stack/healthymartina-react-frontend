@@ -69,7 +69,7 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 	const failGlobalExport = useExportProgressStore((state) => state.fail);
 	const exportButtonClass = 'export-btn hm-btn hm-btn--primary hm-btn--block';
 
-	const { data: recipeSearchData } = useQuery({
+	const { data: recipeSearchData, isLoading: isLoadingRecipes } = useQuery({
 		queryKey: ['calendar-export-recipes', calendar?.id],
 		queryFn: () => getRecipes({ per_page: 1000 }),
 		enabled: !!calendar?.id,
@@ -405,6 +405,15 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 					</div>
 
 					<div className='recipe-selector__list'>
+						{isLoadingRecipes ? (
+							<div className='recipe-selector__loading'>
+								<img
+									src='/img/iconos/recalentado.svg'
+									className='hm-loading-spin'
+									alt='Loading...'
+								/>
+							</div>
+						) : null}
 						{recipeOptions.length === 0 ? (
 							<p className='recipe-selector__empty'>
 								No hay recetas disponibles en este calendario.
