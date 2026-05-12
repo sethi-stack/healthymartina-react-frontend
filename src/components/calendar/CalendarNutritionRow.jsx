@@ -102,6 +102,8 @@ export default function CalendarNutritionRow({ calendar, days, nutritionPlanId =
 			</div>
 			{selectedDay && (
 				<CalendarNutritionModal
+					calendarId={calendar?.id}
+					dayKey={selectedDay}
 					dayName={selectedDayName}
 					items={selectedDayItems}
 					activeView={activeView}
