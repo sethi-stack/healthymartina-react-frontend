@@ -23,11 +23,15 @@ export const RecipeCard = forwardRef(
 			customClass = '',
 			isLeftover = false,
 			calendarServingCount = null,
+			calendarRacion = null,
 			children,
 		},
-		ref
+		ref,
 	) => {
 		const [imageLoaded, setImageLoaded] = React.useState(false);
+
+		// Dynamic classes based on variant
+		const isCalendar = variant === 'calendar';
 
 		const handleAddToCalendar = () => {
 			if (onAddToCalendar) {
@@ -35,12 +39,16 @@ export const RecipeCard = forwardRef(
 			}
 		};
 
-
 		// Format title to be capitalized
 		const formatTitle = (title) => {
 			if (!title) return '';
-			return title.toUpperCase();
+			return String(title).toUpperCase();
 		};
+
+		const racionPrefix =
+			isCalendar && calendarRacion && Number(calendarRacion) > 1
+				? `${Number(calendarRacion)} `
+				: '';
 
 		const ingredientesCount = recipe.ingredientes_count || 0;
 		const tiempo = recipe.tiempo || 0;
@@ -67,30 +75,52 @@ export const RecipeCard = forwardRef(
 
 		const imageUrl = getImageUrl(recipe.imagen_principal || recipe.imagen);
 
-		// Dynamic classes based on variant
-		const isCalendar = variant === 'calendar';
 		const baseClass = isCalendar ? 'hm-calendar__recipe' : 'hm-card';
 		const innerClass = isCalendar ? '' : 'hm-card__inner';
-		const imageClass = isCalendar ? 'calRecpImg hm-calendar__recipe-image' : 'hm-card__image';
-		const titleContainerClass = isCalendar ? 'calRecpInfo hm-calendar__recipe-info' : 'hm-card__body';
-		const titleClass = isCalendar ? 'calRecpName hm-calendar__recipe-name' : 'hm-card__title';
+		const imageClass = isCalendar
+			? 'calRecpImg hm-calendar__recipe-image'
+			: 'hm-card__image';
+		const titleContainerClass = isCalendar
+			? 'calRecpInfo hm-calendar__recipe-info'
+			: 'hm-card__body';
+		const titleClass = isCalendar
+			? 'calRecpName hm-calendar__recipe-name'
+			: 'hm-card__title';
 
-		const leftoverClass = isLeftover && isCalendar ? 'recipeLeftover hm-calendar__recipe--leftover' : (isLeftover ? 'hm-card--leftover' : '');
+		const leftoverClass =
+			isLeftover && isCalendar
+				? 'recipeLeftover hm-calendar__recipe--leftover'
+				: isLeftover
+					? 'hm-card--leftover'
+					: '';
 
 		const renderImage = () => (
 			<div className={imageClass}>
-				<div className={isCalendar ? 'recipe-image-background hm-card__image-placeholder' : 'hm-card__image-placeholder'}>
+				<div
+					className={
+						isCalendar
+							? 'recipe-image-background hm-card__image-placeholder'
+							: 'hm-card__image-placeholder'
+					}
+				>
 					<RecetarioIcon />
 				</div>
 				{imageUrl && (
 					<img
-						className={`${isCalendar ? 'lozad recipe-image-overlay' : ''} hm-card__image-overlay ${imageLoaded ? 'hm-card__image-overlay--loaded' : ''}`}
+						className={
+							isCalendar
+								? `lozad recipe-image-overlay ${imageLoaded ? 'is-loaded' : ''}`
+								: `hm-card__image-overlay ${imageLoaded ? 'hm-card__image-overlay--loaded' : ''}`
+						}
 						loading='lazy'
 						src={imageUrl}
 						alt={recipe.titulo}
 						onLoad={() => setImageLoaded(true)}
 					/>
 				)}
+				{isCalendar && customMenu ? (
+					<div className='hm-calendar__recipe-menu'>{customMenu}</div>
+				) : null}
 			</div>
 		);
 
@@ -105,14 +135,16 @@ export const RecipeCard = forwardRef(
 					{isCalendar ? (
 						<div className='row'>
 							<div className={titleClass}>
-								<p>{formatTitle(recipe.titulo)}</p>
+								<p>
+									{racionPrefix}
+									{formatTitle(recipe.titulo)}
+								</p>
 							</div>
-							{calendarServingCount ? (
+							{/* {calendarServingCount ? (
 								<div className='hm-calendar__recipe-serving-inline'>
 									{calendarServingCount}
 								</div>
-							) : null}
-							{customMenu}
+							) : null} */}
 						</div>
 					) : (
 						<h3 className={titleClass}>{formatTitle(recipe.titulo)}</h3>
@@ -151,11 +183,15 @@ export const RecipeCard = forwardRef(
 		);
 
 		return (
-			<div className={`${baseClass} ${leftoverClass} ${customClass}`.trim()} ref={ref} onClick={onClick}>
+			<div
+				className={`${baseClass} ${leftoverClass} ${customClass}`.trim()}
+				ref={ref}
+				onClick={onClick}
+			>
 				{isCalendar ? content : <div className={innerClass}>{content}</div>}
 			</div>
 		);
-	}
+	},
 );
 
 RecipeCard.displayName = 'RecipeCard';

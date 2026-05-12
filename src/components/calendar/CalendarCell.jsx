@@ -374,6 +374,7 @@ export default function CalendarCell({
 								isLeftover={mainLeftover}
 								customClass='calRecipeMain'
 								calendarServingCount={mainServing || null}
+								calendarRacion={mainRacion || null}
 								onClick={(e) => {
 									e.stopPropagation();
 									if (readOnly) return;
@@ -417,6 +418,7 @@ export default function CalendarCell({
 								isLeftover={sideLeftover}
 								customClass='calRecipeSide hm-calendar__recipe--side'
 								calendarServingCount={sideServing || null}
+								calendarRacion={sideRacion || null}
 								onClick={(e) => {
 									e.stopPropagation();
 									if (readOnly) return;

@@ -37,6 +37,16 @@
 			height: 50%;
 			position: relative;
 			width: 100%;
+			display: flex;
+			flex-direction: column;
+			min-height: 0;
+			z-index: 1;
+
+			// When the kebab dropdown is open, ensure this recipe block stacks above its sibling
+			// (so the dropdown is never hidden behind the other stacked recipe).
+			&:has(.hm-menu__dropdown--open) {
+				z-index: 50;
+			}
 
 			&.recipeLeftover {
 				.calRecpImg::before {
@@ -61,12 +71,13 @@
 			.calRecipeMain,
 			.calRecipeSide {
 				.calRecpImg {
-					height: 62%;
+					// Flex layout controls height; keep for safety.
+					height: auto;
 				}
 
 				.calRecpInfo {
-					height: 38%;
 					min-height: 34px;
+					flex-basis: 44px;
 				}
 			}
 		}
@@ -82,7 +93,9 @@
 		}
 
 		.calRecpImg {
-			height: 70%;
+			flex: 1 1 auto;
+			height: auto;
+			min-height: 0;
 			background-size: cover;
 			background-color: #ffffff;
 			background-repeat: no-repeat;
@@ -116,6 +129,12 @@
 			.recipe-image-overlay {
 				position: relative;
 				z-index: 1;
+				opacity: 0;
+				transition: opacity 0.35s ease;
+
+				&.is-loaded {
+					opacity: 1;
+				}
 			}
 
 			img {
@@ -123,10 +142,18 @@
 				height: 100%;
 				object-fit: cover;
 			}
+
+			.hm-calendar__recipe-menu {
+				position: absolute;
+				bottom: 4px;
+				right: 4px;
+				z-index: 60;
+			}
 		}
 
 		.calRecpInfo {
-			height: 30%;
+			flex: 0 0 44px;
+			height: auto;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;

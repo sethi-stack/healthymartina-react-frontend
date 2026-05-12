@@ -29,7 +29,14 @@ export function RecipeCommentForm({
 			} comment`}
 		>
 			<div className='container-popup'>
-				<button className='close' onClick={onClose}>
+				<button
+					type='button'
+					className='close'
+					onClick={(e) => {
+						e.preventDefault();
+						onClose?.();
+					}}
+				>
 					<FaTimes />
 				</button>
 				{isReply && replyTo ? (
