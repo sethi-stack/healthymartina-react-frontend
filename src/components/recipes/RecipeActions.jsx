@@ -12,6 +12,8 @@ import CalendarPickerModal from '../calendar/CalendarPickerModal';
  * Displays action buttons (Add to Calendar, Export, etc.)
  */
 export function RecipeActions({ recipeId, recipeTitle }) {
+	const USE_EXTERNAL_EXPORT_API =
+		import.meta.env.VITE_USE_EXTERNAL_EXPORT_API === 'true';
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [showCalendarPicker, setShowCalendarPicker] = useState(false);
 	const [targetCalendarId, setTargetCalendarId] = useState(null);
@@ -25,7 +27,7 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 		total: 0,
 	});
 
-	const { data: calendarsData } = useQuery({
+	const { data: calendarsData, isLoading: isLoadingCalendars } = useQuery({
 		queryKey: ['calendars'],
 		queryFn: () => getCalendars(),
 		staleTime: 5 * 60 * 1000,
@@ -89,8 +91,12 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 			window.URL.revokeObjectURL(url);
 			setExportProgress({ progress: 100, rendered: 0, total: 0 });
 		},
-		onError: () => {
-			alert('No se pudo exportar la receta. Intenta de nuevo.');
+		onError: (error) => {
+			const message =
+				error?.response?.data?.message ||
+				error?.message ||
+				'No se pudo exportar la receta. Intenta de nuevo.';
+			alert(message);
 			setExportProgress({ progress: 0, rendered: 0, total: 0 });
 		},
 	});
@@ -104,6 +110,10 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 	};
 
 	const handleExport = () => {
+		if (USE_EXTERNAL_EXPORT_API && !activeCalendarId) {
+			alert('Cargando calendario… Intenta de nuevo en unos segundos.');
+			return;
+		}
 		setExportProgress({ progress: 0, rendered: 0, total: 0 });
 		exportMutation.mutate();
 	};
@@ -180,7 +190,10 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 					type='button'
 					className='export_pdf'
 					onClick={handleExport}
-					disabled={exportMutation.isPending}
+					disabled={
+						exportMutation.isPending ||
+						(USE_EXTERNAL_EXPORT_API && (isLoadingCalendars || !activeCalendarId))
+					}
 					data-page='receta'
 					data-recipeid={recipeId}
 					data-recipe={recipeTitle}
