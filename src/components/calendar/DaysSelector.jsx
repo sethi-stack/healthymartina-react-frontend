@@ -49,7 +49,7 @@ export default function DaysSelector({ selectedRecipeId, mealType = 'main', meal
 				// Different recipe exists - blocked
 				return {
 					enabled: false,
-					checked: true,
+					checked: false,
 				};
 			} else {
 				// Side recipe logic (from general.js lines 143-158)
@@ -83,7 +83,7 @@ export default function DaysSelector({ selectedRecipeId, mealType = 'main', meal
 				// Different side recipe exists - blocked
 				return {
 					enabled: false,
-					checked: true,
+					checked: false,
 				};
 			}
 		},
