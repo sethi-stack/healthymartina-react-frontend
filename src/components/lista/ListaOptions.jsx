@@ -77,7 +77,7 @@ export default function ListaOptions({
 						<form onSubmit={handleSendEmail}>
 							<input
 								type='email'
-								placeholder='Email (opcional)'
+								placeholder='Email'
 								value={emailAddress}
 								onChange={(e) => setEmailAddress(e.target.value)}
 								className='email-input'

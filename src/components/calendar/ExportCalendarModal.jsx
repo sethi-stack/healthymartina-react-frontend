@@ -70,7 +70,7 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 	const exportButtonClass = 'export-btn hm-btn hm-btn--primary hm-btn--block';
 
 	const { data: recipeSearchData, isLoading: isLoadingRecipes } = useQuery({
-		queryKey: ['calendar-export-recipes', calendar?.id],
+		queryKey: ['recipes', 'calendar-search'],
 		queryFn: () => getRecipes({ per_page: 1000 }),
 		enabled: !!calendar?.id,
 		staleTime: 5 * 60 * 1000,
@@ -122,20 +122,38 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 	};
 
 	const handleRecipeToggle = (recipeId) => {
-		setSelectedRecipeIds((prev) =>
-			prev.includes(recipeId)
+		setSelectedRecipeIds((prev) => {
+			const exists = prev.includes(recipeId);
+			const next = exists
 				? prev.filter((id) => id !== recipeId)
-				: [...prev, recipeId],
-		);
+				: [...prev, recipeId];
+
+			// Keep hero selection consistent: if hero recipe is removed, clear hero.
+			if (exists && Number(heroRecipeId) === Number(recipeId)) {
+				setHeroRecipeId('');
+			}
+
+			return next;
+		});
 	};
 
-	const getExportPayload = () => ({
-		calendar: calendar.id,
-		export_param: exportParams,
-		template: pdfTemplate,
-		hero_recipe_id: heroRecipeId ? Number(heroRecipeId) : undefined,
-		selected_recipes: includeRecipePages ? selectedRecipeIds : [],
-	});
+	const getExportPayload = () => {
+		const selected = includeRecipePages ? [...selectedRecipeIds] : [];
+		const heroId = heroRecipeId ? Number(heroRecipeId) : undefined;
+
+		// Ensure hero is never lost from payload flow when switching tabs or editing selection.
+		if (includeRecipePages && heroId && !selected.includes(heroId)) {
+			selected.push(heroId);
+		}
+
+		return {
+			calendar: calendar.id,
+			export_param: exportParams,
+			template: pdfTemplate,
+			hero_recipe_id: heroId,
+			selected_recipes: selected,
+		};
+	};
 
 	const resetExportProgress = (flow) => {
 		progressReplayRef.current = {
@@ -387,7 +405,15 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 							id='heroRecipe'
 							className='recipe-selector__select'
 							value={heroRecipeId}
-							onChange={(e) => setHeroRecipeId(e.target.value)}
+							onChange={(e) => {
+								const nextHeroId = e.target.value;
+								setHeroRecipeId(nextHeroId);
+								if (!nextHeroId) return;
+								const nextHeroNumber = Number(nextHeroId);
+								setSelectedRecipeIds((prev) =>
+									prev.includes(nextHeroNumber) ? prev : [...prev, nextHeroNumber],
+								);
+							}}
 						>
 							<option value=''>Sin portada hero</option>
 							{recipeOptions.map((recipe) => (
