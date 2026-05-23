@@ -284,13 +284,25 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		resetExportProgress(EXPORT_PROGRESS_FLOW.CALENDAR_EMAIL);
 		closeModalForBackgroundExport();
 		try {
+			let latestProgress = null;
 			const response = await sendCalendarPdfEmail({
 				...getExportPayload(),
 				recipient_email_address: recipientEmail || undefined,
+			}, {
+				onProgress: (statusResponse) =>
+					(latestProgress = updateExportProgressFromStatus(
+						statusResponse,
+						EXPORT_PROGRESS_FLOW.CALENDAR_EMAIL,
+					)),
 			});
 			completeGlobalExport(
-				response?.message ||
+				latestProgress?.message ||
+					response?.message ||
 					getExportSuccessMessage(EXPORT_PROGRESS_FLOW.CALENDAR_EMAIL),
+			);
+			alert(
+				response?.message ||
+					'¡El envío de correo ha concluido con éxito!'
 			);
 		} catch (error) {
 			console.error('Error sending calendar PDF email:', error);
@@ -299,6 +311,7 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 				setExportError(message);
 			}
 			failGlobalExport(message);
+			alert(message);
 		} finally {
 			if (isMountedRef.current) {
 				setIsExporting(false);

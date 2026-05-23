@@ -281,11 +281,59 @@ export const exportCalendarPdfViaAsyncJob = async (
  * @param {Object} data - Export data
  * @returns {Promise<Object>} - Response
  */
-export const sendCalendarPdfEmail = async (data) => {
-	const response = await apiClient.post('/calendars/export/pdf/email', data, {
-		timeout: 180000,
-	});
-	return response.data;
+export const sendCalendarPdfEmail = async (
+	data,
+	{
+		pollIntervalMs = EXPORT_POLL_INTERVAL_MS,
+		maxPolls = EXPORT_MAX_POLLS,
+		onProgress,
+	} = {}
+) => {
+	const payload = {
+		...data,
+		delivery_mode: 'email',
+	};
+
+	const startResponse = await startCalendarPdfExportJob(payload);
+	const jobId = startResponse?.job_id;
+	if (!jobId) {
+		throw new Error('No se pudo iniciar la exportación por correo.');
+	}
+
+	for (let attempt = 0; attempt < maxPolls; attempt += 1) {
+		const statusResponse = await getCalendarPdfExportJobStatus(jobId);
+		if (typeof onProgress === 'function') {
+			onProgress(statusResponse);
+		}
+		const status = statusResponse?.status;
+
+		if (status === 'completed') {
+			const response = await apiClient.post(
+				`/calendars/export/pdf/jobs/${jobId}/email`,
+				{
+					recipient_email_address: data?.recipient_email_address,
+				},
+				{ timeout: 180000 }
+			);
+			return {
+				...response.data,
+				job_id: jobId,
+				status,
+			};
+		}
+
+		if (status === 'failed') {
+			throw new Error(
+				statusResponse?.error_message ||
+					statusResponse?.error ||
+					'La exportación falló.'
+			);
+		}
+
+		await sleep(pollIntervalMs);
+	}
+
+	throw new Error('La exportación tardó demasiado. Intenta de nuevo.');
 };
 
 /**
