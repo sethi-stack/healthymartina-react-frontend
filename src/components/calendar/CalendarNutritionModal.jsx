@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Modal from './Modal';
 import { getCalendarNutrition } from '../../lib/api/calendars';
+import { filterNutritionItemsForView } from './nutritionUtils';
 
 export default function CalendarNutritionModal({
 	calendarId,
@@ -35,8 +36,8 @@ export default function CalendarNutritionModal({
 	const recipesByNutrient = detailsData?.nutrition_recipes || {};
 
 	const rows = useMemo(() => {
-		return items || [];
-	}, [items]);
+		return filterNutritionItemsForView(items || [], activeView);
+	}, [activeView, items]);
 
 	const toggleExpanded = (id) => {
 		setOpenIds((prev) => {

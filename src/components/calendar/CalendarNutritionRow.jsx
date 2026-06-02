@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getCalendarNutritionSummary } from '../../lib/api/calendars';
 import CalendarNutritionModal from './CalendarNutritionModal';
+import {
+	filterNutritionItemsForView,
+	normalizeCalendarNutritionItems,
+} from './nutritionUtils';
 import './CalendarNutritionRow.scss';
 
 /**
@@ -124,73 +128,15 @@ export default function CalendarNutritionRow({ calendar, days, nutritionPlanId =
  */
 function NutritionDayColumn({
 	dayKey,
-	dayName,
 	activeView,
 	isLoading,
 	nutritionData,
 	onClick,
 }) {
-	// Parse nutrition data - handle both array format and object format
-	// Don't show default items if there's no nutrition data
-	let nutritionItems = null;
-
-	if (nutritionData?.nutrition) {
-		// Check if nutrition is an object (keys: "94", "99", etc.) or an array
-		if (typeof nutritionData.nutrition === 'object' && !Array.isArray(nutritionData.nutrition)) {
-			// Data comes as object with nutrient IDs as keys
-			// Convert object to array: { "94": [94, "Calorías", ...], ... } => [{id: 94, ...}, ...]
-			const items = Object.values(nutritionData.nutrition).map((item) => {
-				if (Array.isArray(item)) {
-					return {
-						id: item[0],
-						nombre: item[1],
-						unidad_medida: item[2],
-						cantidad: item[3] || 0,
-						porcentaje: item[4] || 0,
-						main_color: item[5] || '#42bd41',
-					};
-				}
-				return item;
-			});
-			// Render all returned nutrition items, even when values are zero.
-			if (items.length > 0) {
-				nutritionItems = items;
-			}
-		} else if (Array.isArray(nutritionData.nutrition)) {
-			// Data comes as array: [id, nombre, unidad_medida, cantidad, porcentaje, main_color]
-			const items = nutritionData.nutrition.map((item) => {
-				if (Array.isArray(item)) {
-					return {
-						id: item[0],
-						nombre: item[1],
-						unidad_medida: item[2],
-						cantidad: item[3] || 0,
-						porcentaje: item[4] || 0,
-						main_color: item[5] || '#42bd41',
-					};
-				}
-				return item;
-			});
-			// Render all returned nutrition items, even when values are zero.
-			if (items.length > 0) {
-				nutritionItems = items;
-			}
-		}
-	} else if (nutritionData?.data && Array.isArray(nutritionData.data)) {
-		// Data comes as object array
-		const items = nutritionData.data.map((item) => ({
-			id: item.id,
-			nombre: item.nombre || item.name,
-			unidad_medida: item.unidad_medida || item.unit,
-			cantidad: item.cantidad || item.amount || 0,
-			porcentaje: item.porcentaje || item.percentage || 0,
-			main_color: item.main_color || item.color || '#42bd41',
-		}));
-		// Render all returned nutrition items, even when values are zero.
-		if (items.length > 0) {
-			nutritionItems = items;
-		}
-	}
+	const nutritionItems = normalizeCalendarNutritionItems(
+		nutritionData?.nutrition || nutritionData?.data || nutritionData
+	);
+	const visibleItems = filterNutritionItemsForView(nutritionItems, activeView);
 
 	// Format amount for display
 	const formatAmount = (amount) => {
@@ -207,7 +153,7 @@ function NutritionDayColumn({
 					<div
 						className='table__nutrition-wrap'
 						id={dayKey}
-						onClick={() => onClick?.(nutritionItems || [])}
+						onClick={() => onClick?.(visibleItems)}
 					>
 						{isLoading ? (
 							<div className='loader-lista-ingrediente'>
@@ -217,25 +163,8 @@ function NutritionDayColumn({
 									alt='Loading'
 								/>
 							</div>
-						) : nutritionItems ? (
-							nutritionItems.map((item) => {
-								// Show statistics view (amounts) by default
-								const showItem =
-									activeView === 'statistics' ||
-									(item.id === 94 && activeView === 'macros'); // Calories always shown
-
-								if (!showItem && activeView === 'macros') {
-									// For macros view, only show specific nutrients
-									if (
-										item.id !== 96 &&
-										item.id !== 97 &&
-										item.id !== 99 &&
-										item.id !== 94
-									) {
-										return null;
-									}
-								}
-
+						) : visibleItems.length ? (
+							visibleItems.map((item) => {
 								return (
 									<div
 										key={item.id}

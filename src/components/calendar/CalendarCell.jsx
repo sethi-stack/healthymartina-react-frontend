@@ -5,6 +5,7 @@ import { addRecipeToCalendar, removeRecipeFromCalendar } from '../../lib/api/cal
 import { RecipeActionMenu } from '../shared/RecipeActionMenu';
 import { RecipeCard } from '../recipes/RecipeCard';
 import AddMealModal from './AddMealModal';
+import { invalidateCalendarNutritionQueries } from './calendarNutritionQueryUtils';
 import UpdateMealModal from './UpdateMealModal';
 import './CalendarCell.scss';
 
@@ -121,9 +122,7 @@ export default function CalendarCell({
 			} else {
 				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
 			}
-			queryClient.invalidateQueries({
-				queryKey: ['calendar-nutrition', calendarId],
-			});
+			invalidateCalendarNutritionQueries(queryClient, calendarId);
 		},
 		onError: (error) => {
 			console.error('Error removing recipe:', error);
@@ -170,9 +169,7 @@ export default function CalendarCell({
 			} else {
 				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
 			}
-			queryClient.invalidateQueries({
-				queryKey: ['calendar-nutrition', calendarId, dayKey],
-			});
+			invalidateCalendarNutritionQueries(queryClient, calendarId);
 		},
 		onError: (error) => {
 			console.error('Error moving recipe:', error);
@@ -192,9 +189,7 @@ export default function CalendarCell({
 			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
-			queryClient.invalidateQueries({
-				queryKey: ['calendar-nutrition', calendarId, dayKey],
-			});
+			invalidateCalendarNutritionQueries(queryClient, calendarId);
 		},
 		onError: (error) => {
 			console.error('Error updating leftover state:', error);

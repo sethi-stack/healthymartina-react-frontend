@@ -6,6 +6,7 @@ import './MealModal.scss';
 import RecipeSearchField from './RecipeSearchField';
 import ServingsSlider from './ServingsSlider';
 import DaysSelector from './DaysSelector';
+import { invalidateCalendarNutritionQueries } from './calendarNutritionQueryUtils';
 import { updateRecipeInCalendar, updateCalendarRacion } from '../../lib/api/calendars';
 import { getRecipe } from '../../lib/api/recipes';
 
@@ -104,7 +105,7 @@ export default function UpdateMealModal({
 	// Update mutation
 	const updateRecipeMutation = useMutation({
 		mutationFn: (data) => updateRecipeInCalendar(calendarId, data),
-		onSuccess: (response) => {
+		onSuccess: async (response) => {
 			const updatedCalendar =
 				response?.calendar?.data || response?.calendar || null;
 			if (updatedCalendar) {
@@ -114,9 +115,7 @@ export default function UpdateMealModal({
 			} else {
 				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
 			}
-			queryClient.invalidateQueries({
-				queryKey: ['calendar-nutrition', calendarId],
-			});
+			await invalidateCalendarNutritionQueries(queryClient, calendarId);
 			onClose();
 		},
 		onError: (error) => {
@@ -127,7 +126,7 @@ export default function UpdateMealModal({
 
 	const updateRacionMutation = useMutation({
 		mutationFn: (data) => updateCalendarRacion(calendarId, data),
-		onSuccess: (response) => {
+		onSuccess: async (response) => {
 			const updatedCalendar =
 				response?.calendar?.data || response?.calendar || null;
 			if (updatedCalendar) {
@@ -137,9 +136,7 @@ export default function UpdateMealModal({
 			} else {
 				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
 			}
-			queryClient.invalidateQueries({
-				queryKey: ['calendar-nutrition', calendarId],
-			});
+			await invalidateCalendarNutritionQueries(queryClient, calendarId);
 		},
 		onError: (error) => {
 			console.error('Error updating ración:', error);

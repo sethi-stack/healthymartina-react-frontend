@@ -6,6 +6,7 @@ import './MealModal.scss';
 import RecipeSearchField from './RecipeSearchField';
 import ServingsSlider from './ServingsSlider';
 import DaysSelector from './DaysSelector';
+import { invalidateCalendarNutritionQueries } from './calendarNutritionQueryUtils';
 import { addRecipeToCalendar } from '../../lib/api/calendars';
 
 /**
@@ -38,9 +39,7 @@ export default function AddMealModal({ calendarId, dayNum, dayKey, mealNum, meal
 			} else {
 				queryClient.invalidateQueries({ queryKey: ['calendar', calendarId] });
 			}
-			queryClient.invalidateQueries({
-				queryKey: ['calendar-nutrition', calendarId],
-			});
+			invalidateCalendarNutritionQueries(queryClient, calendarId);
 			onClose();
 		},
 		onError: (error) => {
