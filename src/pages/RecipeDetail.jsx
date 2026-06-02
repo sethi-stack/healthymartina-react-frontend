@@ -136,6 +136,7 @@ export function RecipeDetail() {
 		slug: recipe.slug,
 		titulo: recipe.titulo || recipe.title,
 		tiempo: recipe.tiempo || recipe.time || 0,
+		tiempo_nota: recipe.tiempo_nota || recipe.time_note || '',
 		ingredientes_count:
 			recipe.ingredientes_count ||
 			recipe.ingredients_count ||
@@ -173,6 +174,7 @@ export function RecipeDetail() {
 						title={recipeData.titulo}
 						time={recipeData.tiempo}
 						ingredientsCount={recipeData.ingredientes_count}
+						timeNote={recipeData.tiempo_nota}
 					/>
 
 					<RecipeImage
