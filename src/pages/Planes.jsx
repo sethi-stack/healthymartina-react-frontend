@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LuCalendarDays, LuExternalLink } from 'react-icons/lu';
+import { LuCalendarDays } from 'react-icons/lu';
 import { useSearchParams } from 'react-router-dom';
 import { copyMealPlan, getMealPlans, getMealPlan } from '../lib/api/plans';
 import { getCalendars, getCalendar } from '../lib/api/calendars';
@@ -15,6 +15,7 @@ import CopyCalendarModal from '../components/calendar/CopyCalendarModal';
 import './Planes.scss';
 
 export default function Planes() {
+	const INVISIBLE_PLAN_TYPE_ID = 1;
 	const { id } = useParams();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
@@ -45,7 +46,10 @@ export default function Planes() {
 		staleTime: 2 * 60 * 1000,
 	});
 
-	const plans = data?.plans || [];
+	const plans = useMemo(
+		() => (data?.plans || []).filter((plan) => Number(plan.tipo_id) !== INVISIBLE_PLAN_TYPE_ID),
+		[data]
+	);
 	const calendars = calendarsData?.data || [];
 
 	const effectiveSelectedPlanId = useMemo(() => {
@@ -207,18 +211,6 @@ export default function Planes() {
 											setSelectedPlanId(plan.id);
 											setSearchParams({ view: 'calendar' });
 											navigate(`/planes/${plan.id}?view=calendar`);
-										}}
-									/>
-								</div>
-								<div className='button-options'>
-									<IconActionButton
-										icon={LuExternalLink}
-										label='Manual'
-										variant='default'
-										disabled={!plan.guia}
-										onClick={(event) => {
-											event.stopPropagation();
-											if (plan.guia) window.open(plan.guia, '_blank', 'noopener,noreferrer');
 										}}
 									/>
 								</div>
