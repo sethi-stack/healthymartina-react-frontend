@@ -12,15 +12,15 @@ export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
 
 	const formatNumber = (num) => {
 		if (num > 0.01) {
-			return Number(num).toFixed(2).replace('.', ',');
+			return Number(num).toFixed(2);
 		}
-		return Number(num).toFixed(3).replace('.', ',');
+		return Number(num).toFixed(3);
 	};
 
 	const formatPercentage = (percent) => {
 		if (percent === '-') return '-';
 		if (percent > 0.001) {
-			return Number(percent).toFixed(1).replace('.', ',') + '%';
+			return Number(percent).toFixed(1) + '%';
 		}
 		return percent + '%';
 	};
