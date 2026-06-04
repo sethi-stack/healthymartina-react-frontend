@@ -5,9 +5,10 @@ import React from 'react';
  * Displays nutritional information per serving
  */
 export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
-	// Predefined nutrient IDs to show (matching constants.php)
-	// Calorías (94), Carbohidratos (99), Fibra (213), Proteína (96), Grasa total (97)
-	const RECIPE_NUTRIENT_IDS = [94, 99, 213, 96, 97];
+	// Predefined nutrient IDs to show (matching constants.php / DB ids)
+	// Calorías (94), Carbohidratos (99), Proteína (96), Grasa total (97),
+	// Colesterol (180), Calcio (102), Hierro (103), Potasio (106), Sodio (107)
+	const RECIPE_NUTRIENT_IDS = [94, 99, 96, 97, 180, 102, 103, 106, 107];
 
 	const formatNumber = (num) => {
 		if (num > 0.01) {
@@ -41,19 +42,26 @@ export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
 		);
 	}
 
-	// Filter nutrients: only show the predefined 5 nutrients
-	// Order: Calorías (1), Carbohidratos (2), Fibra (3), Proteína (5), Grasa total (6)
+	// Filter nutrients: only show the predefined recipe-detail nutrients
 	const filteredNutrients = nutritionData
 		.filter((nutriente) => {
-			// Only show nutrients with mostrar !== false AND in the predefined list
 			return (
 				nutriente.mostrar !== false &&
 				RECIPE_NUTRIENT_IDS.includes(nutriente.id)
 			);
 		})
 		.sort((a, b) => {
-			// Sort by predefined order: Calorías, Carbohidratos, Fibra, Proteína, Grasa total
-			const orderMap = { 94: 1, 99: 2, 213: 3, 96: 5, 97: 6 };
+			const orderMap = {
+				94: 1,
+				99: 2,
+				96: 3,
+				97: 4,
+				180: 5,
+				102: 6,
+				103: 7,
+				106: 8,
+				107: 9,
+			};
 			return (orderMap[a.id] || 999) - (orderMap[b.id] || 999);
 		});
 
