@@ -14,6 +14,15 @@
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+header.public-header.desktop,
+header.public-header.movil {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding-left: 2rem;
+	padding-right: 2rem;
+}
+
 .public-header.movil {
 	display: none;
 }
@@ -169,9 +178,31 @@
 	.public-header.movil {
 		display: flex;
 		position: relative;
+		padding-top: 0.875rem;
+		padding-bottom: 0.875rem;
 	}
 
 	.public-header__mobile-menu {
 		display: block;
+	}
+
+	.public-header__collapse {
+		border-top: 1px solid rgba(0, 0, 0, 0.06);
+	}
+
+	.public-header__collapse ul {
+		padding: 0.75rem 0;
+	}
+
+	.public-header__collapse a,
+	.public-header__collapse .public-header__link {
+		padding: 0.75rem 1.5rem;
+		font-size: 0.95rem;
+	}
+
+	.public-header__collapse .public-header__link--register {
+		margin: 0.5rem 1.5rem 0;
+		padding: 0.75rem 1rem;
+		width: calc(100% - 3rem);
 	}
 }
