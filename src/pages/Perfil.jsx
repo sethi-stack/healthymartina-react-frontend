@@ -429,20 +429,42 @@ function PreferenciasTab() {
 		weekly_reminders: false,
 		new_updates: false,
 		mentions: false,
+		nutritions: [],
 	});
 	const [success, setSuccess] = useState('');
 
 	useEffect(() => {
 		if (prefs) {
+			const selectedNutritionIds = Array.isArray(prefs.nutritions)
+				? prefs.nutritions
+				: Array.isArray(prefs.nutrition_options)
+					? prefs.nutrition_options
+							.filter((item) => item?.mostrar)
+							.map((item) => item.id)
+					: [];
+
 			setForm({
 				unit_measure: prefs.unit_measure || 'metric',
 				theme: prefs.theme || 'light',
 				weekly_reminders: !!prefs.weekly_reminders,
 				new_updates: !!prefs.new_updates,
 				mentions: !!prefs.mentions,
+				nutritions: selectedNutritionIds,
 			});
 		}
 	}, [prefs]);
+
+	const nutritionOptions = Array.isArray(prefs?.nutrition_options) ? prefs.nutrition_options : [];
+
+	const toggleNutrition = (nutritionId) => {
+		const nextId = Number(nutritionId);
+		setForm((current) => ({
+			...current,
+			nutritions: current.nutritions.includes(nextId)
+				? current.nutritions.filter((id) => id !== nextId)
+				: [...current.nutritions, nextId],
+		}));
+	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -543,6 +565,24 @@ function PreferenciasTab() {
 						</label>
 					</div>
 				</div>
+
+				{nutritionOptions.length > 0 && (
+					<div className='perfil-pref-section'>
+						<h3 className='perfil-section-title'>Información nutricional</h3>
+						<div className='perfil-checkbox-group'>
+							{nutritionOptions.map((option) => (
+								<label key={option.id} className='perfil-checkbox'>
+									<input
+										type='checkbox'
+										checked={form.nutritions.includes(Number(option.id))}
+										onChange={() => toggleNutrition(option.id)}
+									/>
+									<span>{option.nombre}</span>
+								</label>
+							))}
+						</div>
+					</div>
+				)}
 
 				{success && <p className='perfil-success'>{success}</p>}
 				{updatePreferences.error && (

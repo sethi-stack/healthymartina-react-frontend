@@ -9,6 +9,7 @@ export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
 	// Calorías (94), Carbohidratos (99), Proteína (96), Grasa total (97),
 	// Colesterol (180), Calcio (102), Hierro (103), Potasio (106), Sodio (107)
 	const RECIPE_NUTRIENT_IDS = [94, 99, 96, 97, 180, 102, 103, 106, 107];
+	const DEFAULT_VISIBLE_NUTRIENT_IDS = [94, 99, 96, 97];
 
 	const formatNumber = (num) => {
 		if (num > 0.01) {
@@ -43,11 +44,17 @@ export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
 	}
 
 	// Filter nutrients: only show the predefined recipe-detail nutrients
+	const allowedNutrientIds =
+		Array.isArray(filterInfo) && filterInfo.length > 0
+			? filterInfo.map(Number)
+			: DEFAULT_VISIBLE_NUTRIENT_IDS;
+
 	const filteredNutrients = nutritionData
 		.filter((nutriente) => {
 			return (
 				nutriente.mostrar !== false &&
-				RECIPE_NUTRIENT_IDS.includes(nutriente.id)
+				RECIPE_NUTRIENT_IDS.includes(nutriente.id) &&
+				allowedNutrientIds.includes(Number(nutriente.id))
 			);
 		})
 		.sort((a, b) => {
