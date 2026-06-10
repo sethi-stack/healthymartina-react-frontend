@@ -24,7 +24,14 @@ export function AuthenticatedHeader({
 
 	const userName = user?.name || 'Luciana';
 	const userEmail = user?.email || 'hola@healthymartina.com';
-	const avatar = user?.image || imagePaths.userAvatar;
+	const avatar = user?.image || user?.bimage || '';
+	const avatarFallback = userName
+		.split(' ')
+		.filter(Boolean)
+		.slice(0, 2)
+		.map((part) => part[0])
+		.join('')
+		.toUpperCase();
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -115,7 +122,13 @@ export function AuthenticatedHeader({
 						aria-expanded={profileOpen}
 					>
 						<span className='perfil'>
-							<img src={avatar} alt={userName} />
+							{avatar ? (
+								<img src={avatar} alt={userName} />
+							) : (
+								<span className='perfil__fallback' aria-hidden='true'>
+									{avatarFallback || 'HM'}
+								</span>
+							)}
 						</span>
 						<span className='hola-name'>
 							¡Hola {userName}!
@@ -129,7 +142,13 @@ export function AuthenticatedHeader({
 					</button>
 					<div className={`menu-collapse ${profileOpen ? 'open' : ''}`}>
 						<div className='menu-collapse__avatar'>
-							<img src={avatar} alt={userName} />
+							{avatar ? (
+								<img src={avatar} alt={userName} />
+							) : (
+								<span className='menu-collapse__avatar-fallback' aria-hidden='true'>
+									{avatarFallback || 'HM'}
+								</span>
+							)}
 						</div>
 						<p>{userName}</p>
 						<span className='correo'>{userEmail}</span>

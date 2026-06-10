@@ -24,7 +24,6 @@ export const imagePaths = {
 	logoSvg: `${IMG_BASE}/header-app/logo.svg`,
 	logoPng: `${IMG_BASE}/header-app/logo.png`,
 	logotipo: `${IMG_BASE}/header-app/logotipo.png`,
-	userAvatar: `${IMG_BASE}/header-app/user.jpg`,
 	homeHeader: `${IMG_BASE}/header-app/Home.jpg`,
 
 	// Icons (iconos)

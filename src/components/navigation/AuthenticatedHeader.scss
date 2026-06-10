@@ -59,12 +59,29 @@
 	height: 50px;
 	border-radius: 50%;
 	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.14);
 }
 
 .boton-menu .perfil img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+.perfil__fallback {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	font-family: 'Gilroy-SemiBold', 'Gilroy', sans-serif;
+	font-size: 0.95rem;
+	letter-spacing: 0.04em;
+	color: #fff;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08));
 }
 
 .hola-name {
@@ -101,12 +118,29 @@
 	border-radius: 50%;
 	margin: 0 auto 0.9rem;
 	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #d7ddd9;
 }
 
 .menu-collapse__avatar img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+.menu-collapse__avatar-fallback {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	font-family: 'Gilroy-SemiBold', 'Gilroy', sans-serif;
+	font-size: 1.15rem;
+	letter-spacing: 0.05em;
+	color: #36544e;
+	background: linear-gradient(135deg, #f2f5f3, #dfe7e2);
 }
 
 .menu-collapse p {
