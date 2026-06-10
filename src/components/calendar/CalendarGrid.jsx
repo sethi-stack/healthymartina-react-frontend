@@ -133,6 +133,20 @@ export default function CalendarGrid({
 		meal_6: 'Otros',
 	};
 
+	const normalizeLabel = (value, fallback) => {
+		if (typeof value === 'string') {
+			const trimmed = value.trim();
+			return trimmed || fallback;
+		}
+
+		if (value === null || value === undefined) {
+			return fallback;
+		}
+
+		const normalized = String(value).trim();
+		return normalized || fallback;
+	};
+
 	// Original labels from constants (for dropdown options)
 	const originalLabels = {
 		days: defaultDays,
@@ -145,6 +159,18 @@ export default function CalendarGrid({
 	const meals = labels.meals && Object.keys(labels.meals).length > 0 
 		? labels.meals 
 		: defaultMeals;
+	const normalizedDays = Object.fromEntries(
+		Object.entries(days).map(([dayKey, dayName]) => [
+			dayKey,
+			normalizeLabel(dayName, defaultDays[dayKey] || dayKey),
+		])
+	);
+	const normalizedMeals = Object.fromEntries(
+		Object.entries(meals).map(([mealKey, mealName]) => [
+			mealKey,
+			normalizeLabel(mealName, defaultMeals[mealKey] || mealKey),
+		])
+	);
 
 	// Get all recipe IDs to fetch recipe details
 	const allRecipeIds = new Set();
@@ -180,34 +206,41 @@ export default function CalendarGrid({
 			{/* Header row with day names */}
 			<div className='row-th hm-calendar__header'>
 				<div className='col-part-th hm-calendar__label-col'></div>
-				{Object.entries(days).map(([dayKey, dayName]) => (
-					<div
-						key={dayKey}
-						className='col-day-th hm-calendar__day-col hm-calendar__day-col--header'
-						onClick={
-							readOnly
-								? undefined
-								: (e) => {
-										e.preventDefault();
-										setLabelType('days');
-										setSelectedLabelKey(dayKey);
-										setShowEditLabelsModal(true);
-								  }
-						}
-					>
-						<span id='labels' data-val={dayKey}></span>
-						<p className={`desk cal_label_${dayKey} hm-calendar__label hm-calendar__label--desktop hm-label hm-label--day hm-label--clickable`} style={{ width: '100%' }}>
-							{dayName}
-						</p>
-						<p className={`mobile cal_m_label_${dayKey} hm-calendar__label hm-calendar__label--mobile hm-label hm-label--day hm-label--clickable`}>
-							{dayName.substring(0, 1)}
-						</p>
-					</div>
-				))}
+				{Object.entries(normalizedDays).map(([dayKey, normalizedDayName]) => {
+					return (
+						<div
+							key={dayKey}
+							className='col-day-th hm-calendar__day-col hm-calendar__day-col--header'
+							onClick={
+								readOnly
+									? undefined
+									: (e) => {
+											e.preventDefault();
+											setLabelType('days');
+											setSelectedLabelKey(dayKey);
+											setShowEditLabelsModal(true);
+									  }
+							}
+						>
+							<span id='labels' data-val={dayKey}></span>
+							<p
+								className={`desk cal_label_${dayKey} hm-calendar__label hm-calendar__label--desktop hm-label hm-label--day hm-label--clickable`}
+								style={{ width: '100%' }}
+							>
+								{normalizedDayName}
+							</p>
+							<p
+								className={`mobile cal_m_label_${dayKey} hm-calendar__label hm-calendar__label--mobile hm-label hm-label--day hm-label--clickable`}
+							>
+								{normalizedDayName.substring(0, 1)}
+							</p>
+						</div>
+					);
+				})}
 			</div>
 
 			{/* Meal rows */}
-			{Object.entries(meals).map(([mealKey, mealName], mealIndex) => {
+			{Object.entries(normalizedMeals).map(([mealKey, normalizedMealName], mealIndex) => {
 				const mealNum = mealIndex + 1;
 				return (
 					<div key={mealKey} className={`row-td meal_${mealNum} hm-calendar__row`}>
@@ -227,15 +260,15 @@ export default function CalendarGrid({
 						>
 							<span id='labels' data-val={mealKey}></span>
 							<p className={`desk cal_label_${mealKey} hm-calendar__label hm-calendar__label--vertical hm-calendar__label--desktop hm-label hm-label--meal hm-label--clickable`} style={{ width: '100%' }}>
-								{mealName}
+								{normalizedMealName}
 							</p>
 							<p className={`mobile cal_m_label_${mealKey} hm-calendar__label hm-calendar__label--mobile hm-label hm-label--meal hm-label--clickable`}>
-								{mealName.substring(0, 1)}
+								{normalizedMealName.substring(0, 1)}
 							</p>
 						</div>
 
 						{/* Day columns */}
-						{Object.entries(days).map(([dayKey, dayName], dayIndex) => {
+						{Object.entries(normalizedDays).map(([dayKey], dayIndex) => {
 							const dayNum = dayIndex + 1;
 							const cellId = `main_${mealNum}_${dayNum}`;
 							const mainRecipeId =
@@ -263,7 +296,7 @@ export default function CalendarGrid({
 									dayKey={dayKey}
 									mealNum={mealNum}
 									mealKey={mealKey}
-									mealName={mealName}
+									mealName={normalizedMealName}
 									calendarId={calendar.id}
 									mainRecipeId={mainRecipeId}
 									sideRecipeId={sideRecipeId}
@@ -276,8 +309,8 @@ export default function CalendarGrid({
 									hasRecipe={!!mainRecipeId}
 									mainRecipe={mainRecipeId ? recipesMap[mainRecipeId] : null}
 									sideRecipe={sideRecipeId ? recipesMap[sideRecipeId] : null}
-									dayLabels={days}
-									mealLabels={meals}
+									dayLabels={normalizedDays}
+									mealLabels={normalizedMeals}
 									mainSchedule={mainSchedule}
 									sidesSchedule={sidesSchedule}
 									readOnly={readOnly}
@@ -291,7 +324,7 @@ export default function CalendarGrid({
 			{/* Nutrition row - shows nutritional info for each day */}
 			<CalendarNutritionRow
 				calendar={calendar}
-				days={days}
+				days={normalizedDays}
 				nutritionPlanId={nutritionPlanId}
 			/>
 
@@ -300,7 +333,7 @@ export default function CalendarGrid({
 				<EditLabelsModal
 					calendar={calendar}
 					labelType={labelType}
-					currentLabels={labelType === 'days' ? days : meals}
+					currentLabels={labelType === 'days' ? normalizedDays : normalizedMeals}
 					originalLabels={
 						labelType === 'days'
 							? originalLabels.days
