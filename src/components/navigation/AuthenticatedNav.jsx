@@ -48,22 +48,35 @@ export function AuthenticatedNav({
 	};
 
 	const normalizeSearchValue = (value) => {
-		return String(value ?? '').toLowerCase().trim();
+		return String(value ?? '')
+			.toLowerCase()
+			.trim()
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '');
 	};
 
-	const matchesSearch = (text) => {
+	const matchesSearch = (values) => {
 		if (!searchTerm.trim()) return true;
-		return normalizeSearchValue(text).includes(normalizeSearchValue(searchTerm));
+
+		const normalizedSearchTerm = normalizeSearchValue(searchTerm);
+		return values.some((value) =>
+			normalizeSearchValue(value).includes(normalizedSearchTerm)
+		);
 	};
 
 	const filteredRecipes = (searchData.recipes || []).filter((item) =>
-		matchesSearch(item?.titulo || item?.title || item?.slug)
+		matchesSearch([
+			item?.titulo,
+			item?.title,
+			item?.slug,
+			item?.descripcion,
+		])
 	);
 	const filteredIngredients = (searchData.ingredients || []).filter((item) =>
-		matchesSearch(item?.nombre)
+		matchesSearch([item?.nombre])
 	);
 	const filteredCalendars = (searchData.calendars || []).filter((item) =>
-		matchesSearch(item?.title || item?.nombre)
+		matchesSearch([item?.title, item?.nombre])
 	);
 
 	const handleSearchResult = (type, item) => {

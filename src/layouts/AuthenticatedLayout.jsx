@@ -63,29 +63,66 @@ export function AuthenticatedLayout({ children, permissions, searchData }) {
 		return [];
 	};
 
+	const hasMorePages = (response) => {
+		if (response?.meta?.current_page && response?.meta?.last_page) {
+			return response.meta.current_page < response.meta.last_page;
+		}
+		if (typeof response?.next_page_url !== 'undefined') {
+			return Boolean(response.next_page_url);
+		}
+		if (response?.links && 'next' in response.links) {
+			return Boolean(response.links.next);
+		}
+		return false;
+	};
+
+	const fetchAllPages = async (fetchPage, params = {}) => {
+		const allItems = [];
+		let page = 1;
+		let keepGoing = true;
+		let safetyCounter = 0;
+
+		while (keepGoing && safetyCounter < 50) {
+			const response = await fetchPage({
+				...params,
+				page,
+				per_page: 500,
+			});
+
+			allItems.push(...normalizeCollection(response));
+			keepGoing = hasMorePages(response);
+			page += 1;
+			safetyCounter += 1;
+		}
+
+		return allItems;
+	};
+
 	const recipesQuery = useQuery({
 		queryKey: ['global-search-data', 'recipes'],
-		queryFn: () => getRecipes({ per_page: 500, sort_by: 'titulo', sort_order: 'asc' }),
+		queryFn: () =>
+			fetchAllPages(getRecipes, { sort_by: 'titulo', sort_order: 'asc' }),
 		enabled: isAuthenticated && !searchData,
 		staleTime: 5 * 60 * 1000,
-		select: normalizeCollection,
 	});
 
 	const ingredientsQuery = useQuery({
 		queryKey: ['global-search-data', 'ingredients'],
 		queryFn: () =>
-			getIngredients({ per_page: 500, sort_by: 'nombre', sort_order: 'asc' }),
+			fetchAllPages(getIngredients, {
+				sort_by: 'nombre',
+				sort_order: 'asc',
+			}),
 		enabled: isAuthenticated && !searchData,
 		staleTime: 5 * 60 * 1000,
-		select: normalizeCollection,
 	});
 
 	const calendarsQuery = useQuery({
 		queryKey: ['global-search-data', 'calendars'],
-		queryFn: () => getCalendars({ per_page: 500, sort_by: 'title', sort_order: 'asc' }),
+		queryFn: () =>
+			fetchAllPages(getCalendars, { sort_by: 'title', sort_order: 'asc' }),
 		enabled: isAuthenticated && !searchData,
 		staleTime: 5 * 60 * 1000,
-		select: normalizeCollection,
 	});
 
 	const defaultPermissions = permissions || {
