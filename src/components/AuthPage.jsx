@@ -13,11 +13,14 @@ export function AuthPage({
 	onRegisterSubmit,
 	onForgotPasswordClick,
 	initialTab = 'login', // 'login' | 'register'
+	showRegister = true,
 	loginError = null,
 	registerError = null,
 	isLoading = false,
 }) {
-	const [activeTab, setActiveTab] = useState(initialTab);
+	const [activeTab, setActiveTab] = useState(
+		showRegister ? initialTab : 'login'
+	);
 
 	// Login form state
 	const [loginData, setLoginData] = useState({
@@ -69,13 +72,17 @@ export function AuthPage({
 					>
 						Log in
 					</button>
-					<button
-						type='button'
-						className={`auth-tab ${activeTab === 'register' ? 'active' : ''}`}
-						onClick={() => setActiveTab('register')}
-					>
-						Registrarse
-					</button>
+					{/*
+					{showRegister && (
+						<button
+							type='button'
+							className={`auth-tab ${activeTab === 'register' ? 'active' : ''}`}
+							onClick={() => setActiveTab('register')}
+						>
+							Registrarse
+						</button>
+					)}
+					*/}
 					<div className='auth-separator'></div>
 				</div>
 
@@ -156,7 +163,7 @@ export function AuthPage({
 						</form>
 					)}
 
-					{activeTab === 'register' && (
+					{/* {showRegister && activeTab === 'register' && (
 						<form className='auth-form' onSubmit={handleRegisterSubmit}>
 							{registerError && (
 								<div
@@ -249,7 +256,7 @@ export function AuthPage({
 								disabled={isLoading}
 							/>
 						</form>
-					)}
+					)} */}
 				</div>
 			</div>
 		</div>

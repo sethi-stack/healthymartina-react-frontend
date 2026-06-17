@@ -8,7 +8,7 @@ import './PublicHeader.scss';
  */
 export function PublicHeader({
 	onLoginClick,
-	onRegisterClick,
+	// onRegisterClick,
 	blogUrl = 'https://healthymartina.com/blog',
 }) {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -40,6 +40,7 @@ export function PublicHeader({
 								Log In
 							</button>
 						</li>
+						{/*
 						<li>
 							<button
 								type='button'
@@ -49,6 +50,7 @@ export function PublicHeader({
 								Registrate
 							</button>
 						</li>
+						*/}
 					</ul>
 				</nav>
 			</header>
@@ -90,6 +92,7 @@ export function PublicHeader({
 								Log In
 							</button>
 						</li>
+						{/*
 						<li>
 							<button
 								type='button'
@@ -99,6 +102,7 @@ export function PublicHeader({
 								Registrate
 							</button>
 						</li>
+						*/}
 					</ul>
 				</div>
 			</header>

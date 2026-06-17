@@ -17,15 +17,15 @@ export function PublicLayout({ children }) {
 		navigate('/login');
 	};
 
-	const handleRegisterClick = () => {
-		navigate('/register');
-	};
+	// const handleRegisterClick = () => {
+	// 	navigate('/register');
+	// };
 
 	return (
 		<div className='public-layout'>
 			<PublicHeader
 				onLoginClick={handleLoginClick}
-				onRegisterClick={handleRegisterClick}
+				// onRegisterClick={handleRegisterClick}
 			/>
 			<main className='public-layout__content'>{children}</main>
 			<Footer />

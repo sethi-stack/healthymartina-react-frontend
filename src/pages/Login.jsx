@@ -76,6 +76,7 @@ export function Login() {
 			onLoginSubmit={handleLoginSubmit}
 			onRegisterSubmit={handleRegisterSubmit}
 			onForgotPasswordClick={handleForgotPasswordClick}
+			showRegister={false}
 			loginError={loginError}
 			registerError={registerError}
 			isLoading={loginMutation.isPending || registerMutation.isPending}
