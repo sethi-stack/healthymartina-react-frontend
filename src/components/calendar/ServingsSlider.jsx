@@ -21,7 +21,8 @@ export default function ServingsSlider({
 	const servingSingular = recipe?.porcion_nombre || 'Porción';
 	const isDisabled = isLeftover;
 
-	const racionLabel = value === 1 ? 'Ración' : 'Racións';
+	const normalizedRacionValue = Number(racionValue);
+	const racionLabel = normalizedRacionValue === 1 ? 'Ración' : 'Racións';
 
 	return (
 		<div className={`form-group rango typ2 porcionRango ${isDisabled ? 'field-disabled' : ''}`}>

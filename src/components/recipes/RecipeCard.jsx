@@ -45,9 +45,18 @@ export const RecipeCard = forwardRef(
 			return String(title).toUpperCase();
 		};
 
+		const formatCalendarRacion = (value) => {
+			const parsed = Number(value);
+			if (!Number.isFinite(parsed)) return '';
+			if (Math.abs(parsed - Math.round(parsed)) < 0.000001) {
+				return String(Math.round(parsed));
+			}
+			return String(parsed);
+		};
+
 		const racionPrefix =
-			isCalendar && calendarRacion && Number(calendarRacion) > 1
-				? `${Number(calendarRacion)} `
+			isCalendar && calendarRacion != null && Number(calendarRacion) !== 1
+				? `${formatCalendarRacion(calendarRacion)} `
 				: '';
 
 		const ingredientesCount = recipe.ingredientes_count || 0;
