@@ -169,16 +169,29 @@ export function RecipeIngredients({ ingredients, portions }) {
 							key={ingrediente.ingred_uid || index}
 							className={`ingrediente ${ingrediente.type || ''}`}
 						>
-							<p
-								data-nombre_english={ingrediente.nombre_english}
-								data-action={ingrediente['sub-url'] || '#'}
+							<div
+								className='ingrediente-copy'
+								style={{ textAlign: 'left', justifySelf: 'start', width: '100%' }}
 							>
-								{renderIngredientName(ingrediente)}
-							</p>
-							{ingrediente.nota && ingrediente.nota !== '' && (
-								<p>{ingrediente.nota}</p>
-							)}
-							<p
+								<p
+									className='nombre'
+									data-nombre_english={ingrediente.nombre_english}
+									data-action={ingrediente['sub-url'] || '#'}
+									style={{ textAlign: 'left', margin: 0 }}
+								>
+									{renderIngredientName(ingrediente)}
+								</p>
+								{ingrediente.nota && ingrediente.nota !== '' && (
+									<p
+										className='ingrediente-nota notaTiempo'
+										style={{ textAlign: 'left', margin: 0 }}
+									>
+										{ingrediente.nota}
+									</p>
+								)}
+							</div>
+							<div
+								className='ingrediente-cantidad cantidad'
 								data-ingred_uid={ingrediente.ingred_uid}
 								data-cantidad={ingrediente.cantidad}
 								data-medida={ingrediente.medida}
@@ -186,13 +199,17 @@ export function RecipeIngredients({ ingredients, portions }) {
 								data-medida_english={ingrediente.medida_english}
 								data-tipo_medida_id={ingrediente.tipo_medida_id}
 								data-porcion={basePortion}
+								style={{ textAlign: 'right', justifySelf: 'end', width: '100%' }}
 							>
 								{hasHTML ? (
-									<span dangerouslySetInnerHTML={{ __html: displayText }} />
+									<span
+										className='ingrediente-cantidad-text'
+										dangerouslySetInnerHTML={{ __html: displayText }}
+									/>
 								) : (
-									displayText
+									<span className='ingrediente-cantidad-text'>{displayText}</span>
 								)}
-							</p>
+							</div>
 						</div>
 					);
 				})}

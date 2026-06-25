@@ -405,26 +405,27 @@
 
 							.ingrediente {
 								display: grid;
-								grid-template-columns: minmax(0, 1fr) auto;
+								grid-template-columns: minmax(0, 60%) minmax(0, 40%);
 								column-gap: 12px;
 								align-items: start;
 								padding: 5px 0;
 								font-size: 15px;
 								font-weight: 900 !important;
 
-								p:first-child {
+								.ingrediente-copy {
+									grid-column: 1;
 									min-width: 0;
-									word-break: break-word;
-								}
+									text-align: left;
 
-								p:last-child {
-									white-space: nowrap;
-									text-align: right;
-									padding-left: 8px;
+									p {
+										margin: 0;
+										text-align: left;
+										word-break: break-word;
+									}
 								}
 
 								.nombre {
-									width: 80%;
+									width: 100%;
 									font-weight: 900 !important;
 
 									// Make links bold
@@ -442,20 +443,30 @@
 								}
 
 								.cantidad {
-									font-family: 'Gotham-Book' !important;
-									width: 20%;
-									font-weight: bold !important;
+									grid-column: 2;
+									width: 100%;
+									font-family: inherit !important;
+									font-weight: 900 !important;
+									color: inherit !important;
 									text-align: right;
+									white-space: normal;
+									overflow-wrap: anywhere;
+									word-break: break-word;
 
-									// Ensure all child elements (spans) inherit bold
+									// Ensure all child elements match the ingredient label styling
 									* {
-										font-family: 'Gotham-Book' !important;
-										font-weight: bold !important;
+										font-family: inherit !important;
+										font-weight: 900 !important;
+										color: inherit !important;
+										white-space: inherit;
+										overflow-wrap: inherit;
+										word-break: inherit;
 									}
 
 									.value {
-										font-family: 'Gotham-Book' !important;
-										font-weight: bold !important;
+										font-family: inherit !important;
+										font-weight: 900 !important;
+										color: inherit !important;
 									}
 
 									.smallFraction {
