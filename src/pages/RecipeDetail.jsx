@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getRecipe, getRecipeBySlug } from '../lib/api/recipes';
+import { usePreferences } from '../hooks/useProfile';
 import { RecipeHeader } from '../components/recipes/RecipeHeader';
 import { RecipeImage } from '../components/recipes/RecipeImage';
 import { RecipeActions } from '../components/recipes/RecipeActions';
@@ -21,6 +22,7 @@ export function RecipeDetail() {
 	const { slug, id } = useParams();
 	const recipeSlug = slug || null;
 	const recipeId = id ? Number(id) : null;
+	const RECIPE_PREFERENCE_IDS = [94, 99, 96, 97, 213, 180, 102, 103, 106, 107];
 
 	const slugQuery = useQuery({
 		queryKey: ['recipe', 'slug', recipeSlug],
@@ -35,6 +37,7 @@ export function RecipeDetail() {
 		enabled: !recipeSlug && !!recipeId,
 		staleTime: 5 * 60 * 1000,
 	});
+	const { data: preferences } = usePreferences();
 
 	const recipeResponse = recipeSlug ? slugQuery.data : idQuery.data;
 	const isLoading = recipeSlug ? slugQuery.isLoading : idQuery.isLoading;
@@ -130,6 +133,22 @@ export function RecipeDetail() {
 			recipe.getInstrucciones?.()
 	);
 
+	const preferenceNutritionIds = Array.isArray(preferences?.nutritions)
+		? preferences.nutritions.map(Number).filter((id) => Number.isFinite(id))
+		: Array.isArray(preferences?.nutrition_options)
+			? preferences.nutrition_options
+					.filter((item) => item?.mostrar)
+					.map((item) => Number(item.id))
+					.filter((id) => Number.isFinite(id))
+			: [];
+	const recipeFilterInfo = Array.isArray(recipe.filter_info)
+		? recipe.filter_info.map(Number).filter((id) => Number.isFinite(id))
+		: [];
+	const resolvedFilterInfo = (preferenceNutritionIds.length
+		? preferenceNutritionIds
+		: recipeFilterInfo
+	).filter((id) => RECIPE_PREFERENCE_IDS.includes(id));
+
 	// Ensure we have the required data structure
 	const recipeData = {
 		id: recipe.id,
@@ -157,7 +176,7 @@ export function RecipeDetail() {
 		instrucciones: normalizedInstructions,
 		tips: normalizedTips,
 		nutrientes: recipe.nutrientes || recipe.nutrition || { info: [] },
-		filter_info: recipe.filter_info || [],
+		filter_info: resolvedFilterInfo,
 		comments: recipe.comments || [],
 		reactions: recipe.reactions || {
 			likes: 0,
