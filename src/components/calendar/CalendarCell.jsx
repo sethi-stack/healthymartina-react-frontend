@@ -207,13 +207,18 @@ export default function CalendarCell({
 		}
 	};
 
-	const handleViewRecipe = (recipe, e) => {
+	const handleViewRecipe = (recipe, mealType, e) => {
 		e.stopPropagation();
 		if (!recipe) return;
+		const servings = mealType === 'main' ? mainServing : sideServing;
+		const servingsParam =
+			Number.isFinite(Number(servings)) && Number(servings) > 0
+				? `?ser=${Number(servings)}`
+				: '';
 		const detailUrl = recipe.slug
-			? `/receta/${recipe.slug}`
+			? `/receta/${recipe.slug}${servingsParam}`
 			: recipe.id
-				? `/receta-id/${recipe.id}`
+				? `/receta-id/${recipe.id}${servingsParam}`
 				: null;
 		if (!detailUrl) return;
 		window.open(detailUrl, '_blank');
@@ -378,10 +383,11 @@ export default function CalendarCell({
 								}}
 								customMenu={
 									readOnly ? null : (
-										<RecipeActionMenu
+											<RecipeActionMenu
 											onViewRecipe={(e) =>
 												handleViewRecipe(
 													mainRecipe || { id: mainRecipeId },
+													'main',
 													e
 												)
 											}
@@ -422,10 +428,11 @@ export default function CalendarCell({
 								}}
 								customMenu={
 									readOnly ? null : (
-										<RecipeActionMenu
+											<RecipeActionMenu
 											onViewRecipe={(e) =>
 												handleViewRecipe(
 													sideRecipe || { id: sideRecipeId },
+													'side',
 													e
 												)
 											}

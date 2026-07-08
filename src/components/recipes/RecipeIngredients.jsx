@@ -7,9 +7,18 @@ import { usePreferences } from '../../hooks/useProfile';
  * Recipe Ingredients Component
  * Displays ingredients list with portion slider for quantity conversion
  */
-export function RecipeIngredients({ ingredients, portions }) {
+export function RecipeIngredients({
+	ingredients,
+	portions,
+	onPortionChange,
+	initialPortion,
+}) {
 	const basePortion = portions?.cantidad || 1;
-	const [currentPortion, setCurrentPortion] = useState(basePortion);
+	const resolvedInitialPortion =
+		Number.isFinite(Number(initialPortion)) && Number(initialPortion) > 0
+			? Number(initialPortion)
+			: basePortion;
+	const [currentPortion, setCurrentPortion] = useState(resolvedInitialPortion);
 	const { data: preferences } = usePreferences();
 	const unitMeasure = preferences?.unit_measure === 'us' ? 'imperial' : 'metric';
 
@@ -20,8 +29,18 @@ export function RecipeIngredients({ ingredients, portions }) {
 
 	// Sync hook's currentPortion with component state whenever it changes
 	useEffect(() => {
+		setCurrentPortion(resolvedInitialPortion);
+	}, [resolvedInitialPortion]);
+
+	useEffect(() => {
 		setPortion(currentPortion);
 	}, [currentPortion, setPortion]);
+
+	useEffect(() => {
+		if (typeof onPortionChange === 'function') {
+			onPortionChange(currentPortion);
+		}
+	}, [currentPortion, onPortionChange]);
 
 	const handlePortionChange = (e) => {
 		const newPortion = parseInt(e.target.value);

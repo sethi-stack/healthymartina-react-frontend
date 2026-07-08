@@ -11,9 +11,7 @@ import CalendarPickerModal from '../calendar/CalendarPickerModal';
  * Recipe Actions Component
  * Displays action buttons (Add to Calendar, Export, etc.)
  */
-export function RecipeActions({ recipeId, recipeTitle }) {
-	const USE_EXTERNAL_EXPORT_API =
-		import.meta.env.VITE_USE_EXTERNAL_EXPORT_API === 'true';
+export function RecipeActions({ recipeId, recipeTitle, portion }) {
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [showCalendarPicker, setShowCalendarPicker] = useState(false);
 	const [targetCalendarId, setTargetCalendarId] = useState(null);
@@ -72,6 +70,7 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 		mutationFn: () =>
 			exportRecipePdf(recipeId, {
 				calendarId: activeCalendarId || undefined,
+				portion,
 				onProgress: (statusResponse) => {
 					setExportProgress({
 						progress: Number(statusResponse?.progress || 0),
@@ -110,10 +109,6 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 	};
 
 	const handleExport = () => {
-		if (USE_EXTERNAL_EXPORT_API && !activeCalendarId) {
-			alert('Cargando calendario… Intenta de nuevo en unos segundos.');
-			return;
-		}
 		setExportProgress({ progress: 0, rendered: 0, total: 0 });
 		exportMutation.mutate();
 	};
@@ -190,10 +185,7 @@ export function RecipeActions({ recipeId, recipeTitle }) {
 					type='button'
 					className='export_pdf'
 					onClick={handleExport}
-					disabled={
-						exportMutation.isPending ||
-						(USE_EXTERNAL_EXPORT_API && (isLoadingCalendars || !activeCalendarId))
-					}
+					disabled={exportMutation.isPending}
 					data-page='receta'
 					data-recipeid={recipeId}
 					data-recipe={recipeTitle}

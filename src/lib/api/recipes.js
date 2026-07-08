@@ -1,8 +1,4 @@
 import apiClient from './client';
-import { exportCalendarPdfViaAsyncJob } from './calendars';
-
-const USE_EXTERNAL_EXPORT_API =
-	import.meta.env.VITE_USE_EXTERNAL_EXPORT_API === 'true';
 
 /**
  * Get recipes with pagination and filtering
@@ -53,24 +49,10 @@ export const getRecipeBySlug = async (slug) => {
  */
 export const exportRecipePdf = async (
 	recipeId,
-	{ calendarId, onProgress } = {}
+	{ portion } = {}
 ) => {
-	if (USE_EXTERNAL_EXPORT_API) {
-		if (!calendarId) {
-			throw new Error(
-				'No hay un calendario activo para exportar esta receta con el flujo externo.'
-			);
-		}
-
-		return await exportCalendarPdfViaAsyncJob({
-			calendar: calendarId,
-			export_param: [1],
-			template: 'bold',
-			selected_recipes: [recipeId],
-		}, { onProgress });
-	}
-
 	const response = await apiClient.get(`/recipes/${recipeId}/pdf`, {
+		params: portion ? { portion } : undefined,
 		responseType: 'blob',
 	});
 	return response.data;

@@ -4,7 +4,7 @@ import React from 'react';
  * Recipe Nutrition Component
  * Displays nutritional information per serving
  */
-export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
+export function RecipeNutrition({ nutrientes, filterInfo = [], portion, basePortion }) {
 	const formatNumber = (num) => {
 		if (num > 0.01) {
 			return Number(num).toFixed(2);
@@ -23,6 +23,22 @@ export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
 	// Ensure we have the correct structure
 	const nutritionData =
 		nutrientes?.info || (Array.isArray(nutrientes) ? nutrientes : []);
+
+	const resolvedBasePortion = Number(basePortion) > 0 ? Number(basePortion) : 1;
+	const resolvedPortion = Number(portion) > 0 ? Number(portion) : resolvedBasePortion;
+	const ratio = resolvedPortion / resolvedBasePortion;
+	const scaledNutritionData = nutritionData.map((nutriente) => {
+		const quantity = Number(nutriente?.cantidad);
+		const percentage = Number(nutriente?.porcentaje);
+		return {
+			...nutriente,
+			cantidad: Number.isFinite(quantity) ? quantity * ratio : nutriente?.cantidad,
+			porcentaje:
+				Number.isFinite(percentage) && nutriente?.porcentaje !== '-'
+					? percentage * ratio
+					: nutriente?.porcentaje,
+		};
+	});
 
 	if (!nutritionData || nutritionData.length === 0) {
 		return (
@@ -44,7 +60,7 @@ export function RecipeNutrition({ nutrientes, filterInfo = [] }) {
 	);
 
 	// Show only the nutrients selected in the user's preferences.
-	const filteredNutrients = nutritionData.filter((nutriente) => {
+	const filteredNutrients = scaledNutritionData.filter((nutriente) => {
 		const nutrientId = Number(nutriente.id);
 		if (!Number.isFinite(nutrientId)) {
 			return false;

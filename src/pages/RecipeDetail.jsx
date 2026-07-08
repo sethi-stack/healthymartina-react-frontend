@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, Navigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getRecipe, getRecipeBySlug } from '../lib/api/recipes';
 import { usePreferences } from '../hooks/useProfile';
@@ -20,6 +20,7 @@ import './RecipeDetail.scss';
  */
 export function RecipeDetail() {
 	const { slug, id } = useParams();
+	const [searchParams] = useSearchParams();
 	const recipeSlug = slug || null;
 	const recipeId = id ? Number(id) : null;
 	const RECIPE_PREFERENCE_IDS = [94, 99, 96, 97, 213, 180, 102, 103, 106, 107];
@@ -43,6 +44,15 @@ export function RecipeDetail() {
 	const isLoading = recipeSlug ? slugQuery.isLoading : idQuery.isLoading;
 	const isError = recipeSlug ? slugQuery.isError : idQuery.isError;
 	const error = recipeSlug ? slugQuery.error : idQuery.error;
+	const recipe = recipeResponse?.data || recipeResponse?.receta || recipeResponse;
+	const defaultPortion = recipe?.porciones?.cantidad || recipe?.portions?.cantidad || 1;
+	const queryPortion = Number(searchParams.get('ser'));
+	const resolvedInitialPortion =
+		Number.isFinite(queryPortion) && queryPortion > 0 ? queryPortion : defaultPortion;
+	const [selectedPortion, setSelectedPortion] = useState(resolvedInitialPortion);
+	useEffect(() => {
+		setSelectedPortion(resolvedInitialPortion);
+	}, [recipe?.id, resolvedInitialPortion]);
 
 	const [activeLeftTab, setActiveLeftTab] = useState('ingredientes');
 	const [activeRightTab, setActiveRightTab] = useState('instrucciones');
@@ -91,10 +101,6 @@ export function RecipeDetail() {
 	if (!recipeResponse) {
 		return <Navigate to='/recetario' replace />;
 	}
-
-	// Map API response to component structure
-	// Handle different possible API response structures
-	const recipe = recipeResponse.data || recipeResponse.receta || recipeResponse;
 
 	const toArray = (value) => {
 		if (Array.isArray(value)) return value;
@@ -204,6 +210,7 @@ export function RecipeDetail() {
 					<RecipeActions
 						recipeId={recipeData.id}
 						recipeTitle={recipeData.titulo}
+						portion={selectedPortion}
 					/>
 
 					<div className='container-receta'>
@@ -239,6 +246,8 @@ export function RecipeDetail() {
 									<RecipeIngredients
 										ingredients={recipeData.ingredientes}
 										portions={recipeData.porciones}
+										initialPortion={resolvedInitialPortion}
+										onPortionChange={setSelectedPortion}
 									/>
 								</div>
 								<div
@@ -249,6 +258,8 @@ export function RecipeDetail() {
 									<RecipeNutrition
 										nutrientes={recipeData.nutrientes}
 										filterInfo={recipeData.filter_info}
+										portion={selectedPortion}
+										basePortion={recipeData.porciones?.cantidad}
 										key={`nutrition-${recipeData.id}`}
 									/>
 								</div>
