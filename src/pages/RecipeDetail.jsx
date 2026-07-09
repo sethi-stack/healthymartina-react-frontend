@@ -258,8 +258,6 @@ export function RecipeDetail() {
 									<RecipeNutrition
 										nutrientes={recipeData.nutrientes}
 										filterInfo={recipeData.filter_info}
-										portion={selectedPortion}
-										basePortion={recipeData.porciones?.cantidad}
 										key={`nutrition-${recipeData.id}`}
 									/>
 								</div>
