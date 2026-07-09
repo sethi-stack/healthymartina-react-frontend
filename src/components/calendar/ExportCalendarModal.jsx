@@ -14,7 +14,8 @@ import {
 	normalizeExportStatus,
 	readExportErrorMessage,
 } from '../../lib/exportProgress';
-import { getRecipes } from '../../lib/api/recipes';
+import { getRecipes, getRecipe } from '../../lib/api/recipes';
+import { expandRecipeIdsForExport } from './calendarExportUtils';
 import CalendarListaTab from './CalendarListaTab';
 import Modal from './Modal';
 import { useExportProgressStore } from '../../stores/exportProgressStore';
@@ -88,6 +89,11 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		return allRecipes.filter((recipe) => calendarIdSet.has(Number(recipe.id)));
 	}, [recipeSearchData, calendarRecipeIds]);
 
+	const recipeSearchItems = useMemo(
+		() => recipeSearchData?.data || [],
+		[recipeSearchData],
+	);
+
 	const selectedRecipeOptions = useMemo(() => {
 		const selectedSet = new Set(selectedRecipeIds.map(Number));
 		return recipeOptions.filter((recipe) => selectedSet.has(Number(recipe.id)));
@@ -137,7 +143,7 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		});
 	};
 
-	const getExportPayload = () => {
+	const getExportPayload = async () => {
 		const selected = includeRecipePages ? [...selectedRecipeIds] : [];
 		const heroId = heroRecipeId ? Number(heroRecipeId) : undefined;
 
@@ -146,12 +152,30 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 			selected.push(heroId);
 		}
 
+		const fetchDetailedRecipesByIds = async (recipeIds) => {
+			const recipes = await Promise.all(
+				recipeIds.map(async (recipeId) => {
+					const response = await getRecipe(recipeId);
+					return response?.data || response?.receta || response;
+				}),
+			);
+			return recipes.filter(Boolean);
+		};
+
+		const expandedSelectedRecipes = includeRecipePages
+			? await expandRecipeIdsForExport(
+					selected,
+					fetchDetailedRecipesByIds,
+					recipeSearchItems,
+				)
+			: [];
+
 		return {
 			calendar: calendar.id,
 			export_param: exportParams,
 			template: pdfTemplate,
 			hero_recipe_id: heroId,
-			selected_recipes: selected,
+			selected_recipes: expandedSelectedRecipes,
 		};
 	};
 
@@ -229,7 +253,8 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		resetExportProgress(EXPORT_PROGRESS_FLOW.CALENDAR_DOWNLOAD);
 		closeModalForBackgroundExport();
 		try {
-			const startResponse = await startCalendarPdfExportJob(getExportPayload());
+			const payload = await getExportPayload();
+			const startResponse = await startCalendarPdfExportJob(payload);
 			const jobId = startResponse?.job_id;
 			if (!jobId) {
 				throw new Error('No se pudo iniciar la exportación en segundo plano.');
@@ -303,10 +328,11 @@ export default function ExportCalendarModal({ calendar, onClose }) {
 		closeModalForBackgroundExport();
 		try {
 			let latestProgress = null;
-			const response = await sendCalendarPdfEmail({
-				...getExportPayload(),
+			const payload = {
+				...(await getExportPayload()),
 				recipient_email_address: recipientEmail || undefined,
-			}, {
+			};
+			const response = await sendCalendarPdfEmail(payload, {
 				onProgress: (statusResponse) =>
 					(latestProgress = updateExportProgressFromStatus(
 						statusResponse,
